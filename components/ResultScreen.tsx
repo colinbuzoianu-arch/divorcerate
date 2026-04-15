@@ -201,8 +201,12 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
 
       <p style={{ fontSize: 12, color: "#bbb", textAlign: "center", lineHeight: 1.6 }}>{result.disclaimer}</p>
 
-      {/* SHARE BUTTON */}
-      <ShareButton result={result} pct={pct} color={color} bg={bg} />
+      {/* SHARE — full card for paid, teaser for free */}
+      {isPaid ? (
+        <ShareButton result={result} pct={pct} color={color} bg={bg} full={true} />
+      ) : (
+        <ShareButton result={result} pct={pct} color={color} bg={bg} full={false} />
+      )}
 
       <button onClick={onRestart} style={{ background: "transparent", border: "0.5px solid #ddd", borderRadius: 10, padding: "11px 20px", fontSize: 14, color: "#999", width: "100%", cursor: "pointer" }}>
         Start over
@@ -342,11 +346,13 @@ function ShareButton({
   pct,
   color,
   bg,
+  full,
 }: {
   result: AnalysisResult;
   pct: number;
   color: string;
   bg: string;
+  full: boolean;
 }) {
   const [status, setStatus] = useState<"idle" | "generating" | "copied" | "shared">("idle");
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -378,7 +384,6 @@ function ShareButton({
     roundRect(ctx, cardX, cardY, cardW, 220, 40);
     ctx.fillStyle = bg;
     ctx.fill();
-    // Fix bottom corners of stripe
     ctx.fillRect(cardX, cardY + 180, cardW, 40);
 
     // Risk level pill
@@ -413,52 +418,70 @@ function ShareButton({
     ctx.lineTo(cardX + cardW - 60, cardY + 460);
     ctx.stroke();
 
-    // Headline (word-wrapped)
-    ctx.fillStyle = "#1a1a1a";
-    ctx.font = "500 44px -apple-system, sans-serif";
-    ctx.textAlign = "center";
-    wrapText(ctx, result.headline, W / 2, cardY + 540, cardW - 160, 58);
+    if (full) {
+      // PAID: full card with headline, pattern, strength/risk
+      ctx.fillStyle = "#1a1a1a";
+      ctx.font = "500 44px -apple-system, sans-serif";
+      ctx.textAlign = "center";
+      wrapText(ctx, result.headline, W / 2, cardY + 540, cardW - 160, 58);
 
-    // Pattern name
-    ctx.fillStyle = "#534ab7";
-    ctx.font = "500 34px -apple-system, sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(result.dynamicPattern, W / 2, cardY + 700);
+      ctx.fillStyle = "#534ab7";
+      ctx.font = "500 34px -apple-system, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(result.dynamicPattern, W / 2, cardY + 700);
 
-    // Strength / Risk row
-    const rowY = cardY + 760;
-    const halfW = cardW / 2 - 20;
+      const rowY = cardY + 760;
+      const halfW = cardW / 2 - 20;
 
-    // Strength box
-    roundRect(ctx, cardX + 20, rowY, halfW, 140, 16);
-    ctx.fillStyle = "#e1f5ee";
-    ctx.fill();
-    ctx.fillStyle = "#0f6e56";
-    ctx.font = "600 22px -apple-system, sans-serif";
-    ctx.textAlign = "left";
-    ctx.fillText("STRENGTH", cardX + 44, rowY + 38);
-    ctx.fillStyle = "#085041";
-    ctx.font = "500 28px -apple-system, sans-serif";
-    wrapText(ctx, result.biggestStrength, cardX + 44, rowY + 76, halfW - 48, 36, 2);
+      roundRect(ctx, cardX + 20, rowY, halfW, 140, 16);
+      ctx.fillStyle = "#e1f5ee";
+      ctx.fill();
+      ctx.fillStyle = "#0f6e56";
+      ctx.font = "600 22px -apple-system, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("STRENGTH", cardX + 44, rowY + 38);
+      ctx.fillStyle = "#085041";
+      ctx.font = "500 28px -apple-system, sans-serif";
+      wrapText(ctx, result.biggestStrength, cardX + 44, rowY + 76, halfW - 48, 36, 2);
 
-    // Risk box
-    const rBoxX = cardX + halfW + 40;
-    roundRect(ctx, rBoxX, rowY, halfW, 140, 16);
-    ctx.fillStyle = "#fcebeb";
-    ctx.fill();
-    ctx.fillStyle = "#a32d2d";
-    ctx.font = "600 22px -apple-system, sans-serif";
-    ctx.textAlign = "left";
-    ctx.fillText("RISK", rBoxX + 24, rowY + 38);
-    ctx.fillStyle = "#501313";
-    ctx.font = "500 28px -apple-system, sans-serif";
-    wrapText(ctx, result.biggestRisk, rBoxX + 24, rowY + 76, halfW - 48, 36, 2);
+      const rBoxX = cardX + halfW + 40;
+      roundRect(ctx, rBoxX, rowY, halfW, 140, 16);
+      ctx.fillStyle = "#fcebeb";
+      ctx.fill();
+      ctx.fillStyle = "#a32d2d";
+      ctx.font = "600 22px -apple-system, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("RISK", rBoxX + 24, rowY + 38);
+      ctx.fillStyle = "#501313";
+      ctx.font = "500 28px -apple-system, sans-serif";
+      wrapText(ctx, result.biggestRisk, rBoxX + 24, rowY + 76, halfW - 48, 36, 2);
+    } else {
+      // FREE teaser: blurred placeholder boxes + lock message
+      ctx.fillStyle = "#1a1a1a";
+      ctx.font = "500 40px -apple-system, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("See the full breakdown at", W / 2, cardY + 560);
+      ctx.fillStyle = "#534ab7";
+      ctx.font = "600 44px -apple-system, sans-serif";
+      ctx.fillText("splitornot.com", W / 2, cardY + 620);
+
+      // Greyed placeholder rows to suggest locked content
+      [700, 760, 820].forEach((y) => {
+        roundRect(ctx, cardX + 60, cardY + y, cardW - 120, 44, 10);
+        ctx.fillStyle = "#f0efed";
+        ctx.fill();
+        ctx.fillStyle = "#ccc";
+        ctx.font = "400 24px -apple-system, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("🔒 unlock for full analysis", W / 2, cardY + y + 30);
+      });
+    }
 
     // Footer branding
     ctx.fillStyle = "#bbb";
     ctx.font = "400 28px -apple-system, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("relationship health analyzer", W / 2, cardY + cardH - 40);
+    ctx.fillText("splitornot.com · relationship health analyzer", W / 2, cardY + cardH - 40);
 
     return canvas;
   }
@@ -479,7 +502,9 @@ function ShareButton({
         await navigator.share({
           files: [file],
           title: "My relationship health result",
-          text: `I got ${pct}% divorce risk on the relationship health analyzer. ${result.headline}`,
+          text: full
+            ? `I got ${pct}% divorce risk on splitornot.com. ${result.headline}`
+            : `I got ${pct}% divorce risk on splitornot.com — see if your relationship is at risk.`,
         });
         setStatus("shared");
         setTimeout(() => setStatus("idle"), 2500);
@@ -511,7 +536,7 @@ function ShareButton({
     status === "generating" ? "Generating card…"
     : status === "copied"   ? "Image saved · Link copied!"
     : status === "shared"   ? "Shared!"
-    : "Share my result";
+    : full ? "Share my result" : "Share my score";
 
   const btnColor = status === "idle" ? "#534ab7" : status === "generating" ? "#afa9ec" : "#1d9e75";
 
