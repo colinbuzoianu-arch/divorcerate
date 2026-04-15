@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const stripe = new Stripe(stripeSecretKey, { apiVersion: "2024-04-10" });
+    const stripe = new Stripe(stripeSecretKey, { apiVersion: "2023-10-16" });
 
     // Store the result token in metadata so we can retrieve it after payment
     const body = await req.json();
