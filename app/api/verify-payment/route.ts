@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Missing session_id." }, { status: 400 });
     }
 
-    const stripe = new Stripe(stripeSecretKey, { apiVersion: "2024-04-10" });
+    const stripe = new Stripe(stripeSecretKey, { apiVersion: "2023-10-16" });
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === "paid") {
