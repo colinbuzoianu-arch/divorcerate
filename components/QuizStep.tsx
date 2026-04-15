@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Step, Question } from "@/lib/questions";
 import { Answers } from "@/lib/types";
 
@@ -24,6 +25,11 @@ export default function QuizStep({
 }: Props) {
   const isLast = stepIndex === totalSteps - 1;
   const progress = ((stepIndex + 1) / totalSteps) * 100;
+
+  // Scroll to top of page on every step change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [stepIndex]);
 
   const allAnswered = step.questions.every((q) => {
     if (q.type === "textarea") return true;
