@@ -38,10 +38,12 @@ const weightColor: Record<string, string> = {
 
 interface Props {
   result: AnalysisResult;
+  isPaid: boolean;
+  onUnlock: () => void;
   onRestart: () => void;
 }
 
-export default function ResultScreen({ result, onRestart }: Props) {
+export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Props) {
   const markerRef = useRef<HTMLDivElement>(null);
   const avgMarkerRef = useRef<HTMLDivElement>(null);
   const [animated, setAnimated] = useState(false);
@@ -132,63 +134,70 @@ export default function ResultScreen({ result, onRestart }: Props) {
         </div>
       </div>
 
-      {/* FACTOR BREAKDOWN */}
-      <div>
-        <p style={{ fontSize: 11, fontWeight: 500, color: "#999", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Full breakdown</p>
-        {negativeFactors.length > 0 && (
-          <div style={{ marginBottom: 10 }}>
-            <p style={{ fontSize: 12, color: "#aaa", marginBottom: 6 }}>Risk factors</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {negativeFactors.map((f, i) => <FactorRow key={i} factor={f} />)}
-            </div>
-          </div>
-        )}
-        {positiveFactors.length > 0 && (
+      {/* PAYWALL GATE — locks everything below */}
+      {!isPaid ? (
+        <PaywallGate onUnlock={onUnlock} riskLevel={result.riskLevel} color={color} />
+      ) : (
+        <>
+          {/* FACTOR BREAKDOWN */}
           <div>
-            <p style={{ fontSize: 12, color: "#aaa", marginBottom: 6, marginTop: negativeFactors.length > 0 ? 14 : 0 }}>Protective factors</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {positiveFactors.map((f, i) => <FactorRow key={i} factor={f} />)}
+            <p style={{ fontSize: 11, fontWeight: 500, color: "#999", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Full breakdown</p>
+            {negativeFactors.length > 0 && (
+              <div style={{ marginBottom: 10 }}>
+                <p style={{ fontSize: 12, color: "#aaa", marginBottom: 6 }}>Risk factors</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {negativeFactors.map((f, i) => <FactorRow key={i} factor={f} />)}
+                </div>
+              </div>
+            )}
+            {positiveFactors.length > 0 && (
+              <div>
+                <p style={{ fontSize: 12, color: "#aaa", marginBottom: 6, marginTop: negativeFactors.length > 0 ? 14 : 0 }}>Protective factors</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {positiveFactors.map((f, i) => <FactorRow key={i} factor={f} />)}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* RECOMMENDATIONS */}
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 500, color: "#999", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>What to do next</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {result.recommendations.map((r, i) => (
+                <div key={i} style={{ display: "flex", gap: 12, padding: "12px 14px", background: "#f8f8f6", borderRadius: 12, border: "0.5px solid #e8e8e5", alignItems: "flex-start" }}>
+                  <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#534ab7", color: "#fff", fontSize: 11, fontWeight: 500, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                    {i + 1}
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 4 }}>{r.title}</p>
+                    <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{r.detail}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        )}
-      </div>
 
-      {/* RECOMMENDATIONS */}
-      <div>
-        <p style={{ fontSize: 11, fontWeight: 500, color: "#999", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>What to do next</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {result.recommendations.map((r, i) => (
-            <div key={i} style={{ display: "flex", gap: 12, padding: "12px 14px", background: "#f8f8f6", borderRadius: 12, border: "0.5px solid #e8e8e5", alignItems: "flex-start" }}>
-              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#534ab7", color: "#fff", fontSize: 11, fontWeight: 500, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                {i + 1}
-              </div>
-              <div>
-                <p style={{ fontSize: 14, fontWeight: 500, color: "#1a1a1a", marginBottom: 4 }}>{r.title}</p>
-                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{r.detail}</p>
-              </div>
+          {/* URGENCY */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: urgency.bg, borderRadius: 10, border: `0.5px solid ${urgency.color}40` }}>
+            <span style={{ width: 28, height: 28, borderRadius: "50%", background: urgency.color, color: "#fff", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              {urgency.icon}
+            </span>
+            <div>
+              <p style={{ fontSize: 12, fontWeight: 500, color: urgency.color, textTransform: "capitalize" }}>Overall: {result.urgency}</p>
+              <p style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
+                {result.urgency === "keep doing what you are doing"
+                  ? "Your relationship has strong protective factors. Keep investing in what's working."
+                  : result.urgency === "worth being aware of"
+                  ? "No immediate crisis, but a few patterns are worth watching. Small adjustments now prevent drift later."
+                  : result.urgency === "worth addressing soon"
+                  ? "These patterns tend to compound over time. Addressing them proactively makes a real difference."
+                  : "One or more serious risk factors are present. This is where professional support tends to help most."}
+              </p>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* URGENCY */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: urgency.bg, borderRadius: 10, border: `0.5px solid ${urgency.color}40` }}>
-        <span style={{ width: 28, height: 28, borderRadius: "50%", background: urgency.color, color: "#fff", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          {urgency.icon}
-        </span>
-        <div>
-          <p style={{ fontSize: 12, fontWeight: 500, color: urgency.color, textTransform: "capitalize" }}>Overall: {result.urgency}</p>
-          <p style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
-            {result.urgency === "keep doing what you are doing"
-              ? "Your relationship has strong protective factors. Keep investing in what's working."
-              : result.urgency === "worth being aware of"
-              ? "No immediate crisis, but a few patterns are worth watching. Small adjustments now prevent drift later."
-              : result.urgency === "worth addressing soon"
-              ? "These patterns tend to compound over time. Addressing them proactively makes a real difference."
-              : "One or more serious risk factors are present. This is where professional support tends to help most."}
-          </p>
-        </div>
-      </div>
+          </div>
+        </>
+      )}
 
       <p style={{ fontSize: 12, color: "#bbb", textAlign: "center", lineHeight: 1.6 }}>{result.disclaimer}</p>
 
@@ -201,6 +210,110 @@ export default function ResultScreen({ result, onRestart }: Props) {
     </div>
   );
 }
+
+/* ─── Paywall Gate ──────────────────────────────────────────────────────────── */
+
+function PaywallGate({
+  onUnlock,
+  riskLevel,
+  color,
+}: {
+  onUnlock: () => void;
+  riskLevel: string;
+  color: string;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = () => {
+    setLoading(true);
+    onUnlock();
+  };
+
+  const lockedItems = [
+    "Full risk & protective factor breakdown",
+    "3 personalised, named action steps",
+    "Overall urgency verdict",
+    "Shareable result card",
+  ];
+
+  return (
+    <div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid #e5e5e5" }}>
+      {/* Blurred preview */}
+      <div style={{ position: "relative" }}>
+        <div style={{ filter: "blur(4px)", pointerEvents: "none", padding: "1.25rem 1.5rem", background: "#f8f8f6", userSelect: "none" }}>
+          <p style={{ fontSize: 11, fontWeight: 500, color: "#999", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Full breakdown</p>
+          {[1, 2, 3].map((i) => (
+            <div key={i} style={{ display: "flex", gap: 10, padding: "11px 14px", background: "#fff", borderRadius: 10, border: "0.5px solid #e8e8e5", marginBottom: 8 }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: i % 2 === 0 ? "#1d9e75" : "#e24b4a", marginTop: 5, flexShrink: 0 }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ height: 12, background: "#e5e5e5", borderRadius: 4, marginBottom: 6, width: "40%" }} />
+                <div style={{ height: 10, background: "#efefef", borderRadius: 4, width: "85%" }} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Overlay */}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0.98) 100%)", display: "flex", alignItems: "flex-end", justifyContent: "center", padding: "1.5rem" }}>
+        </div>
+      </div>
+
+      {/* CTA card */}
+      <div style={{ background: "#fff", padding: "1.5rem", borderTop: "0.5px solid #f0f0f0" }}>
+        <p style={{ fontSize: 16, fontWeight: 500, color: "#1a1a1a", textAlign: "center", marginBottom: 6 }}>
+          Unlock your full report
+        </p>
+        <p style={{ fontSize: 13, color: "#777", textAlign: "center", marginBottom: "1.25rem", lineHeight: 1.6 }}>
+          Your {riskLevel.toLowerCase()} risk result comes with a detailed breakdown of every factor and a personalised action plan.
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: "1.25rem" }}>
+          {lockedItems.map((item) => (
+            <div key={item} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "#444" }}>
+              <span style={{ width: 18, height: 18, borderRadius: "50%", background: "#e1f5ee", color: "#1d9e75", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, flexShrink: 0 }}>✓</span>
+              {item}
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={handleClick}
+          disabled={loading}
+          style={{
+            width: "100%",
+            background: loading ? "#afa9ec" : "#534ab7",
+            color: "#fff",
+            border: "none",
+            borderRadius: 12,
+            padding: "14px 20px",
+            fontSize: 15,
+            fontWeight: 500,
+            cursor: loading ? "not-allowed" : "pointer",
+            transition: "background 0.15s",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+          }}
+        >
+          {loading ? (
+            <>
+              <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
+              Opening checkout…
+            </>
+          ) : (
+            "Unlock full report — $4.99"
+          )}
+        </button>
+        <p style={{ fontSize: 11, color: "#bbb", textAlign: "center", marginTop: 10 }}>
+          One-time payment · Secure checkout via Stripe
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Factor Row ────────────────────────────────────────────────────────────── */
 
 function FactorRow({ factor }: { factor: AnalysisResult["factors"][0] }) {
   const isPositive = factor.positive;
