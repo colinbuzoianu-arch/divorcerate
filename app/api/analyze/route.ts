@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { buildPrompt } from "@/lib/prompt";
 import { Answers, AnalysisResult } from "@/lib/types";
 
-export const runtime = "edge";
+// Use Node.js runtime — no timeout limit on Vercel hobby plan (vs 30s edge limit)
+export const runtime = "nodejs";
+export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,26 +33,56 @@ export async function POST(req: NextRequest) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1024,
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 2048,
         messages: [{ role: "user", content: prompt }],
       }),
     });
 
     if (!anthropicRes.ok) {
       const errText = await anthropicRes.text();
-      console.error("Anthropic API error:", errText);
-      return NextResponse.json({ error: "Analysis service unavailable. Please try again." }, { status: 502 });
+      console.error("Anthropic API error:", anthropicRes.status, errText);
+      return NextResponse.json(
+        { error: `Analysis service error (${anthropicRes.status}). Please try again.` },
+        { status: 502 }
+      );
     }
 
     const data = await anthropicRes.json();
+
+    if (data.type === "error") {
+      console.error("Anthropic error body:", JSON.stringify(data));
+      return NextResponse.json(
+        { error: data.error?.message ?? "Analysis service returned an error." },
+        { status: 502 }
+      );
+    }
+
+    if (!data.content || !Array.isArray(data.content)) {
+      console.error("Unexpected Anthropic response shape:", JSON.stringify(data));
+      return NextResponse.json(
+        { error: "Unexpected response from analysis service." },
+        { status: 502 }
+      );
+    }
+
     const rawText: string = data.content
-      .map((block: { type: string; text?: string }) => (block.type === "text" ? block.text : ""))
-      .filter(Boolean)
+      .map((block: { type: string; text?: string }) => (block.type === "text" ? block.text ?? "" : ""))
       .join("");
 
-    const clean = rawText.replace(/```json|```/g, "").trim();
-    const result: AnalysisResult = JSON.parse(clean);
+    // Strip markdown fences if present
+    const clean = rawText.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+
+    let result: AnalysisResult;
+    try {
+      result = JSON.parse(clean);
+    } catch (parseErr) {
+      console.error("JSON parse failed. Raw text:", rawText.slice(0, 800));
+      return NextResponse.json(
+        { error: "Could not parse the analysis. Please try again." },
+        { status: 500 }
+      );
+    }
 
     // Validate required fields
     if (
@@ -61,14 +93,18 @@ export async function POST(req: NextRequest) {
       !Array.isArray(result.factors) ||
       !Array.isArray(result.recommendations)
     ) {
-      throw new Error("Malformed response from model");
+      console.error("Validation failed. Result keys:", Object.keys(result));
+      return NextResponse.json(
+        { error: "Analysis was incomplete. Please try again." },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(result);
   } catch (err) {
-    console.error("Route error:", err);
+    console.error("Unhandled route error:", err);
     return NextResponse.json(
-      { error: "Failed to process analysis. Please try again." },
+      { error: "Something went wrong. Please try again." },
       { status: 500 }
     );
   }
