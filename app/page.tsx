@@ -72,6 +72,7 @@ function HomeInner() {
       setIsPaid(false);
       setResult(data as AnalysisResult);
       setScreen("result");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Analysis failed. Please try again.");
       setScreen("error");
