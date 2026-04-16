@@ -3,13 +3,25 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Relationship Health Analyzer",
+  title: "Relationship Health Analyzer | Split or Not",
   description:
-    "Evidence-based relationship risk assessment using the Gottman Method, attachment theory, and AI analysis.",
+    "Should you break up or stay? Answer 15 honest questions and get an AI-powered relationship risk assessment based on the Gottman Method and attachment theory.",
+  keywords: ["relationship test", "should I break up", "relationship health check", "gottman method quiz", "split or not"],
+  metadataBase: new URL("https://splitornot.com"),
   openGraph: {
-    title: "Relationship Health Analyzer",
-    description: "Understand your relationship risk factors in 5 minutes.",
+    title: "Relationship Health Analyzer | Split or Not",
+    description: "Get an honest, science-based assessment of your relationship in 5 minutes.",
+    url: "https://splitornot.com",
+    siteName: "Split or Not",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Relationship Health Analyzer",
+    description: "Should you split or not? Find out in 5 minutes.",
+  },
+  alternates: {
+    canonical: "https://splitornot.com",
   },
 };
 
