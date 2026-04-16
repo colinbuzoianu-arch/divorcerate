@@ -29,3 +29,67 @@ button {
   font-family: inherit;
   cursor: pointer;
 }
+
+/* Blog prose styles */
+.prose {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #333;
+}
+
+.prose h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose p {
+  margin-bottom: 1.1rem;
+}
+
+.prose ul, .prose ol {
+  margin-bottom: 1.1rem;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.4rem;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose a {
+  color: #534ab7;
+  text-decoration: underline;
+}
+
+.prose hr {
+  border: none;
+  border-top: 0.5px solid #eee;
+  margin: 2rem 0;
+}
+
+.prose blockquote {
+  border-left: 3px solid #534ab7;
+  padding-left: 1rem;
+  color: #555;
+  font-style: italic;
+  margin: 1.5rem 0;
+}
