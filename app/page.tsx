@@ -107,7 +107,7 @@ function HomeInner() {
 
   return (
     <main style={{ background: "#f0efed", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div style={{ background: "#fff", borderRadius: 16, border: "0.5px solid #e5e5e5", padding: "2rem", width: "100%", maxWidth: 640 }}>
+      <div style={{ background: "#fff", borderRadius: 16, border: "0.5px solid #e5e5e5", padding: "1.5rem", width: "100%", maxWidth: 640 }}>
         <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
           <h1 style={{ fontSize: 22, fontWeight: 500, marginBottom: 6 }}>Relationship health analyzer</h1>
           <p style={{ fontSize: 14, color: "#777" }}>Evidence-based insights from relationship science</p>
