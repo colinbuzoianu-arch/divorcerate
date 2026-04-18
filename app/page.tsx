@@ -187,7 +187,7 @@ function HomeInner() {
 
           {/* ── STATS BAR ── */}
           <section style={{ background: "#fff", borderTop: "1px solid #efefed", borderBottom: "1px solid #efefed" }}>
-            <div style={{ maxWidth: 720, margin: "0 auto", padding: "2rem 1.5rem", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", textAlign: "center" }}>
+            <div style={{ maxWidth: 720, margin: "0 auto", padding: "2rem 1.5rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "1rem", textAlign: "center" }}>
               {stats.map((s) => (
                 <div key={s.value}>
                   <div style={{ fontSize: 28, fontWeight: 800, color: "#534ab7", letterSpacing: "-0.03em", marginBottom: 4 }}>{s.value}</div>
@@ -227,7 +227,7 @@ function HomeInner() {
             <div style={{ maxWidth: 720, margin: "0 auto", padding: "4rem 1.5rem" }}>
               <h2 style={{ fontSize: 26, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em", marginBottom: "0.5rem", textAlign: "center" }}>What you get</h2>
               <p style={{ fontSize: 15, color: "#888", textAlign: "center", marginBottom: "2.5rem" }}>Start free. Unlock the full picture for $4.99.</p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
                 {/* Free */}
                 <div style={{ borderRadius: 16, border: "1px solid #efefed", padding: "1.5rem", background: "#fafaf8" }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>Free</p>
