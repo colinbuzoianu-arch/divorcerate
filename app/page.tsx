@@ -84,7 +84,10 @@ function HomeInner() {
     else { await runAnalysis(); }
   };
 
-  const handleBack = () => { if (stepIndex > 0) setStepIndex((i) => i - 1); };
+  const handleNavigate = (index: number) => {
+    setStepIndex(index);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const runAnalysis = async () => {
     setScreen("loading");
@@ -327,7 +330,7 @@ function HomeInner() {
 
             {screen === "start" && <StartScreen onStart={() => setScreen("quiz")} />}
             {screen === "quiz" && (
-              <QuizStep step={steps[stepIndex]} stepIndex={stepIndex} totalSteps={steps.length} answers={answers} onChange={handleChange} onNext={handleNext} onBack={handleBack} />
+              <QuizStep step={steps[stepIndex]} stepIndex={stepIndex} totalSteps={steps.length} answers={answers} onChange={handleChange} onNext={handleNext} onBack={handleBack} onNavigate={handleNavigate} />
             )}
             {screen === "loading" && <LoadingScreen />}
             {screen === "result" && result && (
