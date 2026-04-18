@@ -132,13 +132,21 @@ function HomeInner() {
     <div style={{ background: "#f0efed", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
 
       {/* ── NAV ── */}
-      <nav style={{ background: "#fff", borderBottom: "1px solid #efefed", padding: "0 1.5rem", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
-        <span style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
-          split<span style={{ color: "#534ab7" }}>or</span>not
-        </span>
+      <nav style={{ background: "#fff", borderBottom: "1px solid #efefed", padding: "0 1.5rem", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <img src="/logo.png" alt="CoupleIQ logo" style={{ width: 36, height: 36, borderRadius: 8, objectFit: "cover" }} />
+          <div>
+            <span style={{ fontSize: 16, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
+              Couple<span style={{ color: "#534ab7" }}>IQ</span>
+            </span>
+            <div style={{ fontSize: 10, color: "#aaa", fontWeight: 500, letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1, marginTop: 1 }}>
+              Relationship Health Analyzer
+            </div>
+          </div>
+        </div>
         <button
           onClick={showLanding ? startQuiz : scrollToApp}
-          style={{ background: "#534ab7", color: "#fff", border: "none", borderRadius: 8, padding: "8px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", letterSpacing: "0.01em" }}
+          style={{ background: "#534ab7", color: "#fff", border: "none", borderRadius: 8, padding: "9px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", letterSpacing: "0.01em" }}
         >
           Take the test
         </button>
@@ -323,10 +331,13 @@ function HomeInner() {
             {/* Header — only show when in quiz/loading */}
             {(screen === "quiz" || screen === "loading") && (
               <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-                <span style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
-                  split<span style={{ color: "#534ab7" }}>or</span>not
-                </span>
-                <p style={{ fontSize: 13, color: "#aaa", marginTop: 4 }}>Relationship health assessment</p>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 4 }}>
+                  <img src="/logo.png" alt="CoupleIQ" style={{ width: 28, height: 28, borderRadius: 6, objectFit: "cover" }} />
+                  <span style={{ fontSize: 16, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
+                    Couple<span style={{ color: "#534ab7" }}>IQ</span>
+                  </span>
+                </div>
+                <p style={{ fontSize: 12, color: "#aaa", marginTop: 2 }}>Relationship health assessment</p>
               </div>
             )}
 
@@ -350,9 +361,12 @@ function HomeInner() {
 
       {/* ── FOOTER ── */}
       <footer style={{ borderTop: "1px solid #efefed", background: "#fff", padding: "2rem 1.5rem", textAlign: "center" }}>
-        <p style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", marginBottom: 8, letterSpacing: "-0.01em" }}>
-          split<span style={{ color: "#534ab7" }}>or</span>not
-        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 10 }}>
+          <img src="/logo.png" alt="CoupleIQ" style={{ width: 28, height: 28, borderRadius: 6, objectFit: "cover" }} />
+          <span style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
+            Couple<span style={{ color: "#534ab7" }}>IQ</span>
+          </span>
+        </div>
         <p style={{ fontSize: 12, color: "#ccc", lineHeight: 1.7 }}>
           Built on relationship science · Powered by Claude AI · No data stored
         </p>

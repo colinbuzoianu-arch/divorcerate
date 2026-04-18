@@ -3,22 +3,22 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Relationship Health Analyzer | Split or Not",
+  title: "CoupleIQ — Relationship Health Analyzer",
   description:
-    "Should you break up or stay? Answer 15 honest questions and get an AI-powered relationship risk assessment based on the Gottman Method and attachment theory.",
-  keywords: ["relationship test", "should I break up", "relationship health check", "gottman method quiz", "split or not"],
+    "Answer 15 honest questions and get an AI-powered relationship risk assessment based on the Gottman Method and attachment theory. Find out where your relationship really stands.",
+  keywords: ["relationship test", "should I break up", "relationship health check", "gottman method quiz", "coupleiq", "split or not"],
   metadataBase: new URL("https://splitornot.com"),
   openGraph: {
-    title: "Relationship Health Analyzer | Split or Not",
+    title: "CoupleIQ — Relationship Health Analyzer",
     description: "Get an honest, science-based assessment of your relationship in 5 minutes.",
     url: "https://splitornot.com",
-    siteName: "Split or Not",
+    siteName: "CoupleIQ",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Relationship Health Analyzer",
-    description: "Should you split or not? Find out in 5 minutes.",
+    title: "CoupleIQ — Relationship Health Analyzer",
+    description: "Find out where your relationship really stands. Takes 5 minutes.",
   },
   alternates: {
     canonical: "https://splitornot.com",
@@ -31,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/logo.png" type="image/png" />
         {/* Point 1: Plus Jakarta Sans — premium feel, clean & modern */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
