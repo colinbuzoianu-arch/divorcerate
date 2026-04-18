@@ -9,6 +9,19 @@ const riskColors: Record<string, string> = {
 const riskBg: Record<string, string> = {
   Low: "#e1f5ee", Moderate: "#faeeda", Elevated: "#faece7", High: "#fcebeb",
 };
+
+/* Named tiers — people identify with these far more than raw percentages */
+const tiers: { max: number; name: string; description: string }[] = [
+  { max: 20,  name: "Solid Ground",       description: "Your relationship shows strong protective factors and low risk. You're doing the important things right." },
+  { max: 35,  name: "Stable Foundation",  description: "Your relationship is fundamentally sound, with some areas worth keeping an eye on." },
+  { max: 50,  name: "Amber Zone",         description: "There are meaningful risk factors present alongside genuine strengths. This is the zone where small changes make the biggest difference." },
+  { max: 70,  name: "Fault Line",         description: "Several significant patterns are putting strain on the relationship. These are worth addressing sooner rather than later." },
+  { max: 100, name: "Critical Point",     description: "Your relationship is under serious stress. The patterns here tend to compound — but awareness is the first step to change." },
+];
+
+function getTier(pct: number) {
+  return tiers.find((t) => pct <= t.max) ?? tiers[tiers.length - 1];
+}
 const urgencyConfig: Record<string, { color: string; bg: string; icon: string }> = {
   "keep doing what you are doing": { color: "#1d9e75", bg: "#e1f5ee", icon: "✓" },
   "worth being aware of":          { color: "#ba7517", bg: "#faeeda", icon: "~" },
@@ -40,6 +53,7 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
   const bg     = riskBg[result.riskLevel]     ?? "#eeedfe";
   const urgency = urgencyConfig[result.urgency] ?? urgencyConfig["worth being aware of"];
   const vsAvg  = pct - avg;
+  const tier   = getTier(pct);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -59,26 +73,49 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
 
-      {/* HEADLINE — Point 4: first to reveal */}
-      <div className={r("reveal-d1")} style={{ background: bg, border: `1px solid ${color}22`, borderRadius: 16, padding: "1.25rem 1.5rem", textAlign: "center" }}>
-        <p style={{ fontSize: 11, color, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
-          {result.riskLevel} risk relationship
+      {/* HEADLINE — tier name leads, percentage supports */}
+      <div className={r("reveal-d1")} style={{ background: bg, border: `1px solid ${color}22`, borderRadius: 16, padding: "1.5rem", textAlign: "center" }}>
+        {/* Tier badge */}
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: color + "18", border: `1px solid ${color}33`, borderRadius: 20, padding: "5px 14px", marginBottom: 14 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0 }} />
+          <span style={{ fontSize: 11, color, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            {result.riskLevel} risk
+          </span>
+        </div>
+
+        {/* Tier name — the identity anchor */}
+        <p style={{ fontSize: 28, fontWeight: 800, color, lineHeight: 1.1, letterSpacing: "-0.03em", marginBottom: 6 }}>
+          {tier.name}
         </p>
-        <p style={{ fontSize: 17, fontWeight: 600, color: "#1a1a1a", lineHeight: 1.5, marginBottom: 10, letterSpacing: "-0.01em" }}>
+
+        {/* Tier description */}
+        <p style={{ fontSize: 13, color: "#666", lineHeight: 1.65, marginBottom: 14, maxWidth: 420, margin: "0 auto 14px" }}>
+          {tier.description}
+        </p>
+
+        {/* Divider */}
+        <div style={{ height: 1, background: color + "20", margin: "14px 0" }} />
+
+        {/* Headline from AI */}
+        <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", lineHeight: 1.55, marginBottom: 8, letterSpacing: "-0.01em" }}>
           {result.headline}
         </p>
-        <p style={{ fontSize: 14, color: "#555", lineHeight: 1.75 }}>
+        <p style={{ fontSize: 13, color: "#666", lineHeight: 1.75, margin: 0 }}>
           {result.summary}
         </p>
       </div>
 
       {/* GAUGE */}
       <div className={r("reveal-d2")} style={{ background: "#fafaf8", borderRadius: 16, padding: "1.25rem 1.5rem", border: "1px solid #efefed" }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 12, marginBottom: 4 }}>
-          <span style={{ fontSize: 56, fontWeight: 700, color, lineHeight: 1, letterSpacing: "-0.03em" }}>{pct}%</span>
-          <div>
-            <div style={{ fontSize: 13, color: "#888" }}>estimated risk</div>
-            <div style={{ fontSize: 12, fontWeight: 600, color: vsAvg > 0 ? "#d85a30" : "#1d9e75", marginTop: 2 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 4 }}>
+          <div style={{ textAlign: "right" }}>
+            <span style={{ fontSize: 56, fontWeight: 800, color, lineHeight: 1, letterSpacing: "-0.03em" }}>{pct}%</span>
+            <div style={{ fontSize: 12, color: "#999", marginTop: 2 }}>estimated risk</div>
+          </div>
+          <div style={{ width: 1, height: 48, background: "#e8e8e5" }} />
+          <div style={{ textAlign: "left" }}>
+            <div style={{ fontSize: 16, fontWeight: 800, color, letterSpacing: "-0.02em", lineHeight: 1.2 }}>{tier.name}</div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: vsAvg > 0 ? "#d85a30" : "#1d9e75", marginTop: 4 }}>
               {vsAvg > 0 ? `+${vsAvg}%` : `${vsAvg}%`} vs national avg ({avg}%)
             </div>
           </div>
