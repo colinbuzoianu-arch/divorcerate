@@ -112,3 +112,20 @@ button {
   font-style: italic;
   margin: 1.5rem 0;
 }
+
+/* Landing page responsive */
+@media (max-width: 520px) {
+  .stats-grid   { grid-template-columns: 1fr !important; }
+  .pricing-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Smooth FAQ open */
+@keyframes faqOpen {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Nav blur on scroll — applied via JS */
+.nav-scrolled {
+  box-shadow: 0 1px 16px rgba(0,0,0,0.06);
+}
