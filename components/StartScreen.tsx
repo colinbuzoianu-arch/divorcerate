@@ -94,11 +94,10 @@ export default function StartScreen({ onStart }: Props) {
       </div>
 
       <h2 style={{ fontSize: 22, fontWeight: 500, marginBottom: "0.75rem" }}>
-        Understand your relationship
+        The honest assessment<br />couples avoid
       </h2>
       <p style={{ fontSize: 15, color: "#555", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-        Answer 15 honest questions about your relationship. Our AI uses decades of relationship
-        science to estimate risk factors and offer personalized, actionable insights.
+        15 questions. AI analysis built on 40 years of relationship science. Most people are surprised by what they find out.
       </p>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: "1.5rem" }}>
@@ -113,10 +112,10 @@ export default function StartScreen({ onStart }: Props) {
         onClick={onStart}
         style={{ width: "100%", background: "#534ab7", color: "#fff", border: "none", borderRadius: 10, padding: "13px 20px", fontSize: 15, fontWeight: 500, cursor: "pointer" }}
       >
-        Begin assessment
+        Find out where we stand
       </button>
       <p style={{ marginTop: "1rem", fontSize: 12, color: "#999" }}>
-        Your answers are private and never stored.
+        Private · takes 5 minutes · no account needed
       </p>
     </div>
   );

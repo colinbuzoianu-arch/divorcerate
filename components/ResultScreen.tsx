@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnalysisResult } from "@/lib/types";
+import EmailCapture from "@/components/EmailCapture";
 
 const riskColors: Record<string, string> = {
   Low: "#1d9e75", Moderate: "#ba7517", Elevated: "#d85a30", High: "#a32d2d",
@@ -124,6 +125,11 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
 
       {/* PAYWALL GATE */}
       <div className={r("reveal-d5")}>
+        {!isPaid && (
+          <div style={{ marginBottom: "1.25rem" }}>
+            <EmailCapture result={result} />
+          </div>
+        )}
         {!isPaid ? (
           <PaywallGate onUnlock={onUnlock} riskLevel={result.riskLevel} color={color} />
         ) : (
