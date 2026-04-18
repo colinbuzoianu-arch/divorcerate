@@ -14,14 +14,27 @@ export const metadata: Metadata = {
     url: "https://splitornot.com",
     siteName: "CoupleIQ",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CoupleIQ — Relationship Health Analyzer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "CoupleIQ — Relationship Health Analyzer",
     description: "Find out where your relationship really stands. Takes 5 minutes.",
+    images: ["/opengraph-image.png"],
   },
   alternates: {
     canonical: "https://splitornot.com",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
 };
 
@@ -31,7 +44,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/logo.png" type="image/png" />
         {/* Point 1: Plus Jakarta Sans — premium feel, clean & modern */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
