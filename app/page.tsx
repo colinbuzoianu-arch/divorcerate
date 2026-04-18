@@ -84,6 +84,8 @@ function HomeInner() {
     else { await runAnalysis(); }
   };
 
+  const handleBack = () => { if (stepIndex > 0) setStepIndex((i) => i - 1); };
+
   const handleNavigate = (index: number) => {
     setStepIndex(index);
     window.scrollTo({ top: 0, behavior: "smooth" });
