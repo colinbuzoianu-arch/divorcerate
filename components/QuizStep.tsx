@@ -12,6 +12,7 @@ interface Props {
   onChange: (id: string, value: string | number) => void;
   onNext: () => void;
   onBack: () => void;
+  onNavigate: (index: number) => void;
 }
 
 export default function QuizStep({
@@ -22,6 +23,7 @@ export default function QuizStep({
   onChange,
   onNext,
   onBack,
+  onNavigate,
 }: Props) {
   const isLast = stepIndex === totalSteps - 1;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,14 +48,17 @@ export default function QuizStep({
         <span style={{ fontSize: 13, color: "#534ab7", fontWeight: 600 }}>{step.title}</span>
       </div>
 
-      {/* Point 3: Dot step indicator */}
+      {/* Point 3: Interactive dot step indicator */}
       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: "1.75rem" }}>
         {Array.from({ length: totalSteps }).map((_, i) => {
-          const done = i < stepIndex;
+          const done   = i < stepIndex;
           const active = i === stepIndex;
+          const clickable = i < stepIndex; // only completed steps are navigable back
           return (
             <div
               key={i}
+              onClick={() => { if (clickable) onNavigate(i); }}
+              title={clickable ? `Go back to step ${i + 1}` : undefined}
               style={{
                 flex: active ? "0 0 28px" : "0 0 8px",
                 height: 8,
@@ -61,6 +66,7 @@ export default function QuizStep({
                 background: done ? "#534ab7" : active ? "#534ab7" : "#e5e5e5",
                 opacity: done ? 0.45 : 1,
                 transition: "flex 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.25s ease, opacity 0.25s ease",
+                cursor: clickable ? "pointer" : "default",
               }}
             />
           );
