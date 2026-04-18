@@ -353,6 +353,10 @@ function HomeInner() {
               <div style={{ textAlign: "center" }}>
                 <div style={{ background: "#fcebeb", border: "1px solid #f7c1c1", borderRadius: 12, padding: "1rem", fontSize: 14, color: "#a32d2d", marginBottom: "1rem" }}>{errorMsg}</div>
                 <button onClick={restart} style={{ background: "transparent", border: "1px solid #eee", borderRadius: 12, padding: "12px 20px", fontSize: 14, color: "#aaa", width: "100%", cursor: "pointer" }}>Try again</button>
+                <p style={{ fontSize: 12, color: "#ccc", marginTop: "0.75rem", textAlign: "center" }}>
+                  If this keeps happening, email us at{" "}
+                  <a href="mailto:support.coupleiq@gmail.com" style={{ color: "#888", textDecoration: "underline" }}>support.coupleiq@gmail.com</a>
+                </p>
               </div>
             )}
           </div>
@@ -372,6 +376,12 @@ function HomeInner() {
         </p>
         <p style={{ fontSize: 11, color: "#ddd", marginTop: 8 }}>
           © {new Date().getFullYear()} splitornot.com · For informational purposes only · Not a substitute for couples therapy
+        </p>
+        <p style={{ fontSize: 12, color: "#ccc", marginTop: 8 }}>
+          Technical support:{" "}
+          <a href="mailto:support.coupleiq@gmail.com" style={{ color: "#aaa", textDecoration: "underline" }}>
+            support.coupleiq@gmail.com
+          </a>
         </p>
       </footer>
     </div>
