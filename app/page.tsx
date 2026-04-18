@@ -9,7 +9,7 @@ import QuizStep from "@/components/QuizStep";
 import LoadingScreen from "@/components/LoadingScreen";
 import ResultScreen from "@/components/ResultScreen";
 
-type Screen = "landing" | "quiz" | "loading" | "result" | "error";
+type Screen = "landing" | "start" | "quiz" | "loading" | "result" | "error";
 
 /* ─── Landing sections ─────────────────────────────────────────────── */
 
@@ -72,7 +72,7 @@ function HomeInner() {
   };
 
   const startQuiz = () => {
-    setScreen("quiz");
+    setScreen("start");
     setTimeout(() => appRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   };
 
@@ -121,6 +121,7 @@ function HomeInner() {
   };
 
   const showLanding = screen === "landing";
+  const showApp = screen !== "landing";
 
   return (
     <div style={{ background: "#f0efed", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -311,10 +312,10 @@ function HomeInner() {
 
       {/* ── APP CARD (quiz / result / loading / error) ── */}
       <div ref={appRef} style={{ padding: showLanding ? "0 1rem 4rem" : "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
-        {(!showLanding) && (
+        {showApp && (
           <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #efefed", padding: "1.75rem", width: "100%", maxWidth: 620, boxShadow: "0 2px 24px rgba(0,0,0,0.05)" }}>
 
-            {/* Header — only show when in quiz/result */}
+            {/* Header — only show when in quiz/loading */}
             {(screen === "quiz" || screen === "loading") && (
               <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
                 <span style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
@@ -324,6 +325,7 @@ function HomeInner() {
               </div>
             )}
 
+            {screen === "start" && <StartScreen onStart={() => setScreen("quiz")} />}
             {screen === "quiz" && (
               <QuizStep step={steps[stepIndex]} stepIndex={stepIndex} totalSteps={steps.length} answers={answers} onChange={handleChange} onNext={handleNext} onBack={handleBack} />
             )}
