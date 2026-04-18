@@ -79,7 +79,13 @@ function SuccessInner() {
               ✓
             </div>
             <p style={{ fontSize: 18, fontWeight: 500, color: "#1a1a1a", marginBottom: 8 }}>Payment confirmed!</p>
-            <p style={{ fontSize: 14, color: "#777" }}>Taking you back to your full report…</p>
+            <p style={{ fontSize: 14, color: "#777", marginBottom: 8 }}>Taking you back to your full report…</p>
+            <p style={{ fontSize: 12, color: "#ccc" }}>
+              Questions?{" "}
+              <a href="mailto:support.coupleiq@gmail.com" style={{ color: "#aaa", textDecoration: "underline" }}>
+                support.coupleiq@gmail.com
+              </a>
+            </p>
           </>
         )}
 
@@ -89,7 +95,13 @@ function SuccessInner() {
               !
             </div>
             <p style={{ fontSize: 18, fontWeight: 500, color: "#1a1a1a", marginBottom: 8 }}>Something went wrong</p>
-            <p style={{ fontSize: 14, color: "#777", marginBottom: "1.5rem" }}>We couldn't verify your payment. If you were charged, please contact support.</p>
+            <p style={{ fontSize: 14, color: "#777", marginBottom: "1.5rem" }}>
+              We couldn't verify your payment. If you were charged, email us at{" "}
+              <a href="mailto:support.coupleiq@gmail.com" style={{ color: "#534ab7", textDecoration: "underline" }}>
+                support.coupleiq@gmail.com
+              </a>{" "}
+              and we'll sort it out within 24 hours.
+            </p>
             <button
               onClick={() => router.push("/")}
               style={{ background: "#534ab7", color: "#fff", border: "none", borderRadius: 10, padding: "12px 24px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}
