@@ -129,3 +129,22 @@ button {
 .nav-scrolled {
   box-shadow: 0 1px 16px rgba(0,0,0,0.06);
 }
+
+/* Legal page */
+.legal-content ul, .legal-content ol {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0 0.75rem;
+}
+.legal-content li {
+  margin-bottom: 0.4rem;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+}
+.legal-content p {
+  margin-bottom: 0.75rem;
+}
+.legal-content a {
+  color: #534ab7;
+  text-decoration: underline;
+}

@@ -226,9 +226,20 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
         )}
       </div>
 
-      <p className={r("reveal-d6")} style={{ fontSize: 12, color: "#ccc", textAlign: "center", lineHeight: 1.6 }}>{result.disclaimer}</p>
+      {/* BOOKMARK NOTICE */}
+      <div className={r("reveal-d6")} style={{ display: "flex", alignItems: "flex-start", gap: 10, background: "#fafaf8", border: "1px solid #efefed", borderRadius: 12, padding: "12px 14px" }}>
+        <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>🔖</span>
+        <div>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#444", marginBottom: 3 }}>Save your result</p>
+          <p style={{ fontSize: 12, color: "#888", lineHeight: 1.6, margin: 0 }}>
+            Your result is stored in this browser tab only. Bookmark this page or share your score before closing — it won't be available if you come back later.
+          </p>
+        </div>
+      </div>
 
-      <div className={r("reveal-d7")}>
+      <p className={r("reveal-d7")} style={{ fontSize: 12, color: "#ccc", textAlign: "center", lineHeight: 1.6 }}>{result.disclaimer}</p>
+
+      <div className={r("reveal-d8")}>
         {isPaid
           ? <ShareButton result={result} pct={pct} color={color} bg={bg} full={true} />
           : <ShareButton result={result} pct={pct} color={color} bg={bg} full={false} />

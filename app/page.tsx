@@ -382,6 +382,10 @@ function HomeInner() {
           <a href="mailto:support.coupleiq@gmail.com" style={{ color: "#aaa", textDecoration: "underline" }}>
             support.coupleiq@gmail.com
           </a>
+          {" · "}
+          <a href="/legal" style={{ color: "#aaa", textDecoration: "underline" }}>
+            Privacy & Terms
+          </a>
         </p>
       </footer>
     </div>
