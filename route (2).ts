@@ -1,0 +1,150 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Point 1: Plus Jakarta Sans as primary font */
+html {
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: #f0efed;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: #534ab7;
+  cursor: pointer;
+}
+
+textarea {
+  font-family: inherit;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Point 2: Option button micro-animation */
+.option-btn {
+  transition: transform 0.1s ease, background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+.option-btn:active {
+  transform: scale(0.97);
+}
+.option-btn.selected {
+  animation: optionPop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes optionPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* Point 4: Result section reveal animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: revealUp 0.5s ease forwards;
+}
+@keyframes revealUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal-d1  { animation-delay: 0.05s; }
+.reveal-d2  { animation-delay: 0.18s; }
+.reveal-d3  { animation-delay: 0.31s; }
+.reveal-d4  { animation-delay: 0.44s; }
+.reveal-d5  { animation-delay: 0.57s; }
+.reveal-d6  { animation-delay: 0.70s; }
+.reveal-d7  { animation-delay: 0.83s; }
+.reveal-d8  { animation-delay: 0.96s; }
+
+/* Point 5: Mobile tap target sizing */
+@media (max-width: 480px) {
+  .option-btn-wrap button {
+    padding: 13px 16px !important;
+    font-size: 15px !important;
+  }
+  .nav-btn {
+    padding: 14px 20px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* Blog prose styles */
+.prose {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #333;
+}
+.prose h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.prose h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.prose p { margin-bottom: 1.1rem; }
+.prose ul, .prose ol { margin-bottom: 1.1rem; padding-left: 1.5rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose strong { font-weight: 600; color: #1a1a1a; }
+.prose em { font-style: italic; }
+.prose a { color: #534ab7; text-decoration: underline; }
+.prose hr { border: none; border-top: 0.5px solid #eee; margin: 2rem 0; }
+.prose blockquote {
+  border-left: 3px solid #534ab7;
+  padding-left: 1rem;
+  color: #555;
+  font-style: italic;
+  margin: 1.5rem 0;
+}
+
+/* Landing page responsive */
+@media (max-width: 520px) {
+  .stats-grid   { grid-template-columns: 1fr !important; }
+  .pricing-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Smooth FAQ open */
+@keyframes faqOpen {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Nav blur on scroll — applied via JS */
+.nav-scrolled {
+  box-shadow: 0 1px 16px rgba(0,0,0,0.06);
+}
+
+/* Legal page */
+.legal-content ul, .legal-content ol {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0 0.75rem;
+}
+.legal-content li {
+  margin-bottom: 0.4rem;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+}
+.legal-content p {
+  margin-bottom: 0.75rem;
+}
+.legal-content a {
+  color: #534ab7;
+  text-decoration: underline;
+}
