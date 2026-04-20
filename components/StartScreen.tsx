@@ -94,10 +94,10 @@ export default function StartScreen({ onStart }: Props) {
       </div>
 
       <h2 style={{ fontSize: 22, fontWeight: 500, marginBottom: "0.75rem" }}>
-        The honest assessment<br />couples avoid
+        Most couples avoid this<br />conversation. You don't have to.
       </h2>
       <p style={{ fontSize: 15, color: "#555", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-        15 questions. AI analysis built on 40 years of relationship science. Most people are surprised by what they find out.
+        Take 5 minutes. Get an honest picture of where your relationship stands — and what to do about it.
       </p>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: "1.5rem" }}>
