@@ -160,8 +160,8 @@ function HomeInner() {
               BASED ON GOTTMAN METHOD RESEARCH
             </div>
             <h1 style={{ fontSize: "clamp(32px, 6vw, 52px)", fontWeight: 800, color: "#1a1a1a", lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: "1.25rem" }}>
-              The honest assessment<br />
-              <span style={{ color: "#534ab7" }}>couples avoid</span>
+              Find out where your<br />
+              <span style={{ color: "#534ab7" }}>relationship really stands</span>
             </h1>
             <p style={{ fontSize: 18, color: "#666", lineHeight: 1.7, maxWidth: 520, margin: "0 auto 2rem", fontWeight: 400 }}>
               15 honest questions. AI analysis based on 40 years of relationship science. Your risk score in under 5 minutes.
@@ -304,8 +304,8 @@ function HomeInner() {
           {/* ── FINAL CTA ── */}
           <section style={{ maxWidth: 720, margin: "0 auto", padding: "5rem 1.5rem", textAlign: "center" }}>
             <h2 style={{ fontSize: 30, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em", marginBottom: "1rem" }}>
-              Find out where your relationship<br />
-              <span style={{ color: "#534ab7" }}>really stands.</span>
+              Most couples avoid this conversation.<br />
+              <span style={{ color: "#534ab7" }}>You don't have to.</span>
             </h2>
             <p style={{ fontSize: 16, color: "#777", marginBottom: "2rem", lineHeight: 1.7 }}>
               Take 5 minutes. Get an honest picture of where your relationship stands — and what to do about it.
