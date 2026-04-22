@@ -2,7 +2,7 @@
 
 An AI-powered relationship risk assessment tool built with **Next.js** and **Claude AI**. Uses the Gottman Method, attachment theory, and conflict research to analyze relationship health.
 
-## Features
+## Features 
 
 - 15-question evidence-based assessment (5 steps)
 - Secure server-side API route — your Anthropic API key is never exposed to the browser
