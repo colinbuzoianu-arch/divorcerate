@@ -14,9 +14,9 @@ type Screen = "landing" | "start" | "quiz" | "loading" | "result" | "error";
 /* ─── Landing sections ─────────────────────────────────────────────── */
 
 const stats = [
-  { value: "39%",   label: "of US marriages end in divorce" },
-  { value: "~$15k", label: "average cost of a divorce" },
-  { value: "2.4yrs",label: "average time couples wait before addressing problems" },
+  { value: "Most couples", label: "wait years before talking about what's actually wrong" },
+  { value: "1 in 3",       label: "people in relationships feel more lonely than when they were single" },
+  { value: "The #1 sign",  label: "of a relationship in trouble isn't conflict — it's silence" },
 ];
 
 const steps_how = [
@@ -189,9 +189,9 @@ function HomeInner() {
           <section style={{ background: "#fff", borderTop: "1px solid #efefed", borderBottom: "1px solid #efefed" }}>
             <div style={{ maxWidth: 720, margin: "0 auto", padding: "2rem 1.5rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "1rem", textAlign: "center" }}>
               {stats.map((s) => (
-                <div key={s.value}>
-                  <div style={{ fontSize: 28, fontWeight: 800, color: "#534ab7", letterSpacing: "-0.03em", marginBottom: 4 }}>{s.value}</div>
-                  <div style={{ fontSize: 12, color: "#888", lineHeight: 1.5 }}>{s.label}</div>
+                <div key={s.value} style={{ padding: "0.5rem 0" }}>
+                  <div style={{ fontSize: s.value.length > 6 ? 17 : 28, fontWeight: 800, color: "#534ab7", letterSpacing: "-0.02em", marginBottom: 6, lineHeight: 1.2 }}>{s.value}</div>
+                  <div style={{ fontSize: 13, color: "#777", lineHeight: 1.6 }}>{s.label}</div>
                 </div>
               ))}
             </div>
