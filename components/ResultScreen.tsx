@@ -155,7 +155,17 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
         <div style={{ background: "#fcebeb", border: "1px solid #f0c0c0", borderRadius: 14, padding: "1rem" }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: "#a32d2d", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Biggest risk</p>
           <p style={{ fontSize: 14, fontWeight: 700, color: "#501313", marginBottom: 6, letterSpacing: "-0.01em" }}>{result.biggestRisk}</p>
-          <p style={{ fontSize: 12, color: "#a32d2d", lineHeight: 1.65 }}>{result.biggestRiskDetail}</p>
+          {/* Detail blurred — unlocked with full report */}
+          <div style={{ position: "relative" }}>
+            <p style={{ fontSize: 12, color: "#a32d2d", lineHeight: 1.65, filter: "blur(4px)", userSelect: "none", pointerEvents: "none" }}>
+              {result.biggestRiskDetail}
+            </p>
+            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: "#a32d2d", background: "#fcebeb", padding: "3px 10px", borderRadius: 20, border: "1px solid #f0c0c0", whiteSpace: "nowrap" }}>
+                🔒 Unlock to see why
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -264,13 +274,14 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
 function PaywallGate({ onUnlock, riskLevel, color }: { onUnlock: () => void; riskLevel: string; color: string }) {
   const [loading, setLoading] = useState(false);
   const lockedItems = [
-    "Full risk & protective factor breakdown",
-    "3 personalised, named action steps",
-    "Overall urgency verdict",
+    "Why your biggest risk is happening — and how to address it",
+    "Complete factor breakdown with severity weighting",
+    "3 specific, named action steps for your pattern",
+    "Overall urgency verdict with clear next steps",
     "Shareable result card",
   ];
   return (
-    <div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid #efefed" }}>
+    <div style={{ borderRadius: 16, overflow: "hidden", border: `1px solid ${color}33` }}>
       <div style={{ position: "relative" }}>
         <div style={{ filter: "blur(4px)", pointerEvents: "none", padding: "1.25rem 1.5rem", background: "#fafaf8", userSelect: "none" }}>
           <p style={{ fontSize: 11, fontWeight: 600, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Full breakdown</p>
@@ -279,7 +290,7 @@ function PaywallGate({ onUnlock, riskLevel, color }: { onUnlock: () => void; ris
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: i % 2 === 0 ? "#1d9e75" : "#e24b4a", marginTop: 5, flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
                 <div style={{ height: 11, background: "#e8e8e5", borderRadius: 4, marginBottom: 7, width: "40%" }} />
-                <div style={{ height: 9,  background: "#f0efed", borderRadius: 4, width: "80%" }} />
+                <div style={{ height: 9, background: "#f0efed", borderRadius: 4, width: "80%" }} />
               </div>
             </div>
           ))}
@@ -287,16 +298,16 @@ function PaywallGate({ onUnlock, riskLevel, color }: { onUnlock: () => void; ris
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.88) 45%, rgba(255,255,255,0.99) 100%)" }} />
       </div>
       <div style={{ background: "#fff", padding: "1.5rem", borderTop: "1px solid #f5f5f3" }}>
-        <p style={{ fontSize: 17, fontWeight: 700, color: "#1a1a1a", textAlign: "center", marginBottom: 6, letterSpacing: "-0.01em" }}>
-          Unlock your full report
+        <p style={{ fontSize: 18, fontWeight: 800, color: "#1a1a1a", textAlign: "center", marginBottom: 6, letterSpacing: "-0.02em", lineHeight: 1.3 }}>
+          Understand what's driving this
         </p>
-        <p style={{ fontSize: 13, color: "#888", textAlign: "center", marginBottom: "1.25rem", lineHeight: 1.65 }}>
-          Your {riskLevel.toLowerCase()} risk result comes with a detailed breakdown of every factor and a personalised action plan.
+        <p style={{ fontSize: 13, color: "#777", textAlign: "center", marginBottom: "1.25rem", lineHeight: 1.7 }}>
+          Your {riskLevel.toLowerCase()} risk result comes with a complete explanation of every factor — and a specific plan for what to do about it.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: "1.25rem" }}>
           {lockedItems.map((item) => (
-            <div key={item} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "#444" }}>
-              <span style={{ width: 20, height: 20, borderRadius: "50%", background: "#e1f5ee", color: "#1d9e75", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>✓</span>
+            <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "#444" }}>
+              <span style={{ width: 20, height: 20, borderRadius: "50%", background: "#e1f5ee", color: "#1d9e75", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
               {item}
             </div>
           ))}
@@ -304,16 +315,24 @@ function PaywallGate({ onUnlock, riskLevel, color }: { onUnlock: () => void; ris
         <button
           onClick={() => { setLoading(true); onUnlock(); }}
           disabled={loading}
-          style={{ width: "100%", background: loading ? "#afa9ec" : "#534ab7", color: "#fff", border: "none", borderRadius: 14, padding: "15px 20px", fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", transition: "background 0.15s, transform 0.1s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, letterSpacing: "0.01em" }}
+          style={{ width: "100%", background: loading ? "#afa9ec" : "#534ab7", color: "#fff", border: "none", borderRadius: 14, padding: "16px 20px", fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", transition: "background 0.15s, transform 0.1s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, letterSpacing: "0.01em" }}
           onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "scale(0.98)"; }}
           onMouseUp={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
         >
           {loading
             ? <><span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />Opening checkout…</>
-            : "Unlock full report — $4.99"
+            : "See what's driving this — $4.99"
           }
         </button>
-        <p style={{ fontSize: 11, color: "#ccc", textAlign: "center", marginTop: 10 }}>One-time payment · Secure checkout via Stripe</p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 12 }}>
+          <span style={{ fontSize: 11, color: "#bbb", display: "flex", alignItems: "center", gap: 4 }}>
+            <span>🔒</span> Secure checkout
+          </span>
+          <span style={{ fontSize: 11, color: "#bbb" }}>·</span>
+          <span style={{ fontSize: 11, color: "#bbb", display: "flex", alignItems: "center", gap: 4 }}>
+            <span>↩</span> 7-day money-back guarantee
+          </span>
+        </div>
       </div>
     </div>
   );
