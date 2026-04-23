@@ -39,6 +39,7 @@ export const metadata: Metadata = {
 };
 
 const GA_MEASUREMENT_ID = "G-K9FVMX9M15";
+const GOOGLE_ADS_ID     = "GT-5RFHKQ3W";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${GA_MEASUREMENT_ID}');
+            gtag('config', '${GOOGLE_ADS_ID}');
           `}
         </Script>
       </head>
