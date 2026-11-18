@@ -1,6 +1,5 @@
 import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
-import { kvConfigured } from "@/lib/kv";
+import { kvConfigured, getRedis } from "@/lib/kv";
 
 /**
  * IP rate limiting for the paid /api/analyze endpoint (Phase 1.3).
@@ -13,7 +12,7 @@ let _daily: Ratelimit | null = null;
 
 function limiters(): { hourly: Ratelimit; daily: Ratelimit } {
   if (!_hourly || !_daily) {
-    const redis = Redis.fromEnv();
+    const redis = getRedis();
     _hourly = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(5, "1 h"), prefix: "rl:analyze:h", analytics: false });
     _daily = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(20, "24 h"), prefix: "rl:analyze:d", analytics: false });
   }
