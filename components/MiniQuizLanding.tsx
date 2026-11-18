@@ -4,6 +4,7 @@ import MiniQuiz from "@/components/MiniQuiz";
 import BrandMark from "@/components/layout/BrandMark";
 import JsonLd from "@/components/JsonLd";
 import { faqPageLd } from "@/lib/seo";
+import { MINI_QUIZZES } from "@/lib/quizzes/registry";
 
 export interface LandingSection { heading: string; body: string[]; }
 export interface LandingFaq { q: string; a: string; }
@@ -87,6 +88,19 @@ export default function MiniQuizLanding({
           <Link href="/relationship-test" style={{ background: "var(--violet-deep)", color: "#fff", borderRadius: 999, padding: "14px 30px", fontSize: 15, fontWeight: 600, textDecoration: "none", display: "inline-block" }}>
             Take the full relationship test →
           </Link>
+        </div>
+
+        {/* More free quizzes */}
+        <div style={{ marginTop: "2.5rem" }}>
+          <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: 16 }}>More free quizzes</p>
+          <div style={{ display: "grid", gap: 10 }}>
+            {MINI_QUIZZES.filter((qz) => !qz.href.includes(config.slug)).map((qz) => (
+              <Link key={qz.href} href={qz.href} style={{ textDecoration: "none", background: "#fff", border: "1px solid var(--line-light)", borderRadius: 16, padding: "1rem 1.25rem", display: "block" }}>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 20, color: "var(--text)", marginBottom: 2 }}>{qz.title}</p>
+                <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.5 }}>{qz.blurb}</p>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </main>

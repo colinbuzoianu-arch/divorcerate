@@ -9,6 +9,7 @@ import NotifyForm from "@/components/landing/NotifyForm";
 import JsonLd from "@/components/JsonLd";
 import { faqPageLd } from "@/lib/seo";
 import { getAllPosts } from "@/lib/posts";
+import { MINI_QUIZZES } from "@/lib/quizzes/registry";
 
 /**
  * Copy that promises the Phase 3 deterministic 0–100 Health Score / bands /
@@ -226,6 +227,25 @@ export default function Home() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* MORE FREE QUIZZES */}
+      <section className="paper sec" id="quizzes" style={{ paddingTop: 40 }}>
+        <div className="wrap">
+          <div className="sec-head reveal">
+            <h2 className="h2">More free <span className="it">quizzes.</span></h2>
+            <p className="lede">Quick, private two-minute quizzes on specific questions. Each ends with a path to the full test.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+            {MINI_QUIZZES.map((qz) => (
+              <Link key={qz.href} href={qz.href} style={{ textDecoration: "none", color: "var(--text)", border: "1px solid var(--line-light)", borderRadius: 24, padding: "1.5rem", background: "var(--paper)", display: "block" }}>
+                <h3 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 26, lineHeight: 1.1, marginBottom: 8 }}>{qz.title}</h3>
+                <p style={{ color: "var(--text-2)", fontSize: 15, lineHeight: 1.6 }}>{qz.blurb}</p>
+                <span className="mono" style={{ display: "inline-block", marginTop: 12, color: "var(--violet-deep)" }}>Take the quiz →</span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
