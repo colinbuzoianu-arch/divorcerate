@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relationship Test: Free, Private Relationship Health Check | CoupleIQ</title>
+<meta name="description" content="A free, private 5-minute relationship test. See where your relationship stands across eight dimensions, discover your relationship pattern, and get clear next steps.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<style>
+:root{
+  --ink:#0C0A14; --ink-2:#14101E; --ink-3:#1D1729;
+  --paper:#F3EEE6; --paper-2:#EAE3D8; --text:#1A1622; --text-2:#5A5463;
+  --on-dark:#F3EEE6; --on-dark-2:#A8A2B3; --line-dark:rgba(243,238,230,.12); --line-light:rgba(26,22,34,.14);
+  --violet:#8B7CFF; --violet-deep:#4B3FB0; --ember:#FF9466; --ember-deep:#B4461C; --blush:#F6C1CF;
+  --serif:"Instrument Serif", "Times New Roman", serif;
+  --sans:"Geist", "Helvetica Neue", Arial, sans-serif;
+  --mono:"Geist Mono", ui-monospace, Menlo, monospace;
+}
+body{margin:0}
+.cq{background:var(--ink);color:var(--on-dark);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip;position:relative}
+.cq *{box-sizing:border-box}
+.cq a{color:inherit}
+.cq h1,.cq h2,.cq h3,.cq p{margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:var(--serif);font-weight:400}
+.it{font-style:italic}
+.grad{background:linear-gradient(100deg,var(--violet) 0%,var(--blush) 50%,var(--ember) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* grain */
+.grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60;opacity:.07;mix-blend-mode:overlay}
+
+/* nav */
+.nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;width:min(1200px,calc(100% - 32px));display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 10px 10px 20px;border-radius:999px;background:rgba(12,10,20,.55);border:1px solid var(--line-dark);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.mark{position:relative;width:30px;height:22px;flex:none}
+.mark span{position:absolute;top:0;width:22px;height:22px;border-radius:50%;mix-blend-mode:screen}
+.mark span:first-child{left:0;background:var(--violet)}
+.mark span:last-child{right:0;background:var(--ember)}
+.word{font-family:var(--serif);font-size:25px;line-height:1;letter-spacing:-.01em}
+.word b{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.08em;margin-left:3px;padding:3px 6px;border:1px solid var(--line-dark);border-radius:6px;vertical-align:4px}
+.nav-links{display:flex;gap:28px;font-size:14px;color:var(--on-dark-2)}
+.nav-links a{text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--on-dark)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 24px;border-radius:999px;font-family:var(--sans);font-size:15px;font-weight:500;text-decoration:none;cursor:pointer;border:0;transition:transform .2s ease,box-shadow .3s ease,background .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn-light{background:var(--on-dark);color:var(--ink)}
+.btn-light:hover{box-shadow:0 0 0 6px rgba(139,124,255,.18),0 10px 40px rgba(255,148,102,.25)}
+.btn-ghost{background:transparent;color:var(--on-dark);border:1px solid var(--line-dark)}
+.btn-ghost:hover{border-color:rgba(243,238,230,.4)}
+.btn-dark{background:var(--ink);color:var(--paper)}
+.btn-sm{min-height:44px;padding:0 18px;font-size:14px}
+.arrow{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6}
+
+/* hero */
+.hero{position:relative;min-height:920px;padding:180px 0 120px;overflow:hidden;isolation:isolate}
+.aurora{position:absolute;inset:-20%;z-index:-2;filter:blur(90px);opacity:.75}
+.aurora i{position:absolute;border-radius:50%;display:block}
+.aurora i:nth-child(1){width:46vw;height:46vw;left:8%;top:30%;background:radial-gradient(circle,#3B2E9A 0%,transparent 65%);animation:drift1 22s ease-in-out infinite alternate}
+.aurora i:nth-child(2){width:40vw;height:40vw;right:6%;top:42%;background:radial-gradient(circle,#7A2E3A 0%,transparent 65%);animation:drift2 26s ease-in-out infinite alternate}
+.aurora i:nth-child(3){width:30vw;height:30vw;left:42%;top:12%;background:radial-gradient(circle,#2A1F55 0%,transparent 70%);animation:drift1 30s ease-in-out infinite alternate-reverse}
+@keyframes drift1{to{transform:translate(8%,-6%) scale(1.12)}}
+@keyframes drift2{to{transform:translate(-10%,5%) scale(.92)}}
+#cq-threads{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.hero-vignette{position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 80% at 50% 0%,transparent 40%,var(--ink) 100%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--on-dark-2)}
+.eyebrow::before{content:"";width:28px;height:1px;background:linear-gradient(90deg,var(--violet),var(--ember))}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(64px,10.4vw,168px);line-height:.88;letter-spacing:-.035em;margin-top:28px}
+.hero h1 .l2{display:block;padding-left:.9em}
+.hero-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:48px;margin-top:56px}
+.hero-copy{max-width:470px}
+.hero-copy p{font-size:19px;line-height:1.6;color:var(--on-dark-2)}
+.hero-copy p strong{color:var(--on-dark);font-weight:500}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:24px;color:var(--on-dark-2)}
+.meta span{display:inline-flex;align-items:center;gap:8px}
+.meta span::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--violet)}
+.meta span:nth-child(2)::before{background:var(--blush)}
+.meta span:nth-child(3)::before{background:var(--ember)}
+
+/* preview card */
+.preview{width:340px;padding:22px;border-radius:24px;background:rgba(22,17,32,.45);border:1px solid var(--line-dark);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);box-shadow:0 40px 120px rgba(0,0,0,.5);transform:rotate(2.5deg);animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:rotate(1deg) translateY(-12px)}}
+.preview-top{display:flex;justify-content:space-between;align-items:center;color:var(--on-dark-2)}
+.pill{padding:4px 10px;border-radius:999px;border:1px solid var(--line-dark);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-2)}
+.score{display:flex;align-items:baseline;gap:10px;margin-top:18px}
+.score .n{font-family:var(--serif);font-size:84px;line-height:.9;letter-spacing:-.04em}
+.score .of{color:var(--on-dark-2);font-size:14px}
+.band{font-family:var(--serif);font-style:italic;font-size:30px;line-height:1;margin-top:6px;color:#F2C46D}
+.bars{display:grid;gap:10px;margin-top:20px}
+.bar{display:grid;grid-template-columns:110px 1fr 28px;gap:10px;align-items:center;font-size:12px;color:var(--on-dark-2)}
+.bar .t{height:4px;border-radius:4px;background:rgba(243,238,230,.1);overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--violet),var(--ember))}
+.bar b{font-weight:500;color:var(--on-dark);font-family:var(--mono);font-size:11px;text-align:right}
+.preview-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--line-dark);display:flex;justify-content:space-between;font-size:13px;color:var(--on-dark-2)}
+.preview-foot strong{color:var(--on-dark);font-weight:500}
+
+/* marquee */
+.marquee{border-top:1px solid var(--line-dark);border-bottom:1px solid var(--line-dark);overflow:hidden;padding:22px 0;background:var(--ink)}
+.marquee-track{display:flex;width:max-content;animation:scroll 40s linear infinite}
+.marquee-track span{font-family:var(--serif);font-style:italic;font-size:34px;line-height:1;padding:0 28px;white-space:nowrap;color:var(--on-dark)}
+.marquee-track span.dot{padding:0;display:inline-flex;align-items:center}
+.marquee-track span.dot::before{content:"";width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--ember))}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* paper sections */
+.paper{background:var(--paper);color:var(--text)}
+.paper .mono{color:var(--text-2)}
+.sec{padding:140px 0}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:72px}
+.h2{font-family:var(--serif);font-weight:400;font-size:clamp(44px,5.6vw,88px);line-height:.98;letter-spacing:-.025em;max-width:860px}
+.lede{max-width:400px;color:var(--text-2);font-size:17px}
+.ink .lede{color:var(--on-dark-2)}
+.ink{background:var(--ink);color:var(--on-dark)}
+.ink .mono{color:var(--on-dark-2)}
+
+/* steps */
+.steps{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:56px}
+.thread{position:absolute;left:0;top:34px;width:100%;height:120px;z-index:0;pointer-events:none}
+.thread path{fill:none;stroke-width:1.5;stroke-linecap:round}
+.thread .a{stroke:var(--violet-deep)}
+.thread .b{stroke:var(--ember-deep);stroke-dasharray:2 7}
+.step{position:relative;z-index:1}
+.step .num{font-family:var(--serif);font-style:italic;font-size:120px;line-height:.8;letter-spacing:-.04em;display:inline-block;background:var(--paper);padding-right:16px}
+.step h3{font-family:var(--serif);font-weight:400;font-size:36px;line-height:1.05;margin-top:36px;letter-spacing:-.01em}
+.step p{margin-top:14px;color:var(--text-2);max-width:330px}
+
+/* measure */
+.measure{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:72px;align-items:center}
+.radar-wrap{position:relative}
+.radar{width:100%;height:auto;display:block;overflow:visible}
+.radar .ring{fill:none;stroke:rgba(243,238,230,.10);stroke-width:1}
+.radar .axis{stroke:rgba(243,238,230,.10);stroke-width:1}
+.radar .you{fill:rgba(139,124,255,.22);stroke:var(--violet);stroke-width:2;stroke-linejoin:round}
+.radar .them{fill:rgba(255,148,102,.12);stroke:var(--ember);stroke-width:1.5;stroke-dasharray:5 6;stroke-linejoin:round}
+.radar .lbl{fill:var(--on-dark-2);font-family:var(--mono);font-size:11px;letter-spacing:.12em}
+.radar .mid{text-anchor:middle}
+.radar .end{text-anchor:end}
+.radar .dotv{fill:var(--violet)}
+.legend{display:flex;gap:24px;margin-top:16px;color:var(--on-dark-2);font-size:13px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend span::before{content:"";width:22px;height:0;border-top:2px solid var(--violet)}
+.legend span:last-child::before{border-top:2px dashed var(--ember)}
+.dims{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-dark)}
+.dims li{display:grid;grid-template-columns:48px 1fr;gap:12px;padding:18px 0;border-bottom:1px solid var(--line-dark);transition:padding .25s ease}
+.dims li:hover{padding-left:10px}
+.dims .k{font-family:var(--mono);font-size:12px;color:var(--on-dark-2);padding-top:6px}
+.dims h3{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.1}
+.dims p{color:var(--on-dark-2);font-size:15px;margin-top:2px}
+
+/* patterns */
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(300px,330px);gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 40px 28px;scrollbar-width:thin;scrollbar-color:rgba(243,238,230,.25) transparent}
+.pcard{scroll-snap-align:start;display:flex;flex-direction:column;border-radius:28px;background:var(--ink-2);border:1px solid var(--line-dark);overflow:hidden;text-decoration:none;color:var(--on-dark);transition:transform .35s ease,border-color .35s ease}
+.pcard:hover{transform:translateY(-6px);border-color:rgba(243,238,230,.28)}
+.art{position:relative;height:300px;overflow:hidden;background:radial-gradient(90% 70% at 50% 60%,#1F1830 0%,var(--ink-2) 70%)}
+.art .o{position:absolute;border-radius:50%;mix-blend-mode:screen;filter:blur(2px)}
+.art .v{background:radial-gradient(circle at 35% 35%,#C9C0FF 0%,var(--violet) 35%,rgba(139,124,255,0) 70%)}
+.art .e{background:radial-gradient(circle at 35% 35%,#FFD4BE 0%,var(--ember) 35%,rgba(255,148,102,0) 70%)}
+.art .o{width:150px;height:150px;top:75px}
+/* 1 validated: overlapping, breathing */
+.p1 .v{left:70px;animation:breathe 6s ease-in-out infinite}
+.p1 .e{left:110px;animation:breathe 6s ease-in-out infinite reverse}
+@keyframes breathe{50%{transform:scale(1.08)}}
+/* 2 volatile: collide */
+.p2 .v{left:40px;animation:clashL 2.4s cubic-bezier(.6,0,.4,1) infinite}
+.p2 .e{left:140px;animation:clashR 2.4s cubic-bezier(.6,0,.4,1) infinite}
+@keyframes clashL{0%,100%{transform:translateX(-10px)}45%{transform:translateX(52px) scale(1.06)}55%{transform:translateX(30px)}}
+@keyframes clashR{0%,100%{transform:translateX(10px)}45%{transform:translateX(-52px) scale(1.06)}55%{transform:translateX(-30px)}}
+/* 3 avoiders: apart, divider */
+.p3 .v{left:-10px;width:130px;height:130px;top:85px}
+.p3 .e{right:-10px;width:130px;height:130px;top:85px}
+.p3 .divider{position:absolute;left:50%;top:50px;bottom:50px;width:1px;background:linear-gradient(transparent,rgba(243,238,230,.45),transparent)}
+/* 4 pursuer-withdrawer */
+.p4 .e{left:20px;animation:pursue 5s ease-in-out infinite}
+.p4 .v{left:130px;animation:withdraw 5s ease-in-out infinite}
+@keyframes pursue{50%{transform:translateX(70px)}}
+@keyframes withdraw{50%{transform:translateX(60px) scale(.82)}}
+/* 5 drifting */
+.p5 .v{left:75px;animation:driftL 9s ease-in-out infinite alternate}
+.p5 .e{left:105px;animation:driftR 9s ease-in-out infinite alternate}
+@keyframes driftL{to{transform:translate(-70px,-30px) scale(.85);opacity:.7}}
+@keyframes driftR{to{transform:translate(70px,30px) scale(.85);opacity:.7}}
+/* 6 crisis-bonded */
+.p6 .v{left:62px;width:120px;height:120px;top:90px}
+.p6 .e{left:128px;width:120px;height:120px;top:90px}
+.p6 .ring{position:absolute;left:50%;top:50%;width:230px;height:230px;margin:-115px 0 0 -115px;border-radius:50%;border:1px dashed rgba(243,238,230,.4);animation:squeeze 4s ease-in-out infinite}
+@keyframes squeeze{50%{transform:scale(.9) rotate(20deg)}}
+/* 7 hostile-detached */
+.p7 .o{filter:none;width:70px;height:70px;top:115px;mix-blend-mode:normal;opacity:.85}
+.p7 .v{left:30px;background:#5D548F}
+.p7 .e{right:30px;background:#8F5B46}
+.p7 .gap{position:absolute;left:110px;right:110px;top:150px;height:1px;background:repeating-linear-gradient(90deg,rgba(243,238,230,.35) 0 4px,transparent 4px 10px)}
+.pbody{padding:22px 24px 26px;display:flex;flex-direction:column;gap:8px;flex:1}
+.pbody .mono{font-size:11px}
+.pbody h3{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.05}
+.pbody p{color:var(--on-dark-2);font-size:15px;flex:1}
+.pbody .more{display:inline-flex;align-items:center;gap:8px;font-size:14px;margin-top:10px;color:var(--on-dark)}
+
+/* spectrum */
+.spectrum{margin-top:8px}
+.spec-bar{height:120px;border-radius:24px;background:linear-gradient(90deg,#7A1F3D 0%,#D2475E 22%,#FF9466 44%,#F2C46D 64%,#9FD8B8 84%,#5FBFA0 100%);position:relative;overflow:hidden}
+.spec-bar::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(20% - 1px),rgba(243,238,230,.6) calc(20% - 1px) 20%)}
+.spec-marker{position:absolute;top:-14px;bottom:-14px;left:58%;width:2px;background:var(--text)}
+.spec-marker::after{content:"Example: 58";position:absolute;top:-30px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
+.spec-labels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin-top:28px}
+.spec-labels h3{font-family:var(--serif);font-weight:400;font-style:italic;font-size:30px;line-height:1.05}
+.spec-labels p{font-size:14px;color:var(--text-2);margin-top:6px}
+.spec-labels .mono{font-size:11px;display:block;margin-bottom:8px}
+.note{margin-top:56px;padding-top:24px;border-top:1px solid var(--line-light);display:flex;flex-wrap:wrap;gap:12px 40px;color:var(--text-2);font-size:15px}
+.note strong{color:var(--text);font-weight:500}
+
+/* offer */
+.offer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.tier{border-radius:32px;padding:44px;border:1px solid var(--line-light);background:var(--paper)}
+.tier.full{background:var(--ink);color:var(--on-dark);border-color:var(--ink);position:relative;overflow:hidden}
+.tier.full::before{content:"";position:absolute;width:420px;height:420px;right:-160px;top:-180px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,255,.45),transparent 65%);filter:blur(30px)}
+.tier.full::after{content:"";position:absolute;width:360px;height:360px;right:-40px;top:-120px;border-radius:50%;background:radial-gradient(circle,rgba(255,148,102,.35),transparent 65%);filter:blur(30px)}
+.tier > *{position:relative;z-index:1}
+.tier .price{font-family:var(--serif);font-size:72px;line-height:1;letter-spacing:-.03em;margin-top:20px}
+.tier .price small{font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--text-2);margin-left:8px}
+.tier.full .price small{color:var(--on-dark-2)}
+.tier ul{list-style:none;padding:0;margin:32px 0 36px;display:grid;gap:14px}
+.tier li{display:grid;grid-template-columns:22px 1fr;gap:12px;font-size:16px}
+.tier li svg{width:18px;height:18px;margin-top:4px;fill:none;stroke-width:1.8;stroke:var(--violet-deep)}
+.tier.full li svg{stroke:var(--ember)}
+.tier .mono{display:block}
+.tier.full .mono{color:var(--on-dark-2)}
+
+/* together */
+.together{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center}
+.venn{position:relative;height:440px}
+.venn .c{position:absolute;top:50%;width:300px;height:300px;margin-top:-150px;border-radius:50%;mix-blend-mode:screen}
+.venn .c1{left:calc(50% - 250px);background:radial-gradient(circle at 40% 40%,rgba(139,124,255,.9),rgba(139,124,255,.15) 70%);animation:nearL 8s ease-in-out infinite}
+.venn .c2{left:calc(50% - 50px);background:radial-gradient(circle at 60% 40%,rgba(255,148,102,.9),rgba(255,148,102,.15) 70%);animation:nearR 8s ease-in-out infinite}
+@keyframes nearL{50%{transform:translateX(26px)}}
+@keyframes nearR{50%{transform:translateX(-26px)}}
+.venn .tag{position:absolute;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--on-dark)}
+.venn .t1{left:calc(50% - 200px);top:50%;margin-top:-8px}
+.venn .t2{left:calc(50% + 120px);top:50%;margin-top:-8px}
+.venn .t3{left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--serif);font-style:italic;font-size:26px;letter-spacing:0;text-transform:none;color:var(--ink)}
+.soon{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid var(--line-dark);color:var(--on-dark-2)}
+.soon::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ember);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+.form{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;max-width:480px}
+.form label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.form input{flex:1 1 240px;min-height:52px;border-radius:999px;border:1px solid var(--line-dark);background:rgba(243,238,230,.05);color:var(--on-dark);padding:0 22px;font-family:var(--sans);font-size:15px}
+.form input::placeholder{color:var(--on-dark-2)}
+.form input:focus{outline:2px solid var(--violet);outline-offset:2px}
+
+/* honest */
+.honest{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.col{border-radius:28px;padding:40px;border:1px solid var(--line-light)}
+.col h3{font-family:var(--serif);font-weight:400;font-size:40px;line-height:1}
+.col ul{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:16px}
+.col li{padding-left:28px;position:relative;color:var(--text-2)}
+.col li strong{color:var(--text);font-weight:500}
+.col li::before{content:"";position:absolute;left:0;top:11px;width:14px;height:1.5px;background:var(--violet-deep)}
+.col.isnt li::before{background:var(--ember-deep)}
+.safety{margin-top:20px;border-radius:28px;padding:32px 40px;background:var(--paper-2);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}
+.safety p{max-width:720px;font-size:18px}
+.safety a{font-weight:500;text-underline-offset:4px;color:var(--violet-deep)}
+
+/* faq */
+.faq{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:64px}
+.faq details{border-bottom:1px solid var(--line-light)}
+.faq details:first-child{border-top:1px solid var(--line-light)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:26px 0;font-family:var(--serif);font-size:28px;line-height:1.15}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--sans);font-weight:300;font-size:28px;transition:transform .3s;flex:none}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 48px 28px 0;color:var(--text-2)}
+
+/* journal */
+.posts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.post{text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:18px}
+.cover{height:260px;border-radius:24px;overflow:hidden;position:relative;background:var(--ink)}
+.cover i{position:absolute;border-radius:50%;filter:blur(30px);display:block;transition:transform .8s ease}
+.post:hover .cover i{transform:scale(1.15)}
+.c1 i:nth-child(1){width:260px;height:260px;left:-40px;top:40px;background:var(--violet)}
+.c1 i:nth-child(2){width:200px;height:200px;right:-30px;top:-40px;background:var(--ember)}
+.c2 i:nth-child(1){width:300px;height:180px;left:20%;top:30%;background:#D2475E}
+.c2 i:nth-child(2){width:120px;height:120px;left:10%;top:10%;background:var(--violet)}
+.c3 i:nth-child(1){width:220px;height:220px;left:15%;top:25%;background:var(--blush)}
+.c3 i:nth-child(2){width:220px;height:220px;left:45%;top:15%;background:var(--violet-deep)}
+.cover .cl{position:absolute;left:20px;bottom:18px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--on-dark);z-index:1}
+.post h3{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.08}
+.post p{color:var(--text-2);font-size:15px}
+
+/* final */
+.final{position:relative;padding:180px 0 160px;text-align:center;overflow:hidden}
+.final svg{position:absolute;left:0;top:50%;width:100%;height:420px;transform:translateY(-50%);pointer-events:none}
+.final path{fill:none;stroke-width:1.6;stroke-linecap:round}
+.final .fa{stroke:var(--violet);stroke-dasharray:1400;stroke-dashoffset:1400;animation:drawin 4s ease forwards infinite alternate}
+.final .fb{stroke:var(--ember);stroke-dasharray:1400;stroke-dashoffset:1400;animation:drawin 4s ease .3s forwards infinite alternate}
+.final .fc{stroke:var(--blush);stroke-width:2.5;opacity:.9}
+@keyframes drawin{to{stroke-dashoffset:0}}
+.final h2{position:relative;font-family:var(--serif);font-weight:400;font-size:clamp(56px,8vw,128px);line-height:.92;letter-spacing:-.03em}
+.final .ctas{justify-content:center;position:relative}
+
+/* footer */
+.foot{border-top:1px solid var(--line-dark);padding:72px 0 40px;color:var(--on-dark-2);font-size:14px}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:40px}
+.foot h4{margin:0 0 16px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:400;color:var(--on-dark-2)}
+.foot ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.foot a{text-decoration:none;color:var(--on-dark)}
+.foot a:hover{color:var(--ember)}
+.foot-base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;margin-top:64px;padding-top:24px;border-top:1px solid var(--line-dark);font-size:13px}
+.foot .big{font-family:var(--serif);font-size:clamp(80px,17vw,260px);line-height:.8;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(243,238,230,.18);margin-top:56px;white-space:nowrap;overflow:hidden}
+
+/* reveal on scroll */
+@supports (animation-timeline: view()){
+  .reveal{animation:rise linear both;animation-timeline:view();animation-range:entry 0% cover 22%}
+  .thread path{stroke-dasharray:1200;animation:trace linear both;animation-timeline:view();animation-range:entry 10% cover 45%}
+  .thread .b{stroke-dasharray:2 7;animation:none}
+}
+@keyframes rise{from{opacity:0;transform:translateY(40px)}}
+@keyframes trace{from{stroke-dashoffset:1200}to{stroke-dashoffset:0}}
+
+@media (prefers-reduced-motion: reduce){
+  .cq *,.cq *::before,.cq *::after{animation:none !important;transition:none !important}
+  .final .fa,.final .fb{stroke-dashoffset:0}
+}
+
+/* responsive */
+@media (max-width: 960px){
+  .wrap{padding:0 22px}
+  .nav-links{display:none}
+  .hero{padding:140px 0 80px;min-height:0}
+  .hero h1 .l2{padding-left:0}
+  .preview{width:100%;max-width:360px;transform:none}
+  .steps,.measure,.offer,.together,.honest,.faq,.posts,.foot-grid{grid-template-columns:minmax(0,1fr)}
+  .thread{display:none}
+  .sec{padding:96px 0}
+  .spec-labels{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rail{padding:4px 22px 24px}
+  .venn{height:340px;transform:scale(.8)}
+  .tier,.col{padding:30px}
+  .faq details p{padding-right:0}
+}
+
+</style>
+</head>
+<body>
+<div class="cq">
+
+<svg class="grain" aria-hidden="true"><filter id="cqn"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"></feTurbulence></filter><rect width="100%" height="100%" filter="url(#cqn)"></rect></svg>
+
+<!-- NAV -->
+<header class="nav">
+  <a class="brand" href="/" aria-label="CoupleIQ home">
+    <span class="mark" aria-hidden="true"><span></span><span></span></span>
+    <span class="word">Couple<b>IQ</b></span>
+  </a>
+  <nav class="nav-links" aria-label="Main">
+    <a href="#how">How it works</a>
+    <a href="#patterns">Patterns</a>
+    <a href="#method">Method</a>
+    <a href="/blog">Journal</a>
+  </nav>
+  <a class="btn btn-light btn-sm" href="/relationship-test">Take the test</a>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <canvas id="cq-threads" aria-hidden="true"></canvas>
+  <div class="hero-vignette" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow mono">Stay or split · A free relationship test</p>
+    <h1>Two people.<span class="l2">One <span class="it grad">honest</span> picture.</span></h1>
+    <div class="hero-row">
+      <div class="hero-copy">
+        <p>Fifteen questions about how you talk, fight, repair and trust, turned into <strong>a clear picture of where your relationship stands</strong> and what to do next.</p>
+        <div class="ctas">
+          <a class="btn btn-light" href="/relationship-test">Take the free test <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <div class="meta mono"><span>15 questions</span><span>About 5 minutes</span><span>No account</span></div>
+      </div>
+
+      <aside class="preview" aria-label="Example result">
+        <div class="preview-top"><span class="mono">Your result</span><span class="pill">Example</span></div>
+        <div class="score"><span class="n">58</span><span class="of">/ 100 health score</span></div>
+        <p class="band">Amber Zone</p>
+        <div class="bars">
+          <div class="bar"><span>Repair</span><span class="t"><i style="width:48%"></i></span><b>48</b></div>
+          <div class="bar"><span>Friendship</span><span class="t"><i style="width:66%"></i></span><b>66</b></div>
+          <div class="bar"><span>Trust</span><span class="t"><i style="width:71%"></i></span><b>71</b></div>
+          <div class="bar"><span>Contempt</span><span class="t"><i style="width:82%"></i></span><b>82</b></div>
+        </div>
+        <div class="preview-foot"><span>Pattern</span><strong>Pursuer–Withdrawer</strong></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Communication</span><span class="dot"></span><span>Conflict &amp; repair</span><span class="dot"></span><span>Contempt</span><span class="dot"></span><span>Friendship</span><span class="dot"></span><span>Respect</span><span class="dot"></span><span>Trust</span><span class="dot"></span><span>Support</span><span class="dot"></span><span>Shared vision</span><span class="dot"></span>
+    <span>Communication</span><span class="dot"></span><span>Conflict &amp; repair</span><span class="dot"></span><span>Contempt</span><span class="dot"></span><span>Friendship</span><span class="dot"></span><span>Respect</span><span class="dot"></span><span>Trust</span><span class="dot"></span><span>Support</span><span class="dot"></span><span>Shared vision</span><span class="dot"></span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="paper sec" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="h2">The hard part isn’t the answer. It’s <span class="it">asking the question.</span></h2>
+      <p class="lede">CoupleIQ gives you a private, structured way to look at your relationship without a therapist’s office, an account or an argument.</p>
+    </div>
+    <div class="steps">
+      <svg class="thread" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+        <path class="a" d="M0 60 C 200 0, 300 120, 420 60 S 700 0, 820 60 S 1060 120, 1200 50"></path>
+        <path class="b" d="M0 70 C 180 120, 320 10, 430 70 S 680 120, 810 60 S 1080 0, 1200 70"></path>
+      </svg>
+      <article class="step reveal">
+        <span class="num">01</span>
+        <h3>Answer honestly</h3>
+        <p>Fifteen questions on communication, conflict, emotional connection, stress and trust. Think of your last real disagreement, not your best day.</p>
+      </article>
+      <article class="step reveal">
+        <span class="num">02</span>
+        <h3>See your pattern</h3>
+        <p>Your answers are scored across eight dimensions and matched to one of seven relationship patterns. Same answers, same score, every time.</p>
+      </article>
+      <article class="step reveal">
+        <span class="num">03</span>
+        <h3>Know what’s next</h3>
+        <p>A plain-language read of your strengths and your biggest risk, with concrete next steps. The full report goes deeper.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE MEASURE -->
+<section class="ink sec" id="method">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="h2">Eight things that <span class="it grad">quietly decide</span> how a relationship goes.</h2>
+      <p class="lede">Built on well-known themes from relationship research: the Four Horsemen, repair attempts, emotional friendship and attachment. Our scoring method is published in full.</p>
+    </div>
+    <div class="measure">
+      <div class="radar-wrap reveal">
+        <svg class="radar" viewBox="0 0 440 440" role="img" aria-label="Example radar chart comparing two partners across eight dimensions">
+          <polygon class="ring" points="220.0,177.5 250.1,189.9 262.5,220.0 250.1,250.1 220.0,262.5 189.9,250.1 177.5,220.0 189.9,189.9"></polygon>
+          <polygon class="ring" points="220.0,135.0 280.1,159.9 305.0,220.0 280.1,280.1 220.0,305.0 159.9,280.1 135.0,220.0 159.9,159.9"></polygon>
+          <polygon class="ring" points="220.0,92.5 310.2,129.8 347.5,220.0 310.2,310.2 220.0,347.5 129.8,310.2 92.5,220.0 129.8,129.8"></polygon>
+          <polygon class="ring" points="220.0,50.0 340.2,99.8 390.0,220.0 340.2,340.2 220.0,390.0 99.8,340.2 50.0,220.0 99.8,99.8"></polygon>
+          <line class="axis" x1="220" y1="220" x2="220" y2="50"></line>
+          <line class="axis" x1="220" y1="220" x2="340.2" y2="99.8"></line>
+          <line class="axis" x1="220" y1="220" x2="390" y2="220"></line>
+          <line class="axis" x1="220" y1="220" x2="340.2" y2="340.2"></line>
+          <line class="axis" x1="220" y1="220" x2="220" y2="390"></line>
+          <line class="axis" x1="220" y1="220" x2="99.8" y2="340.2"></line>
+          <line class="axis" x1="220" y1="220" x2="50" y2="220"></line>
+          <line class="axis" x1="220" y1="220" x2="99.8" y2="99.8"></line>
+          <polygon class="them" points="220.0,114.6 280.1,159.9 350.9,220.0 292.1,292.1 220.0,342.4 143.1,296.9 148.6,220.0 128.6,128.6"></polygon>
+          <polygon class="you" points="220.0,94.2 289.7,150.3 359.4,220.0 277.7,277.7 220.0,332.2 134.7,305.3 126.5,220.0 144.3,144.3"></polygon>
+          <text class="lbl mid" x="220" y="30">COMMUNICATION</text>
+          <text class="lbl" x="352" y="86">REPAIR</text>
+          <text class="lbl" x="400" y="224">CONTEMPT</text>
+          <text class="lbl" x="352" y="364">FRIENDSHIP</text>
+          <text class="lbl mid" x="220" y="414">RESPECT</text>
+          <text class="lbl end" x="90" y="364">TRUST</text>
+          <text class="lbl end" x="40" y="224">SUPPORT</text>
+          <text class="lbl end" x="90" y="86">VISION</text>
+        </svg>
+        <div class="legend"><span>You</span><span>Your partner (coming soon)</span></div>
+      </div>
+      <ol class="dims">
+        <li><span class="k">01</span><div><h3>Communication</h3><p>How you talk when it actually matters.</p></div></li>
+        <li><span class="k">02</span><div><h3>Conflict &amp; repair</h3><p>Not whether you fight, but how you find your way back.</p></div></li>
+        <li><span class="k">03</span><div><h3>Contempt</h3><p>Eye-rolls, sarcasm, dismissal. The quiet corrosive.</p></div></li>
+        <li><span class="k">04</span><div><h3>Friendship &amp; intimacy</h3><p>Feeling truly known, not just coexisting.</p></div></li>
+        <li><span class="k">05</span><div><h3>Respect</h3><p>Respected, not merely tolerated.</p></div></li>
+        <li><span class="k">06</span><div><h3>Trust</h3><p>Reliability, honesty and emotional safety.</p></div></li>
+        <li><span class="k">07</span><div><h3>Support &amp; stress</h3><p>Whether pressure pushes you together or apart.</p></div></li>
+        <li><span class="k">08</span><div><h3>Shared vision</h3><p>Whether you’re building toward the same future.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERNS -->
+<section class="ink sec" id="patterns" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="h2">Seven patterns. <span class="it">Which one are you?</span></h2>
+      <p class="lede">Every result names the dynamic you’re in, because a pattern you can name is a pattern you can change.</p>
+    </div>
+  </div>
+  <div class="rail">
+    <a class="pcard" href="/patterns/validated-couple"><div class="art p1" aria-hidden="true"><span class="o v"></span><span class="o e"></span></div><div class="pbody"><span class="mono">Pattern 01</span><h3>Validated Couple</h3><p>Calm disagreement, real respect and a strong friendship underneath.</p><span class="more">Read more <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></span></div></a>
+    <a class="pcard" href="/patterns/volatile-couple"><div class="art p2" aria-hidden="true"><span class="o v"></span><span class="o e"></span></div><div class="pbody"><span class="mono">Pattern 02</span><h3>Volatile Couple</h3><p>High heat, high passion, and fast, intense repair.</p><span class="more">Read more <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></span></div></a>
+    <a class="pcard" href="/patterns/conflict-avoiders"><div class="art p3" aria-hidden="true"><span class="o v"></span><span class="divider"></span><span class="o e"></span></div><div class="pbody"><span class="mono">Pattern 03</span><h3>Conflict Avoiders</h3><p>Peaceful on the surface, while problems go quietly underground.</p><span class="more">Read more <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></span></div></a>
+    <a class="pcard" href="/patterns/pursuer-withdrawer"><div class="art p4" aria-hidden="true"><span class="o e"></span><span class="o v"></span></div><div class="pbody"><span class="mono">Pattern 04</span><h3>Pursuer–Withdrawer</h3><p>One reaches for connection; the other pulls back to cope.</p><span class="more">Read more <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></span></div></a>
+    <a class="pcard" href="/patterns/drifting-couple"><div class="art p5" aria-hidden="true"><span class="o v"></span><span class="o e"></span></div><div class="pbody"><span class="mono">Pattern 05</span><h3>Drifting Couple</h3><p>Once close, now coexisting. The friendship fades without a fight.</p><span class="more">Read more <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></span></div></a>
+    <a class="pcard" href="/patterns/crisis-bonded"><div class="art p6" aria-hidden="true"><span class="ring"></span><span class="o v"></span><span class="o e"></span></div><div class="pbody"><span class="mono">Pattern 06</span><h3>Crisis-Bonded</h3><p>Held together by shared pressure more than shared closeness.</p><span class="more">Read more <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></span></div></a>
+    <a class="pcard" href="/patterns/hostile-detached"><div class="art p7" aria-hidden="true"><span class="o v"></span><span class="gap"></span><span class="o e"></span></div><div class="pbody"><span class="mono">Pattern 07</span><h3>Hostile–Detached</h3><p>Contempt present, distance growing. The pattern to take seriously.</p><span class="more">Read more <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></span></div></a>
+  </div>
+</section>
+
+<!-- SPECTRUM -->
+<section class="paper sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="h2">Where do you <span class="it">land?</span></h2>
+      <p class="lede">Your Relationship Health Score runs from 0 to 100 and places you in one of five bands, each with its own meaning and next steps.</p>
+    </div>
+    <div class="spectrum reveal">
+      <div class="spec-bar" aria-hidden="true"><span class="spec-marker"></span></div>
+      <div class="spec-labels">
+        <div><span class="mono">0–29</span><h3>Critical Point</h3><p>Serious strain. Patterns that compound, and where support helps most.</p></div>
+        <div><span class="mono">30–49</span><h3>Fault Line</h3><p>Several significant patterns worth addressing soon.</p></div>
+        <div><span class="mono">50–64</span><h3>Amber Zone</h3><p>Real strengths, real risks. Small changes matter most here.</p></div>
+        <div><span class="mono">65–79</span><h3>Stable Foundation</h3><p>Fundamentally sound, with a few things to watch.</p></div>
+        <div><span class="mono">80–100</span><h3>Solid Ground</h3><p>Strong protective factors. Keep doing what works.</p></div>
+      </div>
+    </div>
+    <div class="note"><span><strong>No guesswork.</strong> Your score is computed from your answers by a fixed, published method, not invented by AI.</span><span><strong>One perspective.</strong> It reflects how you see things. Your partner may see it differently.</span></div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="paper sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="h2">Start free. <span class="it">Go deeper</span> if you want to.</h2>
+    </div>
+    <div class="offer">
+      <div class="tier reveal">
+        <span class="mono">Free result</span>
+        <p class="price">$0</p>
+        <ul>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>Your Relationship Health Score and band</span></li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>Your relationship pattern</span></li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>Your biggest strength</span></li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>Your biggest risk</span></li>
+        </ul>
+        <a class="btn btn-dark" href="/relationship-test">Take the free test</a>
+      </div>
+      <div class="tier full reveal">
+        <span class="mono">Full report</span>
+        <p class="price">$4.99<small>one-time</small></p>
+        <ul>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>Everything in the free result</span></li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>All eight dimensions, explained for you</span></li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>Why your biggest risk is happening</span></li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>Three specific next steps for your pattern</span></li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9"></path></svg><span>A private link and a downloadable PDF</span></li>
+        </ul>
+        <a class="btn btn-light" href="/relationship-test">Start with the free test</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOGETHER -->
+<section class="ink sec">
+  <div class="wrap together">
+    <div class="venn reveal" aria-hidden="true">
+      <span class="c c1"></span><span class="c c2"></span>
+      <span class="tag t1">You</span><span class="tag t2">Them</span><span class="tag t3">us</span>
+    </div>
+    <div class="reveal">
+      <span class="soon mono">Coming soon</span>
+      <h2 class="h2" style="margin-top:24px">Take it separately. <span class="it grad">Compare</span> privately.</h2>
+      <p class="lede" style="margin-top:24px;max-width:460px">You and your partner answer on your own. CoupleIQ shows where you see things the same way and where you don’t. Nothing is shared unless both of you say yes.</p>
+      <form class="form" action="#" onsubmit="return false">
+        <label for="cq-email">Email address</label>
+        <input id="cq-email" type="email" placeholder="you@example.com" autocomplete="email">
+        <button class="btn btn-light" type="submit">Notify me</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- HONEST -->
+<section class="paper sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="h2">What this is, and <span class="it">what it isn’t.</span></h2>
+    </div>
+    <div class="honest">
+      <div class="col reveal">
+        <h3>It is</h3>
+        <ul>
+          <li><strong>A structured self-reflection</strong> that helps you see patterns you may already feel.</li>
+          <li><strong>Grounded in research themes</strong> such as the Four Horsemen, repair attempts and attachment.</li>
+          <li><strong>A starting point</strong> for a conversation with your partner or a professional.</li>
+        </ul>
+      </div>
+      <div class="col isnt reveal">
+        <h3>It isn’t</h3>
+        <ul>
+          <li><strong>A diagnosis or a prediction.</strong> No quiz can tell you whether you will break up.</li>
+          <li><strong>Therapy.</strong> It doesn’t replace a qualified couples therapist.</li>
+          <li><strong>A verdict on your partner.</strong> It is one perspective: yours.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="safety reveal">
+      <p>If you feel afraid of your partner or unsafe at home, a quiz is not what you need right now. Confidential help is available.</p>
+      <a href="/support-resources">Find support near you →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="paper sec" style="padding-top:0">
+  <div class="wrap faq">
+    <div class="reveal"><h2 class="h2">Questions, <span class="it">answered.</span></h2></div>
+    <div>
+      <details><summary>Is this scientifically validated?</summary><p>No, and we won’t pretend otherwise. The questions draw on well-established research themes, and the scoring method is published on our methodology page. It’s a tool for reflection, not a validated clinical instrument.</p></details>
+      <details><summary>What happens to my answers?</summary><p>They’re used only to create your result. We don’t sell data and you don’t need an account. Our privacy policy lists exactly what is stored, for how long, and which providers process it.</p></details>
+      <details><summary>Can we take it together?</summary><p>Yes. Take it separately and compare your results. Side-by-side couple comparison is coming soon, and the differences are often more revealing than the scores.</p></details>
+      <details><summary>Is it a replacement for couples therapy?</summary><p>No. Many people use their result to decide whether to seek a therapist, or to start that first session with something concrete.</p></details>
+      <details><summary>Why is the full report paid?</summary><p>The free result gives you the headline. The full report explains every dimension and gives you specific next steps. That’s the part that costs us to produce, and the part that helps you act.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNAL -->
+<section class="paper sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="h2">From the <span class="it">journal.</span></h2>
+      <a class="btn btn-dark btn-sm" href="/blog">All articles</a>
+    </div>
+    <div class="posts">
+      <a class="post reveal" href="/blog/should-i-break-up"><div class="cover c1" aria-hidden="true"><i></i><i></i><span class="cl">Deciding</span></div><h3>Should I break up? 7 signs your relationship may be over</h3><p>How to tell a rough patch from the end of the road.</p></a>
+      <a class="post reveal" href="/blog/signs-of-a-toxic-relationship"><div class="cover c2" aria-hidden="true"><i></i><i></i><span class="cl">Conflict</span></div><h3>10 signs you’re in a toxic relationship</h3><p>Some are loud. Some are quiet enough to feel normal.</p></a>
+      <a class="post reveal" href="/blog/what-is-the-gottman-method"><div class="cover c3" aria-hidden="true"><i></i><i></i><span class="cl">Research</span></div><h3>What is the Gottman Method?</h3><p>The research behind the questions in our test, in plain language.</p></a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <svg viewBox="0 0 1440 420" preserveAspectRatio="none" aria-hidden="true">
+    <path class="fa" d="M-20 60 C 300 60, 480 200, 720 210"></path>
+    <path class="fb" d="M-20 360 C 300 360, 480 220, 720 210"></path>
+    <path class="fc" d="M720 210 C 960 200, 1180 210, 1460 210"></path>
+  </svg>
+  <div class="wrap">
+    <p class="mono" style="color:var(--on-dark-2);position:relative">Five minutes · Free · Private</p>
+    <h2 style="margin-top:24px">The question has been<br>waiting. <span class="it grad">Ask it.</span></h2>
+    <div class="ctas" style="margin-top:44px"><a class="btn btn-light" href="/relationship-test">Take the free relationship test <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></a></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="/"><span class="mark" aria-hidden="true"><span></span><span></span></span><span class="word">Couple<b>IQ</b></span></a>
+        <p style="margin-top:16px;max-width:300px">An honest, private look at your relationship, at splitornot.com.</p>
+      </div>
+      <div><h4>Tests</h4><ul><li><a href="/relationship-test">Relationship test</a></li><li><a href="/should-i-break-up-quiz">Should I break up?</a></li><li><a href="/four-horsemen-quiz">Four Horsemen quiz</a></li><li><a href="/attachment-style-quiz">Attachment style quiz</a></li></ul></div>
+      <div><h4>Learn</h4><ul><li><a href="/patterns/pursuer-withdrawer">Relationship patterns</a></li><li><a href="/methodology">Methodology</a></li><li><a href="/blog">Journal</a></li><li><a href="/support-resources">Support resources</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="/about">About</a></li><li><a href="/legal">Privacy &amp; terms</a></li><li><a href="mailto:support.coupleiq@gmail.com">Contact</a></li></ul></div>
+    </div>
+    <div class="big" aria-hidden="true">Couple<span class="it">IQ</span></div>
+    <div class="foot-base"><span>© 2026 CoupleIQ · splitornot.com · Operated by Verumsell SRL</span><span>For self-reflection only. Not a substitute for professional help.</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+function cqThreads(cv) {
+  if (!cv || !cv.getContext) return function () {};
+  var ctx = cv.getContext('2d');
+  var host = cv.parentElement;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0, H = 0, raf = 0, last = 0, mx = -9999, tmx = -9999;
+  var strands = [
+    { c: '139,124,255', ph: 0 },
+    { c: '255,148,102', ph: Math.PI }
+  ];
+  function gauss() { var u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  function size() {
+    var r = cv.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  size();
+  var N = W < 700 ? 420 : 950;
+  var parts = strands.map(function () {
+    var a = [];
+    for (var i = 0; i < N; i++) a.push({ u: Math.random(), g: gauss(), s: 0.01 + Math.random() * 0.028, w: Math.random() * 6.283, z: 0.5 + Math.random() * 1.5 });
+    return a;
+  });
+  function env(u) { return 0.18 + 0.82 * Math.sin(Math.PI * Math.min(1, Math.max(0, u))); }
+  function yAt(u, t, ph) {
+    var x = u * W, amp = H * 0.15 * env(u);
+    if (mx > -1000) { var d = (x - mx) / 260; amp *= 1 - 0.88 * Math.exp(-d * d); }
+    return H * 0.70 + amp * Math.sin(u * Math.PI * 2.3 + t * 0.32 + ph) + H * 0.025 * Math.sin(u * 5 + t * 0.21);
+  }
+  function draw(now) {
+    var t = now / 1000, dt = last ? Math.min(0.05, t - last) : 0.016; last = t;
+    if (tmx < -1000) { mx = tmx; } else if (mx < -1000) { mx = tmx; } else { mx += (tmx - mx) * 0.06; }
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = reduce ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0.14)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    for (var s = 0; s < 2; s++) {
+      var st = strands[s], P = parts[s];
+      ctx.beginPath();
+      for (var k = 0; k <= 120; k++) { var u = k / 120, y = yAt(u, t, st.ph); if (k) ctx.lineTo(u * W, y); else ctx.moveTo(0, y); }
+      ctx.strokeStyle = 'rgba(' + st.c + ',0.07)'; ctx.lineWidth = 10; ctx.stroke();
+      ctx.strokeStyle = 'rgba(' + st.c + ',0.45)'; ctx.lineWidth = 1.1; ctx.stroke();
+      ctx.fillStyle = 'rgba(' + st.c + ',0.55)';
+      for (var i = 0; i < P.length; i++) {
+        var p = P[i];
+        if (!reduce) { p.u += p.s * dt; if (p.u > 1) p.u -= 1; }
+        var spread = 6 + 30 * env(p.u);
+        var y2 = yAt(p.u, t, st.ph) + p.g * spread * (0.65 + 0.35 * Math.sin(t * 0.9 + p.w));
+        ctx.fillRect(p.u * W, y2, p.z, p.z);
+      }
+    }
+    if (!reduce) raf = requestAnimationFrame(draw);
+  }
+  function move(e) { var r = cv.getBoundingClientRect(); tmx = e.clientX - r.left; }
+  function leave() { tmx = -9999; }
+  host.addEventListener('pointermove', move);
+  host.addEventListener('pointerleave', leave);
+  var ro = window.ResizeObserver ? new ResizeObserver(size) : null;
+  if (ro) ro.observe(cv); else window.addEventListener('resize', size);
+  raf = requestAnimationFrame(draw);
+  return function () {
+    cancelAnimationFrame(raf);
+    host.removeEventListener('pointermove', move);
+    host.removeEventListener('pointerleave', leave);
+    if (ro) ro.disconnect(); else window.removeEventListener('resize', size);
+  };
+}
+
+cqThreads(document.getElementById('cq-threads'));
+</script>
+</body>
+</html>
