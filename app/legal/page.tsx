@@ -50,6 +50,7 @@ export default function LegalPage() {
                 <li><strong>Payment information:</strong> If you purchase the full report, your payment is processed by Stripe. We never see or store your card details. Stripe may store payment data in accordance with their own privacy policy. We store a small flag marking a result as paid (also deleted after 30 days).</li>
                 <li><strong>Email address:</strong> If you email us at {CONTACT} we store your email to reply. If you choose to have your result emailed to you (optional), your email is handled by our email provider (Resend) to send that message and, only if you explicitly opt in, to receive follow-up emails you can unsubscribe from at any time. We do not add you to any mailing list without your explicit consent.</li>
                 <li><strong>Analytics &amp; advertising:</strong> With your consent, we use Google Analytics and the Google Ads tag to understand how people use the site and to measure advertising. These stay switched off until you accept via the cookie banner (see Cookies below).</li>
+                <li><strong>Optional feedback:</strong> If you answer the &quot;was this useful?&quot; prompt, we store your answer and any optional comment (plus whether you agreed we may quote it anonymously) to improve the product. It is stored without your name and auto-deleted after 180 days.</li>
               </ul>
             </SubSection>
 

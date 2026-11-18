@@ -65,7 +65,7 @@ export default function ResultView({
 
   return (
     <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #efefed", padding: "1.75rem", width: "100%", maxWidth: 620, margin: "0 auto", boxShadow: "0 2px 24px rgba(0,0,0,0.05)" }}>
-      <ResultScreen result={merged} isPaid={isPaid} generating={generating} onUnlock={handleUnlock} onRestart={handleRestart} />
+      <ResultScreen result={merged} isPaid={isPaid} generating={generating} resultId={resultId} onUnlock={handleUnlock} onRestart={handleRestart} />
     </div>
   );
 }

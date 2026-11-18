@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { email, result, mode, consent }: { email: string; result?: StoredResult; mode?: string; consent?: boolean } = body;
+    const { email, result, mode, consent, reminderConsent }: { email: string; result?: StoredResult; mode?: string; consent?: boolean; reminderConsent?: boolean } = body;
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
@@ -150,15 +150,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to send email. Please try again." }, { status: 502 });
     }
 
-    // Add to Resend contacts audience (best-effort — don't fail if this errors)
-    try {
-      await resend.contacts.create({
-        email,
-        unsubscribed: false,
-        audienceId:   process.env.RESEND_AUDIENCE_ID ?? "",
-      });
-    } catch (contactErr) {
-      console.warn("Could not add to contacts (audience not set up yet):", contactErr);
+    // Only add to the Resend audience (the re-check reminder list) with an
+    // explicit opt-in. Best-effort — don't fail the send if this errors.
+    if (reminderConsent) {
+      try {
+        await resend.contacts.create({
+          email,
+          unsubscribed: false,
+          audienceId: process.env.RESEND_AUDIENCE_ID ?? "",
+        });
+      } catch (contactErr) {
+        console.warn("Could not add to reminder audience:", contactErr);
+      }
     }
 
     return NextResponse.json({ success: true });

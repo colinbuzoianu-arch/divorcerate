@@ -1,4 +1,5 @@
 import { Redis } from "@upstash/redis";
+import { randomUUID } from "crypto";
 import type { StoredResult, Narrative } from "@/lib/types";
 
 /**
@@ -74,4 +75,10 @@ export async function markPaid(id: string): Promise<void> {
 export async function isPaid(id: string): Promise<boolean> {
   const v = await getRedis().get(paidKey(id));
   return v !== null && v !== undefined;
+}
+
+/** Store a post-result feedback entry (Phase 5.4), kept for 180 days. */
+export async function saveFeedback(entry: Record<string, unknown>): Promise<void> {
+  const id = randomUUID();
+  await getRedis().set(`feedback:${id}`, { ...entry, id, createdAt: Date.now() }, { ex: 60 * 60 * 24 * 180 });
 }

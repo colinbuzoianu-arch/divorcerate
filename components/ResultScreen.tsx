@@ -5,6 +5,8 @@ import type { StoredResult, FreeResult } from "@/lib/types";
 import { track } from "@/lib/analytics";
 import SafetyBlock from "@/components/SafetyBlock";
 import RadarChart from "@/components/RadarChart";
+import EmailCapture from "@/components/EmailCapture";
+import FeedbackPrompt from "@/components/FeedbackPrompt";
 
 const BAND_COLORS: Record<string, string> = {
   "Critical Point": "#C23A54",
@@ -26,11 +28,12 @@ interface Props {
   result: StoredResult | FreeResult;
   isPaid: boolean;
   generating?: boolean;
+  resultId?: string;
   onUnlock: () => void;
   onRestart: () => void;
 }
 
-export default function ResultScreen({ result, isPaid, generating = false, onUnlock, onRestart }: Props) {
+export default function ResultScreen({ result, isPaid, generating = false, resultId, onUnlock, onRestart }: Props) {
   const full = result as StoredResult;
   const color = BAND_COLORS[result.band] ?? "#4B3FB0";
   const narrative = isPaid ? full.narrative : undefined;
@@ -189,8 +192,21 @@ export default function ResultScreen({ result, isPaid, generating = false, onUnl
         </div>
       </div>
 
+      {/* RETENTION — email the result + invite your partner (Phase 5.1, 5.2) */}
+      <div className="reveal reveal-d6">
+        <EmailCapture result={result} />
+      </div>
+      <div className="reveal reveal-d7">
+        <PartnerInvite />
+      </div>
+
       <div className="reveal reveal-d7">
         <ShareButton band={result.band} score={result.healthScore} pattern={result.pattern} color={color} full={isPaid} />
+      </div>
+
+      {/* FEEDBACK (Phase 5.4) */}
+      <div className="reveal reveal-d8">
+        <FeedbackPrompt resultId={resultId} />
       </div>
 
       <button
@@ -247,6 +263,35 @@ function PaywallGate({ onUnlock, color, riskLabel }: { onUnlock: () => void; col
   );
 }
 
+/* ─── Partner invite (Phase 5.2) ──────────────────────────────────────── */
+
+function PartnerInvite() {
+  const [status, setStatus] = useState<"idle" | "copied" | "shared">("idle");
+
+  async function invite() {
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://splitornot.com";
+    const url = `${origin}/relationship-test?ref=partner&utm_source=partner_invite&utm_medium=result`;
+    const text = "I took this relationship test — take it separately and let's compare. It's free and private.";
+    track("share_click", { surface: "partner_invite" });
+    if (navigator.share) {
+      try { await navigator.share({ title: "Take the CoupleIQ relationship test", text, url }); setStatus("shared"); setTimeout(() => setStatus("idle"), 2500); return; } catch { /* fall through */ }
+    }
+    try { await navigator.clipboard.writeText(url); setStatus("copied"); setTimeout(() => setStatus("idle"), 2500); } catch { /* no-op */ }
+  }
+
+  return (
+    <div style={{ border: "1px solid #efefed", borderRadius: 16, padding: "1.25rem 1.5rem", background: "#fff", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+      <div>
+        <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginBottom: 2 }}>Invite your partner to take it</p>
+        <p style={{ fontSize: 13, color: "#777", lineHeight: 1.5, margin: 0 }}>Take it separately, then compare. (Private — they get their own result.)</p>
+      </div>
+      <button onClick={invite} style={{ background: "var(--violet-deep)", color: "#fff", border: "none", borderRadius: 999, padding: "11px 20px", fontSize: 14, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
+        {status === "copied" ? "Link copied!" : status === "shared" ? "Shared!" : "Invite partner"}
+      </button>
+    </div>
+  );
+}
+
 /* ─── Share ───────────────────────────────────────────────────────────── */
 
 function ShareButton({ band, score, pattern, color, full }: { band: string; score: number; pattern: string; color: string; full: boolean }) {
@@ -277,12 +322,16 @@ function ShareButton({ band, score, pattern, color, full }: { band: string; scor
     const canvas = drawCard();
     const blob = await new Promise<Blob>((resolve) => canvas.toBlob((b) => resolve(b!), "image/png"));
     const file = new File([blob], "my-coupleiq-result.png", { type: "image/png" });
-    const text = `I got '${band}' on CoupleIQ — a free, private relationship test. splitornot.com`;
+    // Share a link to the quiz (with UTM), not the private result page — the
+    // point is to get other people to take it (Phase 5.3).
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://splitornot.com";
+    const shareUrl = `${origin}/relationship-test?utm_source=share&utm_medium=result_card&utm_campaign=coupleiq`;
+    const text = `I got '${band}' on CoupleIQ — a free, private relationship test.`;
     if (navigator.canShare?.({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: "My CoupleIQ result", text }); setStatus("shared"); setTimeout(() => setStatus("idle"), 2500); return; } catch { /* fall through */ }
+      try { await navigator.share({ files: [file], title: "My CoupleIQ result", text, url: shareUrl }); setStatus("shared"); setTimeout(() => setStatus("idle"), 2500); return; } catch { /* fall through */ }
     }
     const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "my-coupleiq-result.png"; a.click(); URL.revokeObjectURL(url);
-    try { await navigator.clipboard.writeText(window.location.href); setStatus("copied"); } catch { setStatus("idle"); }
+    try { await navigator.clipboard.writeText(shareUrl); setStatus("copied"); } catch { setStatus("idle"); }
     setTimeout(() => setStatus("idle"), 2500);
   }
 
