@@ -43,7 +43,7 @@ function SuccessInner() {
             });
           }
           setStatus("success");
-          setTimeout(() => router.push(`/?result=${resultId}`), 1200);
+          setTimeout(() => router.push(`/r/${resultId}`), 1200);
           return;
         }
       } catch {
@@ -129,7 +129,7 @@ function SuccessInner() {
               )}
             </p>
             <button
-              onClick={() => router.push(resultId ? `/?result=${resultId}` : "/")}
+              onClick={() => router.push(resultId ? `/r/${resultId}` : "/")}
               style={{ background: "#534ab7", color: "#fff", border: "none", borderRadius: 10, padding: "12px 24px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}
             >
               {resultId ? "Open my report" : "Back to home"}

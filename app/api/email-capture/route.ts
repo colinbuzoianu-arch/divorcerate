@@ -187,10 +187,30 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { email, result }: { email: string; result: AnalysisResult } = body;
+    const { email, result, mode, consent }: { email: string; result?: AnalysisResult; mode?: string; consent?: boolean } = body;
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
+    }
+
+    // "notify" mode: a waitlist opt-in (e.g. the couple-comparison form). No
+    // report is sent; we just add the address to the Resend audience, and only
+    // with explicit consent (Phase 5 will build on this).
+    if (mode === "notify") {
+      if (!consent) {
+        return NextResponse.json({ error: "Please tick the box to opt in." }, { status: 400 });
+      }
+      try {
+        const resend = new Resend(resendKey);
+        await resend.contacts.create({
+          email,
+          unsubscribed: false,
+          audienceId: process.env.RESEND_AUDIENCE_ID ?? "",
+        });
+      } catch (contactErr) {
+        console.warn("Notify signup: could not add contact:", contactErr);
+      }
+      return NextResponse.json({ success: true });
     }
 
     if (!result || typeof result.probability !== "number") {

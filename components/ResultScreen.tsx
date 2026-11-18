@@ -255,7 +255,7 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
         <div>
           <p style={{ fontSize: 13, fontWeight: 600, color: "#444", marginBottom: 3 }}>Save your result</p>
           <p style={{ fontSize: 12, color: "#888", lineHeight: 1.6, margin: 0 }}>
-            Your result is stored in this browser tab only. Bookmark this page or share your score before closing — it won't be available if you come back later.
+            Bookmark this page to return to your result. It stays at this private link for 30 days, then is automatically deleted.
           </p>
         </div>
       </div>
