@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { buildPrompt } from "@/lib/prompt";
-import { AnalysisResult, toFreeResult, ResultResponse } from "@/lib/types";
+import { StoredResult, ResultResponse, ResultDimension, toFreeResult } from "@/lib/types";
+import { computeScore } from "@/lib/scoring";
+import { buildHeadlinePrompt } from "@/lib/prompt";
+import { callAnthropic } from "@/lib/anthropic";
 import { validateAnalyzeRequest } from "@/lib/validation";
 import { checkAnalyzeRateLimit } from "@/lib/ratelimit";
 import { saveResult, kvConfigured } from "@/lib/kv";
 import { detectSafetyFlag } from "@/lib/safety";
 
-// Use Node.js runtime — no timeout limit on Vercel hobby plan (vs 30s edge limit)
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
@@ -19,25 +20,12 @@ function clientIp(req: NextRequest): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "API key not configured. Add ANTHROPIC_API_KEY to your environment variables." },
-        { status: 500 }
-      );
-    }
-
-    // Server-side results require KV. Fail loudly rather than silently leaking
-    // a full report to the browser as the old flow did.
     if (!kvConfigured()) {
       console.error("KV (Upstash) not configured — refusing to generate a result.");
-      return NextResponse.json(
-        { error: "Result storage is not configured. Please try again later." },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: "Result storage is not configured. Please try again later." }, { status: 503 });
     }
 
-    // 1.3 — rate limit by IP (5/hour, 20/day).
+    // 1.3 — rate limit by IP.
     const rl = await checkAnalyzeRateLimit(clientIp(req));
     if (!rl.success) {
       return NextResponse.json(
@@ -46,120 +34,57 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1.3 — validate input (+ honeypot / timing bot check).
+    // 1.3 — validate input (+ honeypot / timing).
     let body: unknown;
-    try {
-      body = await req.json();
-    } catch {
-      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
-    }
+    try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid request body." }, { status: 400 }); }
     const validation = validateAnalyzeRequest(body);
-    if (!validation.ok) {
-      return NextResponse.json({ error: validation.error }, { status: validation.status });
-    }
+    if (!validation.ok) return NextResponse.json({ error: validation.error }, { status: validation.status });
     const answers = validation.answers;
 
-    // 1.4 — deterministic safety detection (never relies on the AI).
+    // 3.1 — deterministic scoring (no AI). 1.4 — safety flag.
     const safetyFlag = detectSafetyFlag(answers);
+    const score = computeScore(answers);
 
-    const prompt = buildPrompt(answers, safetyFlag);
-    const model = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5-20251001";
+    const dimByKey = (k: typeof score.biggestStrength): ResultDimension => {
+      const d = score.dimensions.find((x) => x.key === k)!;
+      return { key: d.key, label: d.label, score: d.score };
+    };
+    const strength = dimByKey(score.biggestStrength);
+    const risk = dimByKey(score.biggestRisk);
 
-    const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: 3000,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
+    const view = { band: score.band, pattern: score.pattern, strength, risk, dimensions: score.dimensions };
 
-    if (!anthropicRes.ok) {
-      const errText = await anthropicRes.text();
-      console.error("Anthropic API error:", anthropicRes.status, errText);
-      return NextResponse.json(
-        { error: `Analysis service error (${anthropicRes.status}). Please try again.` },
-        { status: 502 }
-      );
-    }
-
-    const data = await anthropicRes.json();
-
-    if (data.type === "error") {
-      console.error("Anthropic error body:", JSON.stringify(data));
-      return NextResponse.json(
-        { error: data.error?.message ?? "Analysis service returned an error." },
-        { status: 502 }
-      );
-    }
-
-    if (!data.content || !Array.isArray(data.content)) {
-      console.error("Unexpected Anthropic response shape:", JSON.stringify(data));
-      return NextResponse.json(
-        { error: "Unexpected response from analysis service." },
-        { status: 502 }
-      );
-    }
-
-    const rawText: string = data.content
-      .map((block: { type: string; text?: string }) => (block.type === "text" ? block.text ?? "" : ""))
-      .join("");
-
-    // Strip markdown fences if present
-    const clean = rawText.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
-
-    let result: AnalysisResult;
+    // 3.2 — exactly one short AI call for the free headline; fall back if it fails.
+    let headline: string;
     try {
-      result = JSON.parse(clean);
-    } catch {
-      console.error("JSON parse failed. Raw text length:", rawText.length);
-      return NextResponse.json(
-        { error: "Could not parse the analysis. Please try again." },
-        { status: 500 }
-      );
+      headline = (await callAnthropic(buildHeadlinePrompt(view, safetyFlag), 120)).trim().replace(/^["']|["']$/g, "");
+      if (!headline) throw new Error("empty headline");
+    } catch (err) {
+      console.warn("Headline generation failed, using fallback:", err instanceof Error ? err.message : err);
+      headline = `Your relationship lands in the ${score.band}, with ${strength.label.toLowerCase()} as your strongest area and ${risk.label.toLowerCase()} the one to focus on.`;
     }
 
-    // Validate required fields
-    if (
-      typeof result.probability !== "number" ||
-      !result.riskLevel ||
-      !result.headline ||
-      !result.summary ||
-      !Array.isArray(result.factors) ||
-      !Array.isArray(result.recommendations)
-    ) {
-      console.error("Validation failed. Result keys:", Object.keys(result));
-      return NextResponse.json(
-        { error: "Analysis was incomplete. Please try again." },
-        { status: 500 }
-      );
-    }
+    const result: StoredResult = {
+      healthScore: score.healthScore,
+      band: score.band,
+      pattern: score.pattern,
+      patternSlug: score.patternSlug,
+      dimensions: score.dimensions.map((d) => ({ key: d.key, label: d.label, score: d.score })),
+      strength,
+      risk,
+      headline,
+      safetyFlag,
+      createdAt: Date.now(),
+    };
 
-    // Safety flag is authoritative from our own code, not the model.
-    result.safetyFlag = safetyFlag;
-
-    // 1.2 — store the FULL result server-side under a random id (30-day TTL),
-    // and return ONLY the free fields to the browser. The paid content never
-    // leaves the server until the result is marked paid.
+    // 1.2 — store the full result; return only free fields + resultId.
     const resultId = randomUUID();
     await saveResult(resultId, result);
 
-    const payload: ResultResponse = {
-      resultId,
-      paid: false,
-      result: toFreeResult(result),
-    };
+    const payload: ResultResponse = { resultId, paid: false, result: toFreeResult(result) };
     return NextResponse.json(payload);
   } catch (err) {
-    console.error("Unhandled route error:", err);
-    return NextResponse.json(
-      { error: "Something went wrong. Please try again." },
-      { status: 500 }
-    );
+    console.error("Unhandled analyze error:", err);
+    return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
   }
 }

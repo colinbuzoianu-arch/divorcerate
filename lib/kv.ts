@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis";
-import type { AnalysisResult } from "@/lib/types";
+import type { StoredResult, Narrative } from "@/lib/types";
 
 /**
  * Upstash Redis helpers for Phase 1.2 (server-side results + paywall).
@@ -30,15 +30,26 @@ export function kvConfigured(): boolean {
 
 const resultKey = (id: string) => `result:${id}`;
 const paidKey = (id: string) => `paid:${id}`;
+const narrativeKey = (id: string) => `narrative:${id}`;
 
-/** Store the full analysis under a random id, with a 30-day TTL. */
-export async function saveResult(id: string, result: AnalysisResult): Promise<void> {
+/** Store the computed result under a random id, with a 30-day TTL. */
+export async function saveResult(id: string, result: StoredResult): Promise<void> {
   await redis().set(resultKey(id), result, { ex: TTL_SECONDS });
 }
 
-/** Fetch the full stored analysis, or null if missing/expired. */
-export async function getResult(id: string): Promise<AnalysisResult | null> {
-  return await redis().get<AnalysisResult>(resultKey(id));
+/** Fetch the stored result, or null if missing/expired. */
+export async function getResult(id: string): Promise<StoredResult | null> {
+  return await redis().get<StoredResult>(resultKey(id));
+}
+
+/** Fetch the cached paid narrative, or null if not generated yet. */
+export async function getNarrative(id: string): Promise<Narrative | null> {
+  return await redis().get<Narrative>(narrativeKey(id));
+}
+
+/** Cache the paid narrative (generated once, then reused). */
+export async function saveNarrative(id: string, narrative: Narrative): Promise<void> {
+  await redis().set(narrativeKey(id), narrative, { ex: TTL_SECONDS });
 }
 
 /** Mark a result as paid (called from the verified Stripe webhook). */

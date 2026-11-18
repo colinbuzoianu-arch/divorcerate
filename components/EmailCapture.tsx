@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { AnalysisResult } from "@/lib/types";
+import type { StoredResult } from "@/lib/types";
 import { track } from "@/lib/analytics";
 
 interface Props {
-  result: AnalysisResult;
+  result: StoredResult;
 }
 
 export default function EmailCapture({ result }: Props) {

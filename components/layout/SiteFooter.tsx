@@ -27,6 +27,7 @@ export default function SiteFooter() {
           <div>
             <h4>Learn</h4>
             <ul>
+              <li><Link href="/methodology">Methodology</Link></li>
               <li><Link href="/blog">Journal</Link></li>
               <li><Link href="/support-resources">Support resources</Link></li>
             </ul>

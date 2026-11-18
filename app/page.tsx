@@ -15,7 +15,7 @@ import { getAllPosts } from "@/lib/posts";
  * "same answers, same score" must not ship before Phase 3. Flip to true when
  * Phase 3 (scoring engine + /methodology) lands. See design/README.md.
  */
-const SHOW_PHASE3_COPY = false;
+const SHOW_PHASE3_COPY = true;
 
 export const metadata: Metadata = {
   title: "Relationship Test: Free, Private Relationship Health Check | CoupleIQ",
@@ -167,7 +167,7 @@ export default function Home() {
         <div className="wrap">
           <div className="sec-head reveal">
             <h2 className="h2">Eight things that <span className="it grad">quietly decide</span> how a relationship goes.</h2>
-            <p className="lede">Built on well-known themes from relationship research: the Four Horsemen, repair attempts, emotional friendship and attachment.</p>
+            <p className="lede">Built on well-known themes from relationship research: the Four Horsemen, repair attempts, emotional friendship and attachment. <Link href="/methodology" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: 3 }}>Our scoring method is published in full.</Link></p>
           </div>
           <div className="measure">
             <div className="radar-wrap reveal">
@@ -262,7 +262,7 @@ export default function Home() {
               <span className="mono">Free result</span>
               <p className="price">$0</p>
               <ul>
-                <li>{CHECK}<span>Where your relationship stands</span></li>
+                <li>{CHECK}<span>Your Relationship Health Score and band</span></li>
                 <li>{CHECK}<span>Your relationship pattern</span></li>
                 <li>{CHECK}<span>Your biggest strength</span></li>
                 <li>{CHECK}<span>Your biggest risk</span></li>

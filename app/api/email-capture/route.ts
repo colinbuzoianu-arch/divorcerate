@@ -1,64 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { AnalysisResult } from "@/lib/types";
+import type { StoredResult } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const riskColors: Record<string, string> = {
-  Low: "#1d9e75",
-  Moderate: "#ba7517",
-  Elevated: "#d85a30",
-  High: "#a32d2d",
+const BAND_COLOR: Record<string, string> = {
+  "Critical Point": "#C23A54",
+  "Fault Line": "#C85A2A",
+  "Amber Zone": "#B98900",
+  "Stable Foundation": "#2E8B63",
+  "Solid Ground": "#1E7A58",
 };
 
-const riskBg: Record<string, string> = {
-  Low: "#e1f5ee",
-  Moderate: "#faeeda",
-  Elevated: "#faece7",
-  High: "#fcebeb",
-};
+function buildEmailHtml(result: StoredResult): string {
+  const color = BAND_COLOR[result.band] ?? "#4B3FB0";
 
-function buildEmailHtml(result: AnalysisResult): string {
-  const color  = riskColors[result.riskLevel] ?? "#4B3FB0";
-  const bg     = riskBg[result.riskLevel]     ?? "#ece9fb";
-  const vsAvg  = result.probability - (result.nationalAverage ?? 42);
-  const vsText = vsAvg > 0 ? `+${vsAvg}%` : `${vsAvg}%`;
-
-  const factorRows = result.factors.map((f) => `
+  const dimRows = result.dimensions.map((d) => `
     <tr>
-      <td style="padding:10px 0;border-bottom:1px solid #f5f5f3;vertical-align:top;">
-        <table width="100%" cellpadding="0" cellspacing="0">
-          <tr>
-            <td width="14" style="vertical-align:top;padding-top:3px;">
-              <div style="width:8px;height:8px;border-radius:50%;background:${f.positive ? "#1d9e75" : "#e24b4a"};margin-top:2px;"></div>
-            </td>
-            <td style="padding-left:10px;">
-              <span style="font-size:13px;font-weight:600;color:#1a1a1a;">${f.label}</span>
-              ${!f.positive && f.weight !== "moderate" ? `<span style="font-size:10px;font-weight:600;color:${f.weight === "critical" ? "#a32d2d" : "#d85a30"};background:${f.weight === "critical" ? "#fcebeb" : "#faece7"};padding:2px 7px;border-radius:20px;margin-left:6px;">${f.weight.charAt(0).toUpperCase() + f.weight.slice(1)}</span>` : ""}
-              <p style="font-size:13px;color:#666;margin:4px 0 0;line-height:1.55;">${f.detail}</p>
-            </td>
-          </tr>
-        </table>
-      </td>
+      <td style="padding:6px 0;font-size:13px;color:#555;">${d.label}</td>
+      <td style="padding:6px 0;font-size:13px;color:#1a1a1a;font-weight:600;text-align:right;">${d.score}</td>
     </tr>`).join("");
 
-  const recRows = result.recommendations.map((r, i) => `
-    <tr>
-      <td style="padding:12px 0;border-bottom:1px solid #f5f5f3;">
-        <table width="100%" cellpadding="0" cellspacing="0">
-          <tr>
-            <td width="28" style="vertical-align:top;">
-              <div style="width:24px;height:24px;border-radius:50%;background:#4B3FB0;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">${i + 1}</div>
-            </td>
-            <td style="padding-left:12px;">
-              <p style="font-size:14px;font-weight:600;color:#1a1a1a;margin:0 0 3px;">${r.title}</p>
-              <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">${r.detail}</p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>`).join("");
+  const recRows = (result.narrative?.recommendations ?? []).map((r, i) => `
+    <tr><td style="padding:10px 0;border-bottom:1px solid #f5f5f3;">
+      <p style="font-size:14px;font-weight:600;color:#1a1a1a;margin:0 0 3px;">${i + 1}. ${r.title}</p>
+      <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">${r.detail}</p>
+    </td></tr>`).join("");
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -67,115 +35,64 @@ function buildEmailHtml(result: AnalysisResult): string {
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Your relationship health report — CoupleIQ</title>
 </head>
-<body style="margin:0;padding:0;background:#f0efed;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0efed;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#f3eee6;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f3eee6;padding:32px 16px;">
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;">
 
-        <!-- Header -->
         <tr><td style="padding-bottom:24px;text-align:center;">
-          <span style="font-size:20px;font-weight:800;color:#1a1a1a;letter-spacing:-0.02em;">split<span style="color:#4B3FB0;">or</span>not</span>
+          <span style="font-size:22px;color:#1a1a1a;">CoupleIQ</span>
           <p style="font-size:12px;color:#aaa;margin:4px 0 0;">Your relationship health report</p>
         </td></tr>
 
-        <!-- Headline card -->
-        <tr><td style="background:${bg};border:1px solid ${color}22;border-radius:16px;padding:24px;text-align:center;margin-bottom:16px;">
-          <p style="font-size:11px;color:${color};font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">${result.riskLevel} risk relationship</p>
-          <p style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.4;margin:0 0 10px;letter-spacing:-0.01em;">${result.headline}</p>
-          <p style="font-size:14px;color:#555;line-height:1.75;margin:0;">${result.summary}</p>
+        <tr><td style="background:#fff;border:1px solid ${color}33;border-radius:16px;padding:24px;text-align:center;">
+          <p style="font-size:11px;color:${color};font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">${result.band}</p>
+          <p style="font-size:56px;font-weight:800;color:#1a1a1a;line-height:1;margin:0;letter-spacing:-0.03em;">${result.healthScore}<span style="font-size:16px;color:#999;font-weight:400;"> / 100</span></p>
+          <p style="font-size:15px;font-weight:500;color:#1a1a1a;line-height:1.5;margin:14px 0 0;">${result.headline}</p>
         </td></tr>
 
         <tr><td height="16"></td></tr>
 
-        <!-- Score card -->
-        <tr><td style="background:#fff;border:1px solid #efefed;border-radius:16px;padding:24px;text-align:center;">
-          <p style="font-size:60px;font-weight:800;color:${color};line-height:1;margin:0;letter-spacing:-0.03em;">${result.probability}%</p>
-          <p style="font-size:13px;color:#888;margin:6px 0 4px;">estimated divorce risk</p>
-          <p style="font-size:12px;font-weight:600;color:${vsAvg > 0 ? "#d85a30" : "#1d9e75"};margin:0;">${vsText} vs national average (${result.nationalAverage ?? 42}%)</p>
-        </td></tr>
-
-        <tr><td height="16"></td></tr>
-
-        <!-- Pattern card -->
         <tr><td style="background:#fff;border:1px solid #efefed;border-radius:16px;padding:24px;">
           <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">Your relationship pattern</p>
-          <p style="font-size:17px;font-weight:700;color:#4B3FB0;margin:0 0 8px;letter-spacing:-0.01em;">${result.dynamicPattern}</p>
-          <p style="font-size:14px;color:#555;line-height:1.75;margin:0;">${result.dynamicPatternDetail}</p>
+          <p style="font-size:18px;font-weight:700;color:#4B3FB0;margin:0;">${result.pattern}</p>
         </td></tr>
 
         <tr><td height="16"></td></tr>
 
-        <!-- Strength + Risk -->
-        <tr><td>
-          <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-              <td width="49%" style="background:#e1f5ee;border:1px solid #b5ddd0;border-radius:14px;padding:16px;vertical-align:top;">
-                <p style="font-size:10px;font-weight:700;color:#0f6e56;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Biggest strength</p>
-                <p style="font-size:14px;font-weight:700;color:#085041;margin:0 0 6px;">${result.biggestStrength}</p>
-                <p style="font-size:12px;color:#0f6e56;line-height:1.6;margin:0;">${result.biggestStrengthDetail}</p>
-              </td>
-              <td width="2%"></td>
-              <td width="49%" style="background:#fcebeb;border:1px solid #f0c0c0;border-radius:14px;padding:16px;vertical-align:top;">
-                <p style="font-size:10px;font-weight:700;color:#a32d2d;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Biggest risk</p>
-                <p style="font-size:14px;font-weight:700;color:#501313;margin:0 0 6px;">${result.biggestRisk}</p>
-                <p style="font-size:12px;color:#a32d2d;line-height:1.6;margin:0;">${result.biggestRiskDetail}</p>
-              </td>
-            </tr>
-          </table>
-        </td></tr>
-
-        <tr><td height="16"></td></tr>
-
-        <!-- Full factor breakdown -->
         <tr><td style="background:#fff;border:1px solid #efefed;border-radius:16px;padding:24px;">
-          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 14px;">Full factor breakdown</p>
-          <table width="100%" cellpadding="0" cellspacing="0">
-            ${factorRows}
-          </table>
+          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">Eight dimensions</p>
+          <table width="100%" cellpadding="0" cellspacing="0">${dimRows}</table>
         </td></tr>
 
+        ${result.narrative ? `
         <tr><td height="16"></td></tr>
-
-        <!-- Recommendations -->
         <tr><td style="background:#fff;border:1px solid #efefed;border-radius:16px;padding:24px;">
-          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 14px;">What to do next</p>
-          <table width="100%" cellpadding="0" cellspacing="0">
-            ${recRows}
-          </table>
-        </td></tr>
+          <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 16px;">${result.narrative.summary}</p>
+          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px;">What to do next</p>
+          <table width="100%" cellpadding="0" cellspacing="0">${recRows}</table>
+        </td></tr>` : ""}
 
-        <tr><td height="16"></td></tr>
+        <tr><td height="28"></td></tr>
 
-        <!-- Urgency verdict -->
-        <tr><td style="background:#fafaf8;border:1px solid #efefed;border-radius:14px;padding:18px 20px;">
-          <p style="font-size:12px;font-weight:700;color:#4B3FB0;text-transform:capitalize;margin:0 0 4px;">Overall verdict: ${result.urgency}</p>
-          <p style="font-size:13px;color:#666;line-height:1.6;margin:0;">${result.disclaimer}</p>
-        </td></tr>
-
-        <tr><td height="32"></td></tr>
-
-        <!-- CTA -->
         <tr><td style="text-align:center;">
-          <p style="font-size:14px;color:#888;margin:0 0 16px;line-height:1.6;">Want to track your relationship health over time?<br/>Retake the assessment monthly and see how patterns shift.</p>
-          <a href="https://splitornot.com" style="display:inline-block;background:#4B3FB0;color:#fff;text-decoration:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:700;letter-spacing:0.01em;">Back to splitornot.com</a>
+          <a href="https://splitornot.com/relationship-test" style="display:inline-block;background:#4B3FB0;color:#fff;text-decoration:none;border-radius:999px;padding:14px 32px;font-size:15px;font-weight:600;">Take the test again</a>
         </td></tr>
 
-        <tr><td height="32"></td></tr>
+        <tr><td height="28"></td></tr>
 
-        <!-- Footer -->
         <tr><td style="text-align:center;border-top:1px solid #e8e8e5;padding-top:24px;">
           <p style="font-size:12px;color:#ccc;margin:0 0 4px;">CoupleIQ · splitornot.com</p>
-          <p style="font-size:11px;color:#ddd;margin:0;">This report is for informational purposes only and is not a substitute for professional couples counseling.</p>
+          <p style="font-size:11px;color:#ddd;margin:0;">For self-reflection only — not a substitute for professional help.</p>
         </td></tr>
 
       </table>
     </td></tr>
   </table>
-
 </body>
 </html>`;
 }
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -187,7 +104,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { email, result, mode, consent }: { email: string; result?: AnalysisResult; mode?: string; consent?: boolean } = body;
+    const { email, result, mode, consent }: { email: string; result?: StoredResult; mode?: string; consent?: boolean } = body;
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
@@ -213,7 +130,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
-    if (!result || typeof result.probability !== "number") {
+    if (!result || typeof result.healthScore !== "number") {
       return NextResponse.json({ error: "Invalid result data." }, { status: 400 });
     }
 
@@ -224,7 +141,7 @@ export async function POST(req: NextRequest) {
     const { error: sendError } = await resend.emails.send({
       from:    fromEmail,
       to:      email,
-      subject: `Your relationship health report — ${result.probability}% risk · CoupleIQ`,
+      subject: `Your relationship health report — ${result.band} · CoupleIQ`,
       html,
     });
 

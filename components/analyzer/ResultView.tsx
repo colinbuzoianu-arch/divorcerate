@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import ResultScreen from "@/components/ResultScreen";
-import type { AnalysisResult, FreeResult } from "@/lib/types";
+import type { StoredResult, FreeResult } from "@/lib/types";
 import { track } from "@/lib/analytics";
 
 /**
@@ -15,7 +15,7 @@ export default function ResultView({
   isPaid,
   resultId,
 }: {
-  result: AnalysisResult | FreeResult;
+  result: StoredResult | FreeResult;
   isPaid: boolean;
   resultId: string;
 }) {

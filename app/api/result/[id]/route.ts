@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getResult, isPaid, kvConfigured } from "@/lib/kv";
+import { getResult, isPaid, getNarrative, kvConfigured } from "@/lib/kv";
 import { toFreeResult, ResultResponse } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Returns a stored result. Free fields always; the full report only once the
- * result has been marked paid by the verified Stripe webhook (Phase 1.2).
+ * Returns a stored result. Free fields always; the full report (with the paid
+ * narrative) only once paid AND the narrative has been generated and cached.
+ * This endpoint never generates the narrative — that happens on the /r/[id]
+ * page — so the /success poll stays cheap.
  */
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   const headers = { "X-Robots-Tag": "noindex" };
@@ -27,10 +29,16 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   }
 
   const paid = await isPaid(id);
+  if (!paid) {
+    const payload: ResultResponse = { resultId: id, paid: false, result: toFreeResult(full) };
+    return NextResponse.json(payload, { headers });
+  }
+
+  const narrative = await getNarrative(id);
   const payload: ResultResponse = {
     resultId: id,
-    paid,
-    result: paid ? full : toFreeResult(full),
+    paid: true,
+    result: narrative ? { ...full, narrative } : full,
   };
   return NextResponse.json(payload, { headers });
 }
