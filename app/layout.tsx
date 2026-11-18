@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
+import ConsentBanner from "@/components/ConsentBanner";
 
 export const metadata: Metadata = {
   title: "CoupleIQ — Relationship Health Analyzer",
@@ -52,21 +52,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
+        {/* Google Consent Mode v2 — default DENIED. We set the gtag stub and
+            consent defaults here, but do NOT load gtag.js. The external library
+            (and therefore any GA/Ads request) is only loaded by ConsentBanner
+            after the visitor accepts. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              window.gtag = gtag;
+              gtag('consent', 'default', {
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied',
+                analytics_storage: 'denied'
+              });
+              gtag('js', new Date());
+              gtag('config', '${GA_MEASUREMENT_ID}');
+              gtag('config', '${GOOGLE_ADS_ID}');
+            `,
+          }}
         />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
-            gtag('config', '${GOOGLE_ADS_ID}');
-          `}
-        </Script>
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <ConsentBanner gaId={GA_MEASUREMENT_ID} />
+      </body>
     </html>
   );
 }

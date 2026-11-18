@@ -18,8 +18,10 @@
 
 declare global {
   interface Window {
-    // Defined by the inline gtag bootstrap in app/layout.tsx.
-    gtag?: (command: "event", eventName: string, params?: Record<string, unknown>) => void;
+    // Defined by the inline gtag bootstrap in app/layout.tsx. Variadic so it
+    // also covers gtag('consent', …) and gtag('config', …) calls elsewhere.
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
   }
 }
 

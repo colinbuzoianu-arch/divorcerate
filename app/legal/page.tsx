@@ -7,9 +7,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://splitornot.com/legal" },
 };
 
-const LAST_UPDATED = "18 April 2025";
-const CONTACT     = "support.coupleiq@gmail.com";
-const SITE        = "splitornot.com";
+const LAST_UPDATED   = "18 November 2026";
+const CONTACT        = "support.coupleiq@gmail.com";   // support
+const PRIVACY_CONTACT = "contact@verumsell.com";        // data / privacy requests
+const OPERATOR       = "Verumsell SRL";
+const SITE           = "splitornot.com";
 
 export default function LegalPage() {
   return (
@@ -34,7 +36,7 @@ export default function LegalPage() {
             Privacy Policy & Terms of Service
           </h1>
           <p style={{ fontSize: 15, color: "#666", lineHeight: 1.7, marginBottom: "2rem", paddingBottom: "1.5rem", borderBottom: "1px solid #f5f5f3" }}>
-            This document covers both our Privacy Policy and Terms of Service for <strong>CoupleIQ</strong>, accessible at <strong>{SITE}</strong>. By using CoupleIQ you agree to both.
+            This document covers both our Privacy Policy and Terms of Service for <strong>CoupleIQ</strong>, accessible at <strong>{SITE}</strong>. CoupleIQ is operated by <strong>{OPERATOR}</strong>, the data controller. For privacy or data-protection requests, contact <strong>{PRIVACY_CONTACT}</strong>. By using CoupleIQ you agree to both policies below.
           </p>
 
           {/* PRIVACY POLICY */}
@@ -43,11 +45,11 @@ export default function LegalPage() {
             <SubSection title="1. What information we collect">
               <p>CoupleIQ is designed to collect as little information as possible.</p>
               <ul>
-                <li><strong>Quiz answers:</strong> Your responses to the 15 assessment questions are sent to our AI analysis service (Anthropic Claude) to generate your result. They are processed in real time and are <strong>not stored on our servers</strong> after your result is generated.</li>
-                <li><strong>Payment information:</strong> If you purchase the full report, your payment is processed by Stripe. We never see or store your card details. Stripe may store payment data in accordance with their own privacy policy.</li>
-                <li><strong>Email address:</strong> If you contact us at {CONTACT}, we will store your email to respond to your query. We do not add you to any mailing list without your explicit consent.</li>
-                <li><strong>Analytics:</strong> We use Google Analytics to understand how people use the site (pages visited, time spent, general location by country). This data is anonymised and aggregated.</li>
-                <li><strong>Local storage:</strong> Your quiz result is temporarily stored in your browser's local storage so it survives the Stripe payment redirect. This data lives only in your browser and is never sent to us. It disappears when you clear your browser data.</li>
+                <li><strong>Quiz answers:</strong> Your responses to the 15 assessment questions are sent to our AI analysis service (Anthropic) to generate your result. The answers themselves are <strong>not stored</strong> on our servers.</li>
+                <li><strong>Your generated result:</strong> The analysis we generate is stored on our storage provider (Upstash Redis) under a random, unguessable ID so it survives the payment redirect and can be reopened via its link. It is <strong>automatically deleted after 30 days</strong>, and we store it without any name or account attached.</li>
+                <li><strong>Payment information:</strong> If you purchase the full report, your payment is processed by Stripe. We never see or store your card details. Stripe may store payment data in accordance with their own privacy policy. We store a small flag marking a result as paid (also deleted after 30 days).</li>
+                <li><strong>Email address:</strong> If you email us at {CONTACT} we store your email to reply. If you choose to have your result emailed to you (optional), your email is handled by our email provider (Resend) to send that message and, only if you explicitly opt in, to receive follow-up emails you can unsubscribe from at any time. We do not add you to any mailing list without your explicit consent.</li>
+                <li><strong>Analytics &amp; advertising:</strong> With your consent, we use Google Analytics and the Google Ads tag to understand how people use the site and to measure advertising. These stay switched off until you accept via the cookie banner (see Cookies below).</li>
               </ul>
             </SubSection>
 
@@ -58,11 +60,12 @@ export default function LegalPage() {
                 <li>To respond to support requests</li>
                 <li>To understand and improve how the product is used (via anonymised analytics)</li>
               </ul>
-              <p>We do not sell your data. We do not share your data with third parties except as necessary to provide the service (Anthropic for AI analysis, Stripe for payments, Google for analytics).</p>
+              <p>We do not sell your data. We do not share your data with third parties except the processors necessary to provide the service (Anthropic for AI analysis, Upstash for result storage, Stripe for payments, Resend for email, and — with your consent — Google for analytics and advertising measurement).</p>
             </SubSection>
 
-            <SubSection title="3. Cookies">
-              <p>We use minimal cookies — primarily for Google Analytics session tracking. We do not use advertising cookies or tracking pixels. You can disable cookies in your browser settings without affecting core functionality.</p>
+            <SubSection title="3. Cookies &amp; consent">
+              <p>We use Google Consent Mode v2. When you first visit, analytics and advertising storage are set to <strong>denied</strong> by default, and we do not load the Google Analytics / Google Ads library at all — so no analytics or advertising request is made and no such cookies are set until you choose &quot;Accept&quot; on the cookie banner.</p>
+              <p>If you accept, we use Google Analytics (to understand usage) and the Google Ads tag (to measure advertising), which may set cookies. If you decline, they stay off. You can change your mind by clearing this site&apos;s data in your browser, which will show the banner again. Essential functionality works without any of these cookies.</p>
             </SubSection>
 
             <SubSection title="4. Your rights (GDPR & UK GDPR)">
@@ -73,18 +76,20 @@ export default function LegalPage() {
                 <li>Object to or restrict how we process your data</li>
                 <li>Data portability</li>
               </ul>
-              <p>Since we store almost no personal data, most requests will be straightforward to fulfil. Contact us at <strong>{CONTACT}</strong> and we will respond within 30 days.</p>
+              <p>Since we store very little personal data and nothing is tied to your identity, most requests are straightforward to fulfil. Contact our data controller, {OPERATOR}, at <strong>{PRIVACY_CONTACT}</strong> and we will respond within 30 days.</p>
             </SubSection>
 
             <SubSection title="5. Data retention">
-              <p>Quiz answers are not retained after your result is generated. Payment records are retained by Stripe per their data retention policy. Support emails are retained for up to 12 months. Analytics data is retained per Google Analytics' default settings (26 months).</p>
+              <p>Quiz answers are not retained after your result is generated. Your generated result and its paid flag are stored for <strong>up to 30 days</strong> and then automatically deleted. Payment records are retained by Stripe per their data retention policy. Email you send us, and any email you opt in to receive, is retained until you ask us to delete it or you unsubscribe. Analytics data (only if you consent) is retained per Google Analytics&apos; settings.</p>
             </SubSection>
 
             <SubSection title="6. Third-party services">
               <ul>
-                <li><strong>Anthropic</strong> — AI analysis engine. <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer">Anthropic Privacy Policy</a></li>
+                <li><strong>Anthropic</strong> — AI analysis engine. <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener noreferrer">Anthropic Privacy Policy</a></li>
+                <li><strong>Upstash</strong> — temporary result storage (Redis). <a href="https://upstash.com/trust/privacy.pdf" target="_blank" rel="noopener noreferrer">Upstash Privacy Policy</a></li>
                 <li><strong>Stripe</strong> — payment processing. <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer">Stripe Privacy Policy</a></li>
-                <li><strong>Google Analytics</strong> — anonymised usage analytics. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a></li>
+                <li><strong>Resend</strong> — transactional and opt-in email. <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Resend Privacy Policy</a></li>
+                <li><strong>Google Analytics &amp; Google Ads</strong> — usage analytics and advertising measurement, loaded only with your consent. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a></li>
                 <li><strong>Vercel</strong> — website hosting. <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Vercel Privacy Policy</a></li>
               </ul>
             </SubSection>
