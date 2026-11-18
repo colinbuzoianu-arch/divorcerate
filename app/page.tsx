@@ -32,13 +32,13 @@ const CHECK = (
 );
 
 const patterns = [
-  { n: "01", cls: "p1", art: <><span className="o v"></span><span className="o e"></span></>, title: "Validated Couple", desc: "Calm disagreement, real respect and a strong friendship underneath." },
-  { n: "02", cls: "p2", art: <><span className="o v"></span><span className="o e"></span></>, title: "Volatile Couple", desc: "High heat, high passion, and fast, intense repair." },
-  { n: "03", cls: "p3", art: <><span className="o v"></span><span className="divider"></span><span className="o e"></span></>, title: "Conflict Avoiders", desc: "Peaceful on the surface, while problems go quietly underground." },
-  { n: "04", cls: "p4", art: <><span className="o e"></span><span className="o v"></span></>, title: "Pursuer–Withdrawer", desc: "One reaches for connection; the other pulls back to cope." },
-  { n: "05", cls: "p5", art: <><span className="o v"></span><span className="o e"></span></>, title: "Drifting Couple", desc: "Once close, now coexisting. The friendship fades without a fight." },
-  { n: "06", cls: "p6", art: <><span className="ring"></span><span className="o v"></span><span className="o e"></span></>, title: "Crisis-Bonded", desc: "Held together by shared pressure more than shared closeness." },
-  { n: "07", cls: "p7", art: <><span className="o v"></span><span className="gap"></span><span className="o e"></span></>, title: "Hostile–Detached", desc: "Contempt present, distance growing. The pattern to take seriously." },
+  { n: "01", cls: "p1", slug: "validated-couple", art: <><span className="o v"></span><span className="o e"></span></>, title: "Validated Couple", desc: "Calm disagreement, real respect and a strong friendship underneath." },
+  { n: "02", cls: "p2", slug: "volatile-couple", art: <><span className="o v"></span><span className="o e"></span></>, title: "Volatile Couple", desc: "High heat, high passion, and fast, intense repair." },
+  { n: "03", cls: "p3", slug: "conflict-avoiders", art: <><span className="o v"></span><span className="divider"></span><span className="o e"></span></>, title: "Conflict Avoiders", desc: "Peaceful on the surface, while problems go quietly underground." },
+  { n: "04", cls: "p4", slug: "pursuer-withdrawer", art: <><span className="o e"></span><span className="o v"></span></>, title: "Pursuer–Withdrawer", desc: "One reaches for connection; the other pulls back to cope." },
+  { n: "05", cls: "p5", slug: "drifting-couple", art: <><span className="o v"></span><span className="o e"></span></>, title: "Drifting Couple", desc: "Once close, now coexisting. The friendship fades without a fight." },
+  { n: "06", cls: "p6", slug: "crisis-bonded", art: <><span className="ring"></span><span className="o v"></span><span className="o e"></span></>, title: "Crisis-Bonded", desc: "Held together by shared pressure more than shared closeness." },
+  { n: "07", cls: "p7", slug: "hostile-detached", art: <><span className="o v"></span><span className="gap"></span><span className="o e"></span></>, title: "Hostile–Detached", desc: "Contempt present, distance growing. The pattern to take seriously." },
 ];
 
 const dims = [
@@ -216,14 +216,15 @@ export default function Home() {
         </div>
         <div className="rail">
           {patterns.map((p) => (
-            <article className="pcard" key={p.n}>
+            <Link className="pcard" href={`/patterns/${p.slug}`} key={p.n}>
               <div className={`art ${p.cls}`} aria-hidden="true">{p.art}</div>
               <div className="pbody">
                 <span className="mono">Pattern {p.n}</span>
                 <h3>{p.title}</h3>
                 <p>{p.desc}</p>
+                <span className="more">Read more {ARROW}</span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>

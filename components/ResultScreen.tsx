@@ -93,7 +93,8 @@ export default function ResultScreen({ result, isPaid, generating = false, onUnl
       {/* PATTERN */}
       <div className="reveal reveal-d3" style={{ border: "1px solid #efefed", borderRadius: 20, padding: "1.5rem", background: "#fff" }}>
         <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Your relationship pattern</p>
-        <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 30, color: "var(--violet-deep)", lineHeight: 1.05 }}>{result.pattern}</p>
+        <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 30, color: "var(--violet-deep)", lineHeight: 1.05, marginBottom: 10 }}>{result.pattern}</p>
+        <a href={`/patterns/${result.patternSlug}`} style={{ fontSize: 14, fontWeight: 600, color: "var(--violet-deep)", textDecoration: "none" }}>Read more about your pattern →</a>
       </div>
 
       {/* STRENGTH + RISK */}
