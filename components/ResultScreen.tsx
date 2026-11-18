@@ -72,9 +72,11 @@ export default function ResultScreen({ result, isPaid, generating = false, onUnl
       {/* DIMENSION RADAR + BARS */}
       <div className="reveal reveal-d2" style={{ background: "#fff", border: "1px solid #efefed", borderRadius: 20, padding: "1.5rem" }}>
         <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Eight dimensions</p>
-        <div style={{ margin: "0 0 20px" }}>
-          <RadarChart dimensions={result.dimensions} />
-        </div>
+        {isPaid && (
+          <div style={{ margin: "0 0 20px" }}>
+            <RadarChart dimensions={result.dimensions} />
+          </div>
+        )}
         <div style={{ display: "grid", gap: 12 }}>
           {result.dimensions.map((d) => (
             <div key={d.key} style={{ display: "grid", gridTemplateColumns: "130px 1fr 32px", gap: 12, alignItems: "center" }}>
