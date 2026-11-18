@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AnalysisResult } from "@/lib/types";
+import { track } from "@/lib/analytics";
 
 interface Props {
   result: AnalysisResult;
@@ -25,6 +26,7 @@ export default function EmailCapture({ result }: Props) {
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error ?? "Failed to send.");
+      track("email_submit", { source: "result_email" });
       setStatus("success");
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");

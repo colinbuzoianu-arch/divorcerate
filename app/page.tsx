@@ -8,6 +8,7 @@ import StartScreen from "@/components/StartScreen";
 import QuizStep from "@/components/QuizStep";
 import LoadingScreen from "@/components/LoadingScreen";
 import ResultScreen from "@/components/ResultScreen";
+import { track, MAIN_QUIZ } from "@/lib/analytics";
 
 type Screen = "landing" | "start" | "quiz" | "loading" | "result" | "error";
 
@@ -61,7 +62,12 @@ function HomeInner() {
         setIsPaid(true);
         const saved = localStorage.getItem(`result_${unlockedToken}`);
         if (saved) {
-          try { setResult(JSON.parse(saved)); setScreen("result"); } catch {}
+          try {
+            const parsed = JSON.parse(saved) as AnalysisResult;
+            setResult(parsed);
+            setScreen("result");
+            track("result_view", { band: parsed.riskLevel, paid: true });
+          } catch {}
         }
       }
     }
@@ -80,8 +86,9 @@ function HomeInner() {
     setAnswers((prev) => ({ ...prev, [id]: value }));
 
   const handleNext = async () => {
+    track("quiz_step_complete", { step_index: stepIndex, step_id: steps[stepIndex]?.title, quiz: MAIN_QUIZ });
     if (stepIndex < steps.length - 1) { setStepIndex((i) => i + 1); }
-    else { await runAnalysis(); }
+    else { track("quiz_complete", { quiz: MAIN_QUIZ }); await runAnalysis(); }
   };
 
   const handleBack = () => { if (stepIndex > 0) setStepIndex((i) => i - 1); };
@@ -103,6 +110,8 @@ function HomeInner() {
       setIsPaid(false);
       setResult(data as AnalysisResult);
       setScreen("result");
+      track("result_view", { band: (data as AnalysisResult).riskLevel, paid: false });
+      track("paywall_view", { band: (data as AnalysisResult).riskLevel });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Analysis failed. Please try again.");
@@ -111,6 +120,7 @@ function HomeInner() {
   };
 
   const handleUnlock = async () => {
+    track("checkout_start", { value: 4.99, currency: "USD" });
     try {
       const res  = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ resultToken }) });
       const data = await res.json();
@@ -341,7 +351,7 @@ function HomeInner() {
               </div>
             )}
 
-            {screen === "start" && <StartScreen onStart={() => setScreen("quiz")} />}
+            {screen === "start" && <StartScreen onStart={() => { track("quiz_start", { quiz: MAIN_QUIZ }); setScreen("quiz"); }} />}
             {screen === "quiz" && (
               <QuizStep step={steps[stepIndex]} stepIndex={stepIndex} totalSteps={steps.length} answers={answers} onChange={handleChange} onNext={handleNext} onBack={handleBack} onNavigate={handleNavigate} />
             )}

@@ -1,6 +1,7 @@
 import { getPostBySlug, getAllPosts } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import ArticleCtaLink from "@/components/ArticleCtaLink";
 import type { Metadata } from "next";
 import { remark } from "remark";
 import html from "remark-html";
@@ -83,12 +84,13 @@ export default async function BlogPostPage({ params }: Props) {
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, marginBottom: "1.25rem", lineHeight: 1.6 }}>
             Take CoupleIQ's 5-minute evidence-based assessment. Free to start.
           </p>
-          <Link
+          <ArticleCtaLink
             href="/"
+            slug={params.slug}
             style={{ background: "#fff", color: "#534ab7", borderRadius: 12, padding: "12px 28px", fontSize: 14, fontWeight: 700, textDecoration: "none", display: "inline-block", letterSpacing: "0.01em" }}
           >
             Get my relationship score →
-          </Link>
+          </ArticleCtaLink>
         </div>
 
         <p style={{ marginTop: "1.5rem", fontSize: 12, color: "#ccc", textAlign: "center" }}>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnalysisResult } from "@/lib/types";
+import { track } from "@/lib/analytics";
 
 const riskColors: Record<string, string> = {
   Low: "#1d9e75", Moderate: "#ba7517", Elevated: "#d85a30", High: "#a32d2d",
@@ -402,6 +403,7 @@ function ShareButton({ result, pct, color, bg, full }: { result: AnalysisResult;
   }
 
   async function handleShare() {
+    track("share_click", { surface: full ? "full_report" : "free_result" });
     setStatus("generating");
     await new Promise(r=>setTimeout(r,50));
     const canvas = drawCard();

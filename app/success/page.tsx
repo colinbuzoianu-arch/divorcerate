@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { track } from "@/lib/analytics";
 
 function SuccessInner() {
   const router = useRouter();
@@ -26,6 +27,7 @@ function SuccessInner() {
         if (data.paid) {
           // Store unlock in localStorage so result page can read it
           localStorage.setItem(`paid_${token}`, "true");
+          track("purchase", { transaction_id: sessionId ?? undefined, value: 4.99, currency: "USD" });
           setStatus("success");
           // Redirect back to home with the token so the result re-renders
           setTimeout(() => {
