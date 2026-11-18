@@ -9,6 +9,7 @@ export type PostMeta = {
   title: string;
   description: string;
   date: string;
+  category?: string;
 };
 
 export type Post = PostMeta & {
@@ -31,10 +32,20 @@ export function getAllPosts(): PostMeta[] {
         title: data.title,
         description: data.description,
         date: data.date,
+        category: data.category ?? undefined,
       };
     });
 
   return posts.sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/** Related posts: prefer the same category, then fill with the most recent. */
+export function getRelatedPosts(slug: string, limit = 3): PostMeta[] {
+  const all = getAllPosts().filter((p) => p.slug !== slug);
+  const self = all.length ? getAllPosts().find((p) => p.slug === slug) : undefined;
+  const sameCat = self?.category ? all.filter((p) => p.category === self.category) : [];
+  const rest = all.filter((p) => !sameCat.includes(p));
+  return [...sameCat, ...rest].slice(0, limit);
 }
 
 export function getPostBySlug(slug: string): Post {
@@ -47,6 +58,7 @@ export function getPostBySlug(slug: string): Post {
     title: data.title,
     description: data.description,
     date: data.date,
+    category: data.category ?? undefined,
     content,
   };
 }

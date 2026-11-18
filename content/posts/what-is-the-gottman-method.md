@@ -3,6 +3,7 @@ title: "What Is the Gottman Method? The Science Behind Relationship Success"
 description: "The Gottman Method is one of the most research-backed approaches to understanding relationships. Here's what it says — and what it means for yours."
 date: "2025-04-08"
 slug: "what-is-the-gottman-method"
+category: "Research"
 ---
 
 When it comes to understanding why some relationships thrive and others fall apart, few researchers have contributed more than Dr. John Gottman. Over four decades of studying thousands of couples, Gottman and his colleagues identified specific, measurable patterns that track closely with whether a relationship survives.

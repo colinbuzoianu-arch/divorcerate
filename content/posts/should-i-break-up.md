@@ -3,6 +3,7 @@ title: "Should I Break Up? 7 Signs Your Relationship May Be Over"
 description: "Feeling stuck and unsure whether to stay or go? These 7 research-backed signs can help you understand what your relationship is telling you."
 date: "2025-04-10"
 slug: "should-i-break-up"
+category: "Deciding"
 ---
 
 Every relationship goes through rough patches. But how do you know when you've hit a rough patch versus when you've reached the end of the road? It's one of the hardest questions a person can face — and there's no easy answer.

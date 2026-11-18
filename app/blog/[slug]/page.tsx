@@ -1,4 +1,4 @@
-import { getPostBySlug, getAllPosts } from "@/lib/posts";
+import { getPostBySlug, getAllPosts, getRelatedPosts } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ArticleCtaLink from "@/components/ArticleCtaLink";
@@ -49,6 +49,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const processedContent = await remark().use(html).process(post.content);
   const contentHtml = processedContent.toString();
+  const related = getRelatedPosts(params.slug, 3);
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "var(--sans)", color: "var(--text)" }}>
@@ -57,15 +58,20 @@ export default async function BlogPostPage({ params }: Props) {
       <div style={{ width: "100%", maxWidth: 680 }}>
 
         {/* Nav */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
           <Link href="/" style={{ textDecoration: "none" }}><BrandMark /></Link>
           <Link href="/blog" style={{ fontSize: 13, color: "var(--text-2)", textDecoration: "none" }}>← All articles</Link>
         </div>
 
+        {/* Breadcrumb */}
+        <nav aria-label="Breadcrumb" style={{ fontSize: 12, color: "var(--text-2)", marginBottom: "1.75rem" }}>
+          <Link href="/" style={{ color: "var(--text-2)" }}>Home</Link> · <Link href="/blog" style={{ color: "var(--text-2)" }}>Journal</Link>{post.category ? <> · {post.category}</> : null}
+        </nav>
+
         {/* Article */}
         <article style={{ background: "#fff", borderRadius: 32, border: "1px solid var(--line-light)", padding: "2.75rem 2.25rem" }}>
           <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: "0.9rem" }}>
-            {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+            {post.category ? <>{post.category} · </> : null}{new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
           </p>
           <h1 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 42, color: "var(--text)", lineHeight: 1.05, marginBottom: "1rem", letterSpacing: "-0.02em" }}>
             {post.title}
@@ -92,6 +98,20 @@ export default async function BlogPostPage({ params }: Props) {
             Take the free test →
           </ArticleCtaLink>
         </div>
+
+        {related.length > 0 && (
+          <div style={{ marginTop: "2.5rem" }}>
+            <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: 16 }}>Related reading</p>
+            <div style={{ display: "grid", gap: 10 }}>
+              {related.map((r) => (
+                <Link key={r.slug} href={`/blog/${r.slug}`} style={{ textDecoration: "none", background: "#fff", border: "1px solid var(--line-light)", borderRadius: 16, padding: "1rem 1.25rem", display: "block" }}>
+                  <p style={{ fontFamily: "var(--serif)", fontSize: 20, color: "var(--text)", marginBottom: 2, lineHeight: 1.15 }}>{r.title}</p>
+                  <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.5 }}>{r.description}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         <p style={{ marginTop: "1.5rem", fontSize: 12, color: "var(--text-2)", textAlign: "center" }}>
           CoupleIQ · splitornot.com

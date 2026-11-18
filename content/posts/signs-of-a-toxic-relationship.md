@@ -3,6 +3,7 @@ title: "10 Signs You're in a Toxic Relationship (And What to Do About It)"
 description: "Toxic relationships don't always look the way we expect. Learn the 10 signs — some subtle, some not — and what steps you can take if you recognise them."
 date: "2025-04-06"
 slug: "signs-of-a-toxic-relationship"
+category: "Conflict"
 ---
 
 The word "toxic" gets used a lot. But in the context of relationships, it has a specific meaning: a dynamic that consistently undermines your wellbeing, self-worth, or sense of reality. Toxic relationships aren't always loud or dramatic. Some are quiet. Some feel almost normal, until you step outside of them and realise how much they've taken from you.
