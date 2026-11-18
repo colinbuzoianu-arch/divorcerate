@@ -20,8 +20,8 @@ const riskBg: Record<string, string> = {
 };
 
 function buildEmailHtml(result: AnalysisResult): string {
-  const color  = riskColors[result.riskLevel] ?? "#534ab7";
-  const bg     = riskBg[result.riskLevel]     ?? "#eeedfe";
+  const color  = riskColors[result.riskLevel] ?? "#4B3FB0";
+  const bg     = riskBg[result.riskLevel]     ?? "#ece9fb";
   const vsAvg  = result.probability - (result.nationalAverage ?? 42);
   const vsText = vsAvg > 0 ? `+${vsAvg}%` : `${vsAvg}%`;
 
@@ -49,7 +49,7 @@ function buildEmailHtml(result: AnalysisResult): string {
         <table width="100%" cellpadding="0" cellspacing="0">
           <tr>
             <td width="28" style="vertical-align:top;">
-              <div style="width:24px;height:24px;border-radius:50%;background:#534ab7;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">${i + 1}</div>
+              <div style="width:24px;height:24px;border-radius:50%;background:#4B3FB0;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">${i + 1}</div>
             </td>
             <td style="padding-left:12px;">
               <p style="font-size:14px;font-weight:600;color:#1a1a1a;margin:0 0 3px;">${r.title}</p>
@@ -75,7 +75,7 @@ function buildEmailHtml(result: AnalysisResult): string {
 
         <!-- Header -->
         <tr><td style="padding-bottom:24px;text-align:center;">
-          <span style="font-size:20px;font-weight:800;color:#1a1a1a;letter-spacing:-0.02em;">split<span style="color:#534ab7;">or</span>not</span>
+          <span style="font-size:20px;font-weight:800;color:#1a1a1a;letter-spacing:-0.02em;">split<span style="color:#4B3FB0;">or</span>not</span>
           <p style="font-size:12px;color:#aaa;margin:4px 0 0;">Your relationship health report</p>
         </td></tr>
 
@@ -100,7 +100,7 @@ function buildEmailHtml(result: AnalysisResult): string {
         <!-- Pattern card -->
         <tr><td style="background:#fff;border:1px solid #efefed;border-radius:16px;padding:24px;">
           <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">Your relationship pattern</p>
-          <p style="font-size:17px;font-weight:700;color:#534ab7;margin:0 0 8px;letter-spacing:-0.01em;">${result.dynamicPattern}</p>
+          <p style="font-size:17px;font-weight:700;color:#4B3FB0;margin:0 0 8px;letter-spacing:-0.01em;">${result.dynamicPattern}</p>
           <p style="font-size:14px;color:#555;line-height:1.75;margin:0;">${result.dynamicPatternDetail}</p>
         </td></tr>
 
@@ -149,7 +149,7 @@ function buildEmailHtml(result: AnalysisResult): string {
 
         <!-- Urgency verdict -->
         <tr><td style="background:#fafaf8;border:1px solid #efefed;border-radius:14px;padding:18px 20px;">
-          <p style="font-size:12px;font-weight:700;color:#534ab7;text-transform:capitalize;margin:0 0 4px;">Overall verdict: ${result.urgency}</p>
+          <p style="font-size:12px;font-weight:700;color:#4B3FB0;text-transform:capitalize;margin:0 0 4px;">Overall verdict: ${result.urgency}</p>
           <p style="font-size:13px;color:#666;line-height:1.6;margin:0;">${result.disclaimer}</p>
         </td></tr>
 
@@ -158,7 +158,7 @@ function buildEmailHtml(result: AnalysisResult): string {
         <!-- CTA -->
         <tr><td style="text-align:center;">
           <p style="font-size:14px;color:#888;margin:0 0 16px;line-height:1.6;">Want to track your relationship health over time?<br/>Retake the assessment monthly and see how patterns shift.</p>
-          <a href="https://splitornot.com" style="display:inline-block;background:#534ab7;color:#fff;text-decoration:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:700;letter-spacing:0.01em;">Back to splitornot.com</a>
+          <a href="https://splitornot.com" style="display:inline-block;background:#4B3FB0;color:#fff;text-decoration:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:700;letter-spacing:0.01em;">Back to splitornot.com</a>
         </td></tr>
 
         <tr><td height="32"></td></tr>

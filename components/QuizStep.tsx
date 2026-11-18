@@ -45,7 +45,7 @@ export default function QuizStep({
         <span style={{ fontSize: 13, color: "#999", letterSpacing: "0.02em" }}>
           Step {stepIndex + 1} of {totalSteps}
         </span>
-        <span style={{ fontSize: 13, color: "#534ab7", fontWeight: 600 }}>{step.title}</span>
+        <span style={{ fontSize: 13, color: "#4B3FB0", fontWeight: 600 }}>{step.title}</span>
       </div>
 
       {/* Point 3: Interactive dot step indicator */}
@@ -63,7 +63,7 @@ export default function QuizStep({
                 flex: active ? "0 0 28px" : "0 0 8px",
                 height: 8,
                 borderRadius: 4,
-                background: done ? "#534ab7" : active ? "#534ab7" : "#e5e5e5",
+                background: done ? "#4B3FB0" : active ? "#4B3FB0" : "#e5e5e5",
                 opacity: done ? 0.45 : 1,
                 transition: "flex 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.25s ease, opacity 0.25s ease",
                 cursor: clickable ? "pointer" : "default",
@@ -86,9 +86,9 @@ export default function QuizStep({
             onClick={onBack}
             style={{
               background: "transparent",
-              border: "0.5px solid #ddd",
-              borderRadius: 12,
-              padding: "13px 20px",
+              border: "1px solid #ddd",
+              borderRadius: 999,
+              padding: "13px 24px",
               fontSize: 14,
               color: "#777",
               fontWeight: 500,
@@ -104,11 +104,11 @@ export default function QuizStep({
           disabled={!allAnswered}
           style={{
             flex: 1,
-            background: allAnswered ? "#534ab7" : "#d4d2ee",
+            background: allAnswered ? "#4B3FB0" : "#d4d2ee",
             color: "#fff",
             border: "none",
-            borderRadius: 12,
-            padding: "13px 20px",
+            borderRadius: 999,
+            padding: "14px 20px",
             fontSize: 15,
             fontWeight: 600,
             cursor: allAnswered ? "pointer" : "not-allowed",
@@ -166,8 +166,8 @@ function QuestionBlock({
                 className={`option-btn${selected ? " selected" : ""}`}
                 onClick={() => onChange(q.id, opt)}
                 style={{
-                  background: selected ? "#eeedfe" : "#fafaf8",
-                  border: selected ? "1.5px solid #534ab7" : "1px solid #e8e8e5",
+                  background: selected ? "#ece9fb" : "#fafaf8",
+                  border: selected ? "1.5px solid #4B3FB0" : "1px solid #e8e8e5",
                   borderRadius: 12,
                   padding: "12px 16px",
                   textAlign: "left",
@@ -191,7 +191,7 @@ function QuestionBlock({
             textAlign: "center",
             fontSize: 28,
             fontWeight: 700,
-            color: "#534ab7",
+            color: "#4B3FB0",
             letterSpacing: "-0.02em",
             lineHeight: 1,
           }}>
@@ -234,7 +234,7 @@ function QuestionBlock({
             fontFamily: "inherit",
             transition: "border-color 0.15s",
           }}
-          onFocus={(e) => { e.currentTarget.style.borderColor = "#534ab7"; }}
+          onFocus={(e) => { e.currentTarget.style.borderColor = "#4B3FB0"; }}
           onBlur={(e) => { e.currentTarget.style.borderColor = "#e8e8e5"; }}
         />
       )}

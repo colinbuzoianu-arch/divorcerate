@@ -11,23 +11,24 @@ export const metadata: Metadata = {
 
 export default function RelationshipTestPage() {
   return (
-    <main style={{ background: "#f0efed", minHeight: "100vh", padding: "1.5rem 1rem 3rem", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <main style={{ background: "var(--ink)", minHeight: "100vh", padding: "1.5rem 1rem 3rem", fontFamily: "var(--sans)", color: "var(--on-dark)" }}>
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <img src="/logo.png" alt="CoupleIQ" style={{ width: 28, height: 28, borderRadius: 6, objectFit: "cover" }} />
-            <span style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
-              Couple<span style={{ color: "#534ab7" }}>IQ</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.75rem" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <span aria-hidden="true" style={{ position: "relative", width: 30, height: 22, flex: "none" }}>
+              <span style={{ position: "absolute", top: 0, left: 0, width: 22, height: 22, borderRadius: "50%", background: "var(--violet)", mixBlendMode: "screen" }} />
+              <span style={{ position: "absolute", top: 0, right: 0, width: 22, height: 22, borderRadius: "50%", background: "var(--ember)", mixBlendMode: "screen" }} />
             </span>
+            <span style={{ fontFamily: "var(--serif)", fontSize: 24, color: "var(--on-dark)", letterSpacing: "-0.01em" }}>CoupleIQ</span>
           </Link>
-          <Link href="/" style={{ fontSize: 13, color: "#999", textDecoration: "none" }}>← Home</Link>
+          <Link href="/" style={{ fontSize: 13, color: "var(--on-dark-2)", textDecoration: "none" }}>← Home</Link>
         </div>
 
         <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em", marginBottom: 6 }}>
+          <h1 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 40, color: "var(--on-dark)", letterSpacing: "-0.02em", marginBottom: 10, lineHeight: 1 }}>
             The relationship test
           </h1>
-          <p style={{ fontSize: 14, color: "#777", lineHeight: 1.6, maxWidth: 460, margin: "0 auto" }}>
+          <p style={{ fontSize: 15, color: "var(--on-dark-2)", lineHeight: 1.6, maxWidth: 460, margin: "0 auto" }}>
             Fifteen questions about how you talk, fight, repair and trust. Private, no account, about
             5 minutes. Answer honestly — the more candid you are, the more useful your result.
           </p>
@@ -35,10 +36,10 @@ export default function RelationshipTestPage() {
 
         <Analyzer />
 
-        <p style={{ marginTop: "1.5rem", fontSize: 12, color: "#bbb", textAlign: "center", lineHeight: 1.6 }}>
+        <p style={{ marginTop: "1.5rem", fontSize: 12, color: "var(--on-dark-2)", textAlign: "center", lineHeight: 1.6 }}>
           For self-reflection only — not a diagnosis or a substitute for professional help. If you
           feel unsafe, see{" "}
-          <Link href="/support-resources" style={{ color: "#999", textDecoration: "underline" }}>support resources</Link>.
+          <Link href="/support-resources" style={{ color: "var(--on-dark)", textDecoration: "underline" }}>support resources</Link>.
         </p>
       </div>
     </main>

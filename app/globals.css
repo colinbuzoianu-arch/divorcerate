@@ -4,22 +4,22 @@
   padding: 0;
 }
 
-/* Point 1: Plus Jakarta Sans as primary font */
+/* Base font: Geist (self-hosted via next/font). Falls back cleanly. */
 html {
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: #f0efed;
-  color: #1a1a1a;
+  background: var(--paper);
+  color: var(--text);
   min-height: 100vh;
 }
 
 input[type="range"] {
   width: 100%;
-  accent-color: #534ab7;
+  accent-color: #4B3FB0;
   cursor: pointer;
 }
 
@@ -103,10 +103,10 @@ button {
 .prose li { margin-bottom: 0.4rem; }
 .prose strong { font-weight: 600; color: #1a1a1a; }
 .prose em { font-style: italic; }
-.prose a { color: #534ab7; text-decoration: underline; }
+.prose a { color: #4B3FB0; text-decoration: underline; }
 .prose hr { border: none; border-top: 0.5px solid #eee; margin: 2rem 0; }
 .prose blockquote {
-  border-left: 3px solid #534ab7;
+  border-left: 3px solid #4B3FB0;
   padding-left: 1rem;
   color: #555;
   font-style: italic;
@@ -145,6 +145,6 @@ button {
   margin-bottom: 0.75rem;
 }
 .legal-content a {
-  color: #534ab7;
+  color: #4B3FB0;
   text-decoration: underline;
 }

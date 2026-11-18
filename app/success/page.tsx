@@ -68,12 +68,13 @@ function SuccessInner() {
   return (
     <main
       style={{
-        background: "#f0efed",
+        background: "var(--ink)",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: "2rem",
+        fontFamily: "var(--sans)",
       }}
     >
       <div
@@ -89,7 +90,7 @@ function SuccessInner() {
       >
         {status === "verifying" && (
           <>
-            <div style={{ width: 40, height: 40, border: "3px solid #eeedfe", borderTopColor: "#534ab7", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 1rem" }} />
+            <div style={{ width: 40, height: 40, border: "3px solid #ece9fb", borderTopColor: "#4B3FB0", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 1rem" }} />
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
             <p style={{ fontSize: 16, fontWeight: 500, color: "#1a1a1a", marginBottom: 8 }}>Confirming your payment…</p>
             <p style={{ fontSize: 14, color: "#777" }}>This usually takes a few seconds.</p>
@@ -123,14 +124,14 @@ function SuccessInner() {
                 ? "Your payment may still be confirming. Open your report below — if it's still locked, give it a minute and refresh."
                 : "We couldn't find your result reference. If you were charged, email us at "}
               {!resultId && (
-                <a href="mailto:support.coupleiq@gmail.com" style={{ color: "#534ab7", textDecoration: "underline" }}>
+                <a href="mailto:support.coupleiq@gmail.com" style={{ color: "#4B3FB0", textDecoration: "underline" }}>
                   support.coupleiq@gmail.com
                 </a>
               )}
             </p>
             <button
               onClick={() => router.push(resultId ? `/r/${resultId}` : "/")}
-              style={{ background: "#534ab7", color: "#fff", border: "none", borderRadius: 10, padding: "12px 24px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}
+              style={{ background: "#4B3FB0", color: "#fff", border: "none", borderRadius: 10, padding: "12px 24px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}
             >
               {resultId ? "Open my report" : "Back to home"}
             </button>

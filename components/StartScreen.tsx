@@ -12,16 +12,16 @@ export default function StartScreen({ onStart }: Props) {
       <div style={{ margin: "0 auto 1.25rem", maxWidth: 320 }}>
         <svg width="100%" viewBox="0 0 680 220" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Two figures reaching toward each other with a heart between them, surrounded by analytical arcs">
           <style>{`
-            .fig{fill:#534ab7}
+            .fig{fill:#4B3FB0}
             .fig-l{fill:#afa9ec}
             .hrt{fill:#d85a30}
-            .dot{fill:#534ab7}
+            .dot{fill:#4B3FB0}
             .dot-l{fill:#afa9ec}
             .base{stroke:#e5e5e5;stroke-width:1;fill:none}
             .dash{stroke:#afa9ec;fill:none;stroke-width:1.5;stroke-dasharray:3 3}
-            .arc-s{stroke:#534ab7;fill:none;stroke-width:2;stroke-linecap:round;stroke-dasharray:200;stroke-dashoffset:200;animation:draw 1.4s ease forwards}
+            .arc-s{stroke:#4B3FB0;fill:none;stroke-width:2;stroke-linecap:round;stroke-dasharray:200;stroke-dashoffset:200;animation:draw 1.4s ease forwards}
             .arc-m{stroke:#afa9ec;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-dasharray:220;stroke-dashoffset:220;animation:draw 1.4s ease forwards}
-            .arc-l{stroke:#eeedfe;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-dasharray:180;stroke-dashoffset:180;animation:draw 1.4s ease forwards}
+            .arc-l{stroke:#ece9fb;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-dasharray:180;stroke-dashoffset:180;animation:draw 1.4s ease forwards}
             .a1{animation-delay:0s}
             .a2{animation-delay:0.15s}
             .a3{animation-delay:0.3s}
@@ -59,26 +59,26 @@ export default function StartScreen({ onStart }: Props) {
             <circle className="fig"   cx="289" cy="100" r="18"/>
             <circle className="fig-l" cx="284" cy="97"  r="5"/>
             <rect   className="fig"   x="272" y="112" width="34" height="52" rx="8"/>
-            <path   fill="none" stroke="#534ab7" strokeWidth="10" strokeLinecap="round" d="M306 128 Q326 120 336 115"/>
+            <path   fill="none" stroke="#4B3FB0" strokeWidth="10" strokeLinecap="round" d="M306 128 Q326 120 336 115"/>
           </g>
 
           <g className="fig-grp-r">
             <circle className="fig"   cx="391" cy="100" r="18"/>
             <circle className="fig-l" cx="386" cy="97"  r="5"/>
             <rect   className="fig"   x="374" y="112" width="34" height="52" rx="8"/>
-            <path   fill="none" stroke="#534ab7" strokeWidth="10" strokeLinecap="round" d="M374 128 Q354 120 344 115"/>
+            <path   fill="none" stroke="#4B3FB0" strokeWidth="10" strokeLinecap="round" d="M374 128 Q354 120 344 115"/>
           </g>
 
           <path fill="#d85a30" className="hrt-pulse" d="M340 122 C340 122 320 108 320 97 C320 89 327 83 334 85 C337 86 340 89 340 89 C340 89 343 86 346 85 C353 83 360 89 360 97 C360 108 340 122 340 122Z"/>
 
           <g className="chip1">
             <rect fill="none" stroke="#afa9ec" strokeWidth="1" x="300" y="42" width="36" height="14" rx="4"/>
-            <rect fill="#534ab7" opacity="0.7" x="303" y="46" width="14" height="6" rx="2"/>
+            <rect fill="#4B3FB0" opacity="0.7" x="303" y="46" width="14" height="6" rx="2"/>
             <rect fill="#afa9ec" opacity="0.5" x="319" y="46" width="10" height="6" rx="2"/>
           </g>
           <g className="chip2">
             <rect fill="none" stroke="#afa9ec" strokeWidth="1" x="344" y="34" width="36" height="14" rx="4"/>
-            <rect fill="#534ab7" opacity="0.7" x="347" y="38" width="18" height="6" rx="2"/>
+            <rect fill="#4B3FB0" opacity="0.7" x="347" y="38" width="18" height="6" rx="2"/>
             <rect fill="#afa9ec" opacity="0.4" x="367" y="38" width="8"  height="6" rx="2"/>
           </g>
 
@@ -102,7 +102,7 @@ export default function StartScreen({ onStart }: Props) {
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: "1.5rem" }}>
         {["Gottman method", "Attachment theory", "Communication patterns", "Conflict resolution", "~5 minutes"].map((tag) => (
-          <span key={tag} style={{ fontSize: 12, padding: "4px 12px", borderRadius: 20, background: "#eeedfe", color: "#3c3489", border: "0.5px solid #afa9ec" }}>
+          <span key={tag} style={{ fontSize: 12, padding: "4px 12px", borderRadius: 20, background: "#ece9fb", color: "#3c3489", border: "0.5px solid #afa9ec" }}>
             {tag}
           </span>
         ))}
@@ -110,7 +110,7 @@ export default function StartScreen({ onStart }: Props) {
 
       <button
         onClick={onStart}
-        style={{ width: "100%", background: "#534ab7", color: "#fff", border: "none", borderRadius: 10, padding: "13px 20px", fontSize: 15, fontWeight: 500, cursor: "pointer" }}
+        style={{ width: "100%", background: "#4B3FB0", color: "#fff", border: "none", borderRadius: 10, padding: "13px 20px", fontSize: 15, fontWeight: 500, cursor: "pointer" }}
       >
         Find out where we stand
       </button>

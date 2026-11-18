@@ -15,7 +15,7 @@ const SITE           = "splitornot.com";
 
 export default function LegalPage() {
   return (
-    <main style={{ background: "#f0efed", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <main style={{ background: "var(--paper)", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "var(--sans)", color: "var(--text)" }}>
       <div style={{ width: "100%", maxWidth: 680 }}>
 
         {/* Nav */}
@@ -23,7 +23,7 @@ export default function LegalPage() {
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
             <img src="/logo.png" alt="CoupleIQ" style={{ width: 28, height: 28, borderRadius: 6, objectFit: "cover" }} />
             <span style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
-              Couple<span style={{ color: "#534ab7" }}>IQ</span>
+              Couple<span style={{ color: "#4B3FB0" }}>IQ</span>
             </span>
           </Link>
           <Link href="/" style={{ fontSize: 13, color: "#999", textDecoration: "none" }}>← Back to home</Link>

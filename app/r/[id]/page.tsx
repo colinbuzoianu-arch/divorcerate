@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getResult, isPaid as isPaidKv, kvConfigured } from "@/lib/kv";
 import { toFreeResult } from "@/lib/types";
 import ResultView from "@/components/analyzer/ResultView";
+import BrandMark from "@/components/layout/BrandMark";
 
 export const dynamic = "force-dynamic";
 
@@ -14,16 +15,11 @@ export const metadata: Metadata = {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main style={{ background: "#f0efed", minHeight: "100vh", padding: "1.5rem 1rem 3rem", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <main style={{ background: "var(--ink)", minHeight: "100vh", padding: "1.5rem 1rem 3rem", fontFamily: "var(--sans)", color: "var(--on-dark)" }}>
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <img src="/logo.png" alt="CoupleIQ" style={{ width: 28, height: 28, borderRadius: 6, objectFit: "cover" }} />
-            <span style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
-              Couple<span style={{ color: "#534ab7" }}>IQ</span>
-            </span>
-          </Link>
-          <Link href="/relationship-test" style={{ fontSize: 13, color: "#999", textDecoration: "none" }}>Take the test again</Link>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.75rem" }}>
+          <Link href="/" style={{ textDecoration: "none" }}><BrandMark onDark /></Link>
+          <Link href="/relationship-test" style={{ fontSize: 13, color: "var(--on-dark-2)", textDecoration: "none" }}>Take the test again</Link>
         </div>
         {children}
       </div>
@@ -34,9 +30,9 @@ function Shell({ children }: { children: React.ReactNode }) {
 function NotFoundCard({ title, body }: { title: string; body: string }) {
   return (
     <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #efefed", padding: "2.5rem 2rem", textAlign: "center", maxWidth: 620, margin: "0 auto" }}>
-      <p style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", marginBottom: 8 }}>{title}</p>
+      <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 28, color: "#1a1a1a", marginBottom: 8, lineHeight: 1.1 }}>{title}</p>
       <p style={{ fontSize: 14, color: "#777", lineHeight: 1.7, marginBottom: "1.5rem" }}>{body}</p>
-      <Link href="/relationship-test" style={{ background: "#534ab7", color: "#fff", borderRadius: 10, padding: "12px 22px", fontSize: 14, fontWeight: 600, textDecoration: "none", display: "inline-block" }}>
+      <Link href="/relationship-test" style={{ background: "#4B3FB0", color: "#fff", borderRadius: 999, padding: "13px 26px", fontSize: 14, fontWeight: 600, textDecoration: "none", display: "inline-block" }}>
         Take the relationship test
       </Link>
     </div>

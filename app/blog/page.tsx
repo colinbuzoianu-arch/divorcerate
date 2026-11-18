@@ -1,5 +1,6 @@
 import { getAllPosts } from "@/lib/posts";
 import Link from "next/link";
+import BrandMark from "@/components/layout/BrandMark";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -22,26 +23,21 @@ export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <main style={{ background: "#f0efed", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <main style={{ background: "var(--paper)", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "var(--sans)", color: "var(--text)" }}>
       <div style={{ width: "100%", maxWidth: 680 }}>
 
         {/* Nav */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <img src="/logo.png" alt="CoupleIQ" style={{ width: 28, height: 28, borderRadius: 6, objectFit: "cover" }} />
-            <span style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
-              Couple<span style={{ color: "#534ab7" }}>IQ</span>
-            </span>
-          </Link>
-          <Link href="/" style={{ fontSize: 13, color: "#999", textDecoration: "none" }}>← Back to analyzer</Link>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2.5rem" }}>
+          <Link href="/" style={{ textDecoration: "none" }}><BrandMark /></Link>
+          <Link href="/relationship-test" style={{ fontSize: 13, color: "var(--text-2)", textDecoration: "none" }}>Take the test →</Link>
         </div>
 
         {/* Header */}
         <div style={{ marginBottom: "2rem" }}>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: "#1a1a1a", marginBottom: "0.5rem", letterSpacing: "-0.02em" }}>
-            Relationship insights
+          <h1 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 48, color: "var(--text)", marginBottom: "0.5rem", letterSpacing: "-0.02em", lineHeight: 1 }}>
+            From the journal
           </h1>
-          <p style={{ fontSize: 15, color: "#777", lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: "var(--text-2)", lineHeight: 1.6 }}>
             Evidence-based articles to help you understand your relationship.
           </p>
         </div>
@@ -50,22 +46,22 @@ export default function BlogPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {posts.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-              <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #efefed", padding: "1.5rem", cursor: "pointer", transition: "border-color 0.15s" }}>
-                <p style={{ fontSize: 12, color: "#bbb", marginBottom: "0.4rem", fontWeight: 500 }}>
+              <div style={{ background: "#fff", borderRadius: 24, border: "1px solid var(--line-light)", padding: "1.75rem", cursor: "pointer", transition: "border-color 0.15s" }}>
+                <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: "0.6rem" }}>
                   {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
                 </p>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", marginBottom: "0.5rem", lineHeight: 1.4, letterSpacing: "-0.01em" }}>
+                <h2 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 28, color: "var(--text)", marginBottom: "0.5rem", lineHeight: 1.1, letterSpacing: "-0.01em" }}>
                   {post.title}
                 </h2>
-                <p style={{ fontSize: 14, color: "#666", lineHeight: 1.65 }}>{post.description}</p>
-                <p style={{ fontSize: 13, color: "#534ab7", marginTop: "0.75rem", fontWeight: 600 }}>Read article →</p>
+                <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.65 }}>{post.description}</p>
+                <p style={{ fontSize: 13, color: "var(--violet-deep)", marginTop: "0.75rem", fontWeight: 600 }}>Read article →</p>
               </div>
             </Link>
           ))}
         </div>
 
-        <p style={{ marginTop: "2rem", fontSize: 12, color: "#ccc", textAlign: "center" }}>
-          CoupleIQ · Built on relationship science · Powered by Claude AI
+        <p style={{ marginTop: "2.5rem", fontSize: 12, color: "var(--text-2)", textAlign: "center" }}>
+          CoupleIQ · splitornot.com
         </p>
       </div>
     </main>

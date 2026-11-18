@@ -31,7 +31,7 @@ export default function LoadingScreen() {
 
       {/* Spinner */}
       <div style={{ position: "relative", width: 56, height: 56 }}>
-        <div style={{ width: 56, height: 56, border: "3px solid #eeedfe", borderTopColor: "#534ab7", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+        <div style={{ width: 56, height: 56, border: "3px solid #ece9fb", borderTopColor: "#4B3FB0", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
 
@@ -42,7 +42,7 @@ export default function LoadingScreen() {
 
       {/* Time estimate */}
       <div style={{ background: "#f5f5f3", borderRadius: 10, padding: "8px 16px", display: "inline-flex", alignItems: "center", gap: 8 }}>
-        <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#534ab7", animation: "pulse 1.5s ease-in-out infinite" }} />
+        <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4B3FB0", animation: "pulse 1.5s ease-in-out infinite" }} />
         <style>{`@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }`}</style>
         <p style={{ fontSize: 13, color: "#888", margin: 0 }}>
           {seconds < 10

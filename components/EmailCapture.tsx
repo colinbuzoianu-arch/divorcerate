@@ -51,7 +51,7 @@ export default function EmailCapture({ result }: Props) {
   return (
     <div style={{ border: "1px solid #efefed", borderRadius: 16, overflow: "hidden" }}>
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #534ab7 0%, #3c3489 100%)", padding: "1.5rem", textAlign: "center" }}>
+      <div style={{ background: "linear-gradient(135deg, #4B3FB0 0%, #3c3489 100%)", padding: "1.5rem", textAlign: "center" }}>
         <div style={{ fontSize: 28, marginBottom: 8 }}>📬</div>
         <p style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6, letterSpacing: "-0.01em" }}>
           Get the full report in your inbox
@@ -74,7 +74,7 @@ export default function EmailCapture({ result }: Props) {
           "Retake reminder so you can track progress",
         ].map((item) => (
           <div key={item} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, fontSize: 13, color: "#444" }}>
-            <span style={{ width: 18, height: 18, borderRadius: "50%", background: "#eeedfe", color: "#534ab7", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>✓</span>
+            <span style={{ width: 18, height: 18, borderRadius: "50%", background: "#ece9fb", color: "#4B3FB0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>✓</span>
             {item}
           </div>
         ))}
@@ -102,7 +102,7 @@ export default function EmailCapture({ result }: Props) {
               transition: "border-color 0.15s",
               boxSizing: "border-box",
             }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = "#534ab7")}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#4B3FB0")}
             onBlur={(e)  => (e.currentTarget.style.borderColor = "#e8e8e5")}
           />
 
@@ -115,7 +115,7 @@ export default function EmailCapture({ result }: Props) {
             disabled={status === "loading"}
             style={{
               width: "100%",
-              background: status === "loading" ? "#afa9ec" : "#534ab7",
+              background: status === "loading" ? "#afa9ec" : "#4B3FB0",
               color: "#fff",
               border: "none",
               borderRadius: 12,

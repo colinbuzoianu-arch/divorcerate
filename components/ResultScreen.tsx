@@ -56,8 +56,8 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
 
   const pct    = Math.min(100, Math.max(0, result.probability));
   const avg    = Math.min(100, Math.max(0, result.nationalAverage ?? 42));
-  const color  = riskColors[result.riskLevel] ?? "#534ab7";
-  const bg     = riskBg[result.riskLevel]     ?? "#eeedfe";
+  const color  = riskColors[result.riskLevel] ?? "#4B3FB0";
+  const bg     = riskBg[result.riskLevel]     ?? "#ece9fb";
   const urgency = urgencyConfig[full.urgency] ?? urgencyConfig["worth being aware of"];
   const vsAvg  = pct - avg;
   const tier   = getTier(pct);
@@ -94,7 +94,7 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
         </div>
 
         {/* Tier name — the identity anchor */}
-        <p style={{ fontSize: 28, fontWeight: 800, color, lineHeight: 1.1, letterSpacing: "-0.03em", marginBottom: 6 }}>
+        <p style={{ fontFamily: "var(--serif)", fontSize: 40, fontWeight: 400, color, lineHeight: 1, letterSpacing: "-0.02em", marginBottom: 6 }}>
           {tier.name}
         </p>
 
@@ -151,7 +151,7 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
       {/* PATTERN */}
       <div className={r("reveal-d3")} style={{ border: "1px solid #efefed", borderRadius: 16, padding: "1.25rem 1.5rem", background: "#fff" }}>
         <p style={{ fontSize: 11, fontWeight: 600, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>Your relationship pattern</p>
-        <p style={{ fontSize: 16, fontWeight: 700, color: "#534ab7", marginBottom: 8, letterSpacing: "-0.01em" }}>{result.dynamicPattern}</p>
+        <p style={{ fontSize: 16, fontWeight: 700, color: "#4B3FB0", marginBottom: 8, letterSpacing: "-0.01em" }}>{result.dynamicPattern}</p>
         <p style={{ fontSize: 14, color: "#555", lineHeight: 1.75 }}>{result.dynamicPatternDetail}</p>
       </div>
 
@@ -215,7 +215,7 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {(full.recommendations ?? []).map((rec, i) => (
                   <div key={i} style={{ display: "flex", gap: 14, padding: "13px 16px", background: "#fafaf8", borderRadius: 14, border: "1px solid #efefed", alignItems: "flex-start" }}>
-                    <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#534ab7", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                    <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#4B3FB0", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
                       {i + 1}
                     </div>
                     <div>
@@ -328,7 +328,7 @@ function PaywallGate({ onUnlock, riskLevel, color }: { onUnlock: () => void; ris
         <button
           onClick={() => { setLoading(true); onUnlock(); }}
           disabled={loading}
-          style={{ width: "100%", background: loading ? "#afa9ec" : "#534ab7", color: "#fff", border: "none", borderRadius: 14, padding: "16px 20px", fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", transition: "background 0.15s, transform 0.1s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, letterSpacing: "0.01em" }}
+          style={{ width: "100%", background: loading ? "#afa9ec" : "#4B3FB0", color: "#fff", border: "none", borderRadius: 14, padding: "16px 20px", fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", transition: "background 0.15s, transform 0.1s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, letterSpacing: "0.01em" }}
           onMouseDown={(e) => { if (!loading) e.currentTarget.style.transform = "scale(0.98)"; }}
           onMouseUp={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
         >
@@ -396,7 +396,7 @@ function ShareButton({ result, pct, color, bg, full }: { result: AnalysisResult 
     ctx.strokeStyle="#e8e8e5"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cardX+60,cardY+460); ctx.lineTo(cardX+cardW-60,cardY+460); ctx.stroke();
     if (full) {
       ctx.fillStyle="#1a1a1a"; ctx.font="500 44px -apple-system,sans-serif"; wrapText(ctx,result.headline,W/2,cardY+540,cardW-160,58);
-      ctx.fillStyle="#534ab7"; ctx.font="500 34px -apple-system,sans-serif"; ctx.fillText(result.dynamicPattern,W/2,cardY+700);
+      ctx.fillStyle="#4B3FB0"; ctx.font="500 34px -apple-system,sans-serif"; ctx.fillText(result.dynamicPattern,W/2,cardY+700);
       const rowY=cardY+760, halfW=cardW/2-20;
       roundRect(ctx,cardX+20,rowY,halfW,140,16); ctx.fillStyle="#e1f5ee"; ctx.fill();
       ctx.fillStyle="#0f6e56"; ctx.font="600 22px -apple-system,sans-serif"; ctx.textAlign="left"; ctx.fillText("STRENGTH",cardX+44,rowY+38);
@@ -406,7 +406,7 @@ function ShareButton({ result, pct, color, bg, full }: { result: AnalysisResult 
       ctx.fillStyle="#501313"; ctx.font="500 28px -apple-system,sans-serif"; wrapText(ctx,result.biggestRisk,rBoxX+24,rowY+76,halfW-48,36,2);
     } else {
       ctx.fillStyle="#1a1a1a"; ctx.font="500 40px -apple-system,sans-serif"; ctx.textAlign="center"; ctx.fillText("See the full breakdown at",W/2,cardY+560);
-      ctx.fillStyle="#534ab7"; ctx.font="600 44px -apple-system,sans-serif"; ctx.fillText("splitornot.com",W/2,cardY+620);
+      ctx.fillStyle="#4B3FB0"; ctx.font="600 44px -apple-system,sans-serif"; ctx.fillText("splitornot.com",W/2,cardY+620);
       [700,760,820].forEach(y=>{ roundRect(ctx,cardX+60,cardY+y,cardW-120,44,10); ctx.fillStyle="#f0efed"; ctx.fill(); ctx.fillStyle="#ccc"; ctx.font="400 24px -apple-system,sans-serif"; ctx.fillText("🔒 unlock for full analysis",W/2,cardY+y+30); });
     }
     ctx.fillStyle="#bbb"; ctx.font="400 28px -apple-system,sans-serif"; ctx.textAlign="center";
@@ -433,7 +433,7 @@ function ShareButton({ result, pct, color, bg, full }: { result: AnalysisResult 
   }
 
   const label = status==="generating"?"Generating card…":status==="copied"?"Image saved · Link copied!":status==="shared"?"Shared!":full?"Share my result":"Share my score";
-  const btnBg = status==="idle"?"#534ab7":status==="generating"?"#afa9ec":"#1d9e75";
+  const btnBg = status==="idle"?"#4B3FB0":status==="generating"?"#afa9ec":"#1d9e75";
 
   return (
     <button onClick={handleShare} disabled={status==="generating"}

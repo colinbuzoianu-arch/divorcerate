@@ -56,13 +56,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${serif.variable} ${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
-        {/* Point 1: Plus Jakarta Sans — premium feel, clean & modern */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
         {/* Google Consent Mode v2 — default DENIED. We set the gtag stub and
             consent defaults here, but do NOT load gtag.js. The external library
             (and therefore any GA/Ads request) is only loaded by ConsentBanner

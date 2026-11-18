@@ -2,6 +2,7 @@ import { getPostBySlug, getAllPosts } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ArticleCtaLink from "@/components/ArticleCtaLink";
+import BrandMark from "@/components/layout/BrandMark";
 import JsonLd from "@/components/JsonLd";
 import { blogPostingLd, breadcrumbLd } from "@/lib/seo";
 import type { Metadata } from "next";
@@ -50,55 +51,50 @@ export default async function BlogPostPage({ params }: Props) {
   const contentHtml = processedContent.toString();
 
   return (
-    <main style={{ background: "#f0efed", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <main style={{ background: "var(--paper)", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "var(--sans)", color: "var(--text)" }}>
       <JsonLd data={blogPostingLd({ title: post.title, description: post.description, slug: params.slug, date: post.date })} />
       <JsonLd data={breadcrumbLd([{ name: "Home", path: "/" }, { name: "Journal", path: "/blog" }, { name: post.title, path: `/blog/${params.slug}` }])} />
       <div style={{ width: "100%", maxWidth: 680 }}>
 
         {/* Nav */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <img src="/logo.png" alt="CoupleIQ" style={{ width: 28, height: 28, borderRadius: 6, objectFit: "cover" }} />
-            <span style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
-              Couple<span style={{ color: "#534ab7" }}>IQ</span>
-            </span>
-          </Link>
-          <Link href="/blog" style={{ fontSize: 13, color: "#999", textDecoration: "none" }}>← All articles</Link>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
+          <Link href="/" style={{ textDecoration: "none" }}><BrandMark /></Link>
+          <Link href="/blog" style={{ fontSize: 13, color: "var(--text-2)", textDecoration: "none" }}>← All articles</Link>
         </div>
 
         {/* Article */}
-        <article style={{ background: "#fff", borderRadius: 16, border: "1px solid #efefed", padding: "2.5rem 2rem" }}>
-          <p style={{ fontSize: 12, color: "#bbb", marginBottom: "0.75rem", fontWeight: 500 }}>
+        <article style={{ background: "#fff", borderRadius: 32, border: "1px solid var(--line-light)", padding: "2.75rem 2.25rem" }}>
+          <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: "0.9rem" }}>
             {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
           </p>
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#1a1a1a", lineHeight: 1.3, marginBottom: "0.75rem", letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 42, color: "var(--text)", lineHeight: 1.05, marginBottom: "1rem", letterSpacing: "-0.02em" }}>
             {post.title}
           </h1>
-          <p style={{ fontSize: 15, color: "#666", lineHeight: 1.7, marginBottom: "2rem", borderBottom: "1px solid #f5f5f3", paddingBottom: "1.5rem" }}>
+          <p style={{ fontSize: 16, color: "var(--text-2)", lineHeight: 1.7, marginBottom: "2rem", borderBottom: "1px solid var(--line-light)", paddingBottom: "1.5rem" }}>
             {post.description}
           </p>
           <div className="prose" dangerouslySetInnerHTML={{ __html: contentHtml }} />
         </article>
 
         {/* CTA */}
-        <div style={{ background: "#534ab7", borderRadius: 16, padding: "2rem", marginTop: "1.5rem", textAlign: "center" }}>
-          <p style={{ color: "#fff", fontSize: 17, fontWeight: 700, marginBottom: "0.5rem", letterSpacing: "-0.01em" }}>
+        <div style={{ background: "var(--ink)", color: "var(--on-dark)", borderRadius: 32, padding: "2.5rem 2rem", marginTop: "1.5rem", textAlign: "center" }}>
+          <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 30, marginBottom: "0.5rem", lineHeight: 1.1 }}>
             Wondering about your own relationship?
           </p>
-          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, marginBottom: "1.25rem", lineHeight: 1.6 }}>
-            Take CoupleIQ's 5-minute evidence-based assessment. Free to start.
+          <p style={{ color: "var(--on-dark-2)", fontSize: 14, marginBottom: "1.5rem", lineHeight: 1.6 }}>
+            Take CoupleIQ&apos;s free, private 5-minute relationship test.
           </p>
           <ArticleCtaLink
-            href="/"
+            href="/relationship-test"
             slug={params.slug}
-            style={{ background: "#fff", color: "#534ab7", borderRadius: 12, padding: "12px 28px", fontSize: 14, fontWeight: 700, textDecoration: "none", display: "inline-block", letterSpacing: "0.01em" }}
+            style={{ background: "var(--on-dark)", color: "var(--ink)", borderRadius: 999, padding: "14px 30px", fontSize: 15, fontWeight: 600, textDecoration: "none", display: "inline-block" }}
           >
-            Get my relationship score →
+            Take the free test →
           </ArticleCtaLink>
         </div>
 
-        <p style={{ marginTop: "1.5rem", fontSize: 12, color: "#ccc", textAlign: "center" }}>
-          CoupleIQ · Built on relationship science · Powered by Claude AI
+        <p style={{ marginTop: "1.5rem", fontSize: 12, color: "var(--text-2)", textAlign: "center" }}>
+          CoupleIQ · splitornot.com
         </p>
       </div>
     </main>

@@ -95,7 +95,7 @@ export default function ConsentBanner({ gaId }: { gaId: string }) {
       <p style={{ fontSize: 13.5, color: "#444", lineHeight: 1.6, margin: "0 0 12px" }}>
         We use analytics and advertising cookies to understand how the site is used. They stay off
         until you accept. See our{" "}
-        <a href="/legal" style={{ color: "#534ab7", textDecoration: "underline", textUnderlineOffset: 2 }}>
+        <a href="/legal" style={{ color: "#4B3FB0", textDecoration: "underline", textUnderlineOffset: 2 }}>
           privacy policy
         </a>
         .
@@ -103,7 +103,7 @@ export default function ConsentBanner({ gaId }: { gaId: string }) {
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <button
           onClick={() => choose("granted")}
-          style={{ background: "#534ab7", color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 14, fontWeight: 700, cursor: "pointer", minHeight: 44 }}
+          style={{ background: "#4B3FB0", color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 14, fontWeight: 700, cursor: "pointer", minHeight: 44 }}
         >
           Accept
         </button>

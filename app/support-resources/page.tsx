@@ -11,18 +11,18 @@ export const metadata: Metadata = {
 const sectionStyle = { background: "#fff", borderRadius: 16, border: "1px solid #efefed", padding: "1.5rem" } as const;
 const h2Style = { fontSize: 18, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em", marginBottom: 10 } as const;
 const liStyle = { fontSize: 14, color: "#444", lineHeight: 1.7, marginBottom: 8 } as const;
-const linkStyle = { color: "#534ab7", fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3 } as const;
+const linkStyle = { color: "#4B3FB0", fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3 } as const;
 
 export default function SupportResourcesPage() {
   return (
-    <main style={{ background: "#f0efed", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <main style={{ background: "var(--paper)", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "var(--sans)", color: "var(--text)" }}>
       <div style={{ width: "100%", maxWidth: 680 }}>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
             <img src="/logo.png" alt="CoupleIQ" style={{ width: 28, height: 28, borderRadius: 6, objectFit: "cover" }} />
             <span style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>
-              Couple<span style={{ color: "#534ab7" }}>IQ</span>
+              Couple<span style={{ color: "#4B3FB0" }}>IQ</span>
             </span>
           </Link>
           <Link href="/" style={{ fontSize: 13, color: "#999", textDecoration: "none" }}>← Home</Link>
