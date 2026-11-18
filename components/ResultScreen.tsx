@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnalysisResult, FreeResult } from "@/lib/types";
 import { track } from "@/lib/analytics";
+import SafetyBlock from "@/components/SafetyBlock";
 
 const riskColors: Record<string, string> = {
   Low: "#1d9e75", Moderate: "#ba7517", Elevated: "#d85a30", High: "#a32d2d",
@@ -78,6 +79,9 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+
+      {/* SAFETY — free, never blurred, always first (Phase 1.4) */}
+      {result.safetyFlag && <SafetyBlock />}
 
       {/* HEADLINE — tier name leads, percentage supports */}
       <div className={r("reveal-d1")} style={{ background: bg, border: `1px solid ${color}22`, borderRadius: 16, padding: "1.5rem", textAlign: "center" }}>

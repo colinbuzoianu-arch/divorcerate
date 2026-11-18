@@ -28,6 +28,8 @@ export interface AnalysisResult {
   recommendations: Recommendation[];
   urgency: "keep doing what you are doing" | "worth being aware of" | "worth addressing soon" | "worth addressing urgently";
   disclaimer: string;
+  /** Set server-side (never by the AI) when the safety layer triggers (Phase 1.4). */
+  safetyFlag?: boolean;
 }
 
 /**
@@ -47,6 +49,7 @@ export const FREE_FIELDS = [
   "biggestStrengthDetail",
   "biggestRisk",
   "disclaimer",
+  "safetyFlag",
 ] as const;
 
 export type FreeResult = Pick<AnalysisResult, (typeof FREE_FIELDS)[number]>;

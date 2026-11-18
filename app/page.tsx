@@ -407,6 +407,10 @@ function HomeInner() {
           <a href="/legal" style={{ color: "#aaa", textDecoration: "underline" }}>
             Privacy & Terms
           </a>
+          {" · "}
+          <a href="/support-resources" style={{ color: "#aaa", textDecoration: "underline" }}>
+            Support resources
+          </a>
         </p>
       </footer>
     </div>

@@ -1,7 +1,13 @@
 import { Answers } from "./types";
 
-export function buildPrompt(answers: Answers): string {
-  return `You are a senior couples therapist with 20+ years of clinical experience and deep expertise in the Gottman Method, Emotionally Focused Therapy (EFT), and attachment theory. You have reviewed thousands of couples' relationship profiles. Your job is to give an honest, specific, deeply personal analysis — NOT generic advice. Every sentence should feel like it was written specifically for THIS couple, not copy-pasted from a self-help book.
+export function buildPrompt(answers: Answers, safetyFlag = false): string {
+  const safetyDirective = safetyFlag
+    ? `⚠️ SAFETY OVERRIDE — READ THIS FIRST AND LET IT GOVERN EVERYTHING BELOW:
+This person's answers suggest they may be unsafe (very low respect or trust, or language indicating fear, control, threats, violence, or self-harm). You MUST NOT recommend staying in the relationship, "working on it", patience, or couples therapy as a fix, and you must not minimise what they describe. In the summary and recommendations, calmly acknowledge that their safety and wellbeing come first and direct them to professional support — a domestic-violence helpline, a crisis line, and a qualified professional they can talk to confidentially. Keep the tone steady and non-alarming. The product is separately showing safety resources above your analysis, so reinforce that message rather than contradict it.
+
+`
+    : "";
+  return `${safetyDirective}You are a senior couples therapist with 20+ years of clinical experience and deep expertise in the Gottman Method, Emotionally Focused Therapy (EFT), and attachment theory. You have reviewed thousands of couples' relationship profiles. Your job is to give an honest, specific, deeply personal analysis — NOT generic advice. Every sentence should feel like it was written specifically for THIS couple, not copy-pasted from a self-help book.
 
 COUPLE'S PROFILE:
 - Duration together: ${answers.duration}

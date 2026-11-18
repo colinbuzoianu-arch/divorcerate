@@ -5,6 +5,7 @@ import { AnalysisResult, toFreeResult, ResultResponse } from "@/lib/types";
 import { validateAnalyzeRequest } from "@/lib/validation";
 import { checkAnalyzeRateLimit } from "@/lib/ratelimit";
 import { saveResult, kvConfigured } from "@/lib/kv";
+import { detectSafetyFlag } from "@/lib/safety";
 
 // Use Node.js runtime — no timeout limit on Vercel hobby plan (vs 30s edge limit)
 export const runtime = "nodejs";
@@ -58,7 +59,10 @@ export async function POST(req: NextRequest) {
     }
     const answers = validation.answers;
 
-    const prompt = buildPrompt(answers);
+    // 1.4 — deterministic safety detection (never relies on the AI).
+    const safetyFlag = detectSafetyFlag(answers);
+
+    const prompt = buildPrompt(answers, safetyFlag);
     const model = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5-20251001";
 
     const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
@@ -135,6 +139,9 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Safety flag is authoritative from our own code, not the model.
+    result.safetyFlag = safetyFlag;
 
     // 1.2 — store the FULL result server-side under a random id (30-day TTL),
     // and return ONLY the free fields to the browser. The paid content never
