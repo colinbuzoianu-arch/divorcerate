@@ -1,0 +1,218 @@
+# ----------------------------------------
+# Reports snapshot
+# Account: VerumSell
+# Property: Split or Not
+# ----------------------------------------
+#  
+# Start date: 20260820
+# End date: 20261117
+Active users,New users,Average engagement time per active user,Event count
+104,101,25.85576923076923,467
+
+#  
+# Start date: 20260820
+# End date: 20261117
+Page title and screen class,Views,Active users,Event count,Bounce rate
+CoupleIQ — Relationship Health Analyzer,121,104,443,0.5897435897435898
+Privacy Policy & Terms | CoupleIQ,2,1,5,0
+CoupleIQ — Анализатор здоровья отношений,0,4,6,0.25
+CoupleIQ — анализатор здоровья отношений,0,9,13,0
+
+#  
+# Start date: 20260820
+# End date: 20261117
+First user source / medium,Active users
+google / organic,55
+(direct) / (none),37
+yandex.ru / referral,6
+agent.spot / (not set),1
+chatgpt.com / ai-assistant,1
+duckduckgo / organic,1
+reddit.lightning.force.com / referral,1
+vercel.com / referral,1
+yandex.by / referral,1
+
+#  
+# Start date: 20260820
+# End date: 20261117
+Session source / medium,Sessions
+google / organic,66
+(direct) / (none),36
+yandex.ru / referral,6
+agent.spot / (not set),1
+chatgpt.com / ai-assistant,1
+duckduckgo / organic,1
+reddit.lightning.force.com / referral,1
+vercel.com / referral,1
+yandex.by / referral,1
+
+#  
+# Start date: 20260820
+# End date: 20261117
+Nth day,new,returning
+0000,0,0
+0001,0,0
+0002,0,0
+0003,0,0
+0004,1,0
+0005,0,0
+0006,0,0
+0007,0,0
+0008,0,0
+0009,1,0
+0010,2,0
+0011,0,0
+0012,0,0
+0013,0,0
+0014,0,0
+0015,0,0
+0016,1,0
+0017,1,0
+0018,0,0
+0019,0,0
+0020,0,0
+0021,1,0
+0022,0,0
+0023,0,0
+0024,0,0
+0025,0,0
+0026,0,0
+0027,0,0
+0028,0,0
+0029,1,0
+0030,1,0
+0031,2,0
+0032,1,0
+0033,1,0
+0034,1,1
+0035,0,0
+0036,3,0
+0037,1,0
+0038,0,0
+0039,0,0
+0040,0,0
+0041,0,0
+0042,0,0
+0043,0,0
+0044,0,0
+0045,0,0
+0046,1,0
+0047,0,0
+0048,0,0
+0049,0,0
+0050,0,0
+0051,0,0
+0052,0,0
+0053,0,0
+0054,0,0
+0055,0,0
+0056,0,0
+0057,3,0
+0058,1,0
+0059,2,0
+0060,0,0
+0061,1,0
+0062,0,0
+0063,0,0
+0064,1,0
+0065,1,0
+0066,0,0
+0067,2,0
+0068,1,0
+0069,0,0
+0070,0,0
+0071,1,0
+0072,0,0
+0073,0,0
+0074,0,0
+0075,0,0
+0076,1,0
+0077,0,0
+0078,18,2
+0079,26,2
+0080,8,2
+0081,6,1
+0082,3,0
+0083,2,1
+0084,2,0
+0085,2,0
+0086,1,0
+0087,1,0
+0088,0,0
+0089,1,0
+
+# How does activity on your platforms compare?
+# Start date: 20260820
+# End date: 20261117
+Platform,Key events
+
+
+#  
+# Start date: 20260820
+# End date: 20261117
+City,Active users
+Minsk,6
+Moscow,5
+Warsaw,5
+Vienna,4
+Vitebsk,4
+Frankfurt am Main,3
+Krasnodar,3
+New York,3
+Hong Kong,2
+Lviv,2
+San Jose,2
+Timisoara,2
+Xinxiang,2
+Aarhus,1
+Alicante,1
+Almaty,1
+Amsterdam,1
+Antwerp,1
+Barysaw,1
+Belo Horizonte,1
+Berlin,1
+Biala Podlaska,1
+Biel/Bienne,1
+Bishkek,1
+Burnaby,1
+Chelyabinsk,1
+Cherepovets,1
+Chernihiv,1
+Chicago,1
+Chisinau,1
+Copenhagen,1
+Dortmund,1
+Dushanbe,1
+Gdansk,1
+Georgsmarienhutte,1
+Glenview,1
+Groningen,1
+Independence,1
+Innsbruck,1
+Kaliningrad,1
+Khammam,1
+Khimki,1
+Kladno,1
+Kryvyi Rih,1
+Madrid,1
+Newark,1
+Nizhny Tagil,1
+Novosibirsk,1
+Omsk,1
+Pasadena,1
+Poznan,1
+Rheden,1
+Saratov,1
+Singapore,1
+Stockholm,1
+Tallinn,1
+Tubingen,1
+Wheaton,1
+Zaporizhzhia,1
+
+#  
+# Start date: 20260820
+# End date: 20261117
+Audience name,Active users
+All Users,104
