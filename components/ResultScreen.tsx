@@ -410,7 +410,7 @@ function ShareButton({ result, pct, color, bg, full }: { result: AnalysisResult 
       [700,760,820].forEach(y=>{ roundRect(ctx,cardX+60,cardY+y,cardW-120,44,10); ctx.fillStyle="#f0efed"; ctx.fill(); ctx.fillStyle="#ccc"; ctx.font="400 24px -apple-system,sans-serif"; ctx.fillText("🔒 unlock for full analysis",W/2,cardY+y+30); });
     }
     ctx.fillStyle="#bbb"; ctx.font="400 28px -apple-system,sans-serif"; ctx.textAlign="center";
-    ctx.fillText("splitornot.com · relationship health analyzer",W/2,cardY+cardH-40);
+    ctx.fillText("CoupleIQ · splitornot.com",W/2,cardY+cardH-40);
     return canvas;
   }
 
@@ -423,7 +423,7 @@ function ShareButton({ result, pct, color, bg, full }: { result: AnalysisResult 
     const file = new File([blob],"my-relationship-result.png",{type:"image/png"});
     if (navigator.canShare?.({files:[file]})) {
       try {
-        await navigator.share({ files:[file], title:"My relationship health result", text: full ? `I got ${pct}% divorce risk on splitornot.com. ${result.headline}` : `I got ${pct}% divorce risk on splitornot.com — see if your relationship is at risk.` });
+        await navigator.share({ files:[file], title:"My relationship health result", text: full ? `I got ${pct}% divorce risk on CoupleIQ. ${result.headline}` : `I got ${pct}% divorce risk on CoupleIQ — see where your relationship stands at splitornot.com.` });
         setStatus("shared"); setTimeout(()=>setStatus("idle"),2500); return;
       } catch {}
     }

@@ -396,7 +396,7 @@ function HomeInner() {
           Grounded in relationship research themes · AI-assisted · No account, no sign-up
         </p>
         <p style={{ fontSize: 11, color: "#ddd", marginTop: 8 }}>
-          © {new Date().getFullYear()} splitornot.com · For informational purposes only · Not a substitute for couples therapy
+          © {new Date().getFullYear()} CoupleIQ · splitornot.com · Operated by Verumsell SRL · For informational purposes only · Not a substitute for couples therapy
         </p>
         <p style={{ fontSize: 12, color: "#ccc", marginTop: 8 }}>
           Technical support:{" "}

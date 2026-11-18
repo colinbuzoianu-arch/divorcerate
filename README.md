@@ -1,6 +1,6 @@
-# Relationship Health Analyzer
+# CoupleIQ
 
-An AI-powered relationship risk assessment tool built with **Next.js** and **Claude AI**. Uses the Gottman Method, attachment theory, and conflict research to analyze relationship health.
+**CoupleIQ** (at **splitornot.com**) is an AI-assisted relationship self-assessment tool built with **Next.js** and the **Anthropic Claude API**. It draws on well-known relationship-research themes (the Gottman "Four Horsemen", repair, friendship, attachment) to help people reflect on where their relationship stands. It is a tool for reflection, not a validated clinical test.
 
 ## Features 
 
@@ -17,8 +17,8 @@ An AI-powered relationship risk assessment tool built with **Next.js** and **Cla
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/relationship-health-analyzer.git
-cd relationship-health-analyzer
+git clone https://github.com/colinbuzoianu-arch/divorcerate.git
+cd divorcerate
 ```
 
 ### 2. Install dependencies
@@ -105,7 +105,7 @@ Vercel auto-detects Next.js — no build configuration needed.
 - `ANTHROPIC_API_KEY` lives only in `.env.local` (local) or Vercel's encrypted environment variables (production)
 - The browser never sees the API key — all calls go through `/api/analyze`
 - `.env.local` is in `.gitignore` and will never be committed
-- No user data is stored anywhere
+- Quiz answers are not stored; the generated result is stored in Upstash Redis under a random id with a 30-day TTL (see `/legal`)
 
 ---
 

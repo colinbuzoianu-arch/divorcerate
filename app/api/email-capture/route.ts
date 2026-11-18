@@ -65,7 +65,7 @@ function buildEmailHtml(result: AnalysisResult): string {
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Your relationship health report — splitornot.com</title>
+  <title>Your relationship health report — CoupleIQ</title>
 </head>
 <body style="margin:0;padding:0;background:#f0efed;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
 
@@ -165,7 +165,7 @@ function buildEmailHtml(result: AnalysisResult): string {
 
         <!-- Footer -->
         <tr><td style="text-align:center;border-top:1px solid #e8e8e5;padding-top:24px;">
-          <p style="font-size:12px;color:#ccc;margin:0 0 4px;">splitornot.com · Powered by Claude AI</p>
+          <p style="font-size:12px;color:#ccc;margin:0 0 4px;">CoupleIQ · splitornot.com</p>
           <p style="font-size:11px;color:#ddd;margin:0;">This report is for informational purposes only and is not a substitute for professional couples counseling.</p>
         </td></tr>
 
@@ -204,7 +204,7 @@ export async function POST(req: NextRequest) {
     const { error: sendError } = await resend.emails.send({
       from:    fromEmail,
       to:      email,
-      subject: `Your relationship health report — ${result.probability}% risk · splitornot.com`,
+      subject: `Your relationship health report — ${result.probability}% risk · CoupleIQ`,
       html,
     });
 
