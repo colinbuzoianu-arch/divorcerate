@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
+import { Instrument_Serif } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import "./styles/tokens.css";
 import "./globals.css";
 import ConsentBanner from "@/components/ConsentBanner";
+
+// Geist + Geist Mono are self-hosted via Vercel's `geist` package (next/font/local
+// under the hood); Next 14's next/font/google doesn't know them. Instrument Serif
+// comes from Google. All three are exposed as CSS variables for tokens.css.
+const serif = Instrument_Serif({ weight: "400", style: ["normal", "italic"], subsets: ["latin"], variable: "--font-serif", display: "swap" });
 
 export const metadata: Metadata = {
   title: "CoupleIQ — Relationship Health Analyzer",
@@ -43,7 +52,7 @@ const GOOGLE_ADS_ID     = "GT-5RFHKQ3W";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${serif.variable} ${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
         {/* Point 1: Plus Jakarta Sans — premium feel, clean & modern */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

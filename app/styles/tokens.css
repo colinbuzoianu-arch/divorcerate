@@ -1,0 +1,24 @@
+/* CoupleIQ design tokens (Phase 2). Ported from design/landing.html :root.
+   Font-family vars reference the next/font variables set in app/layout.tsx. */
+:root {
+  --ink: #0C0A14;
+  --ink-2: #14101E;
+  --ink-3: #1D1729;
+  --paper: #F3EEE6;
+  --paper-2: #EAE3D8;
+  --text: #1A1622;
+  --text-2: #5A5463;
+  --on-dark: #F3EEE6;
+  --on-dark-2: #A8A2B3;
+  --line-dark: rgba(243, 238, 230, .12);
+  --line-light: rgba(26, 22, 34, .14);
+  --violet: #8B7CFF;
+  --violet-deep: #4B3FB0;
+  --ember: #FF9466;
+  --ember-deep: #B4461C;
+  --blush: #F6C1CF;
+
+  --serif: var(--font-serif), "Times New Roman", serif;
+  --sans: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
+  --mono: var(--font-geist-mono), ui-monospace, Menlo, monospace;
+}
