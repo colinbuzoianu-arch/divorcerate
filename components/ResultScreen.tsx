@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { StoredResult, FreeResult } from "@/lib/types";
 import { track } from "@/lib/analytics";
 import SafetyBlock from "@/components/SafetyBlock";
+import RadarChart from "@/components/RadarChart";
 
 const BAND_COLORS: Record<string, string> = {
   "Critical Point": "#C23A54",
@@ -24,11 +25,12 @@ const BAND_BLURB: Record<string, string> = {
 interface Props {
   result: StoredResult | FreeResult;
   isPaid: boolean;
+  generating?: boolean;
   onUnlock: () => void;
   onRestart: () => void;
 }
 
-export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Props) {
+export default function ResultScreen({ result, isPaid, generating = false, onUnlock, onRestart }: Props) {
   const full = result as StoredResult;
   const color = BAND_COLORS[result.band] ?? "#4B3FB0";
   const narrative = isPaid ? full.narrative : undefined;
@@ -67,9 +69,12 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
         <p style={{ fontSize: 15, fontWeight: 500, color: "#1a1a1a", lineHeight: 1.55 }}>{result.headline}</p>
       </div>
 
-      {/* DIMENSION BARS */}
+      {/* DIMENSION RADAR + BARS */}
       <div className="reveal reveal-d2" style={{ background: "#fff", border: "1px solid #efefed", borderRadius: 20, padding: "1.5rem" }}>
         <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Eight dimensions</p>
+        <div style={{ margin: "0 0 20px" }}>
+          <RadarChart dimensions={result.dimensions} />
+        </div>
         <div style={{ display: "grid", gap: 12 }}>
           {result.dimensions.map((d) => (
             <div key={d.key} style={{ display: "grid", gridTemplateColumns: "130px 1fr 32px", gap: 12, alignItems: "center" }}>
@@ -149,8 +154,21 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
             )}
           </div>
         ) : isPaid ? (
-          <div style={{ background: "#fff", border: "1px solid #efefed", borderRadius: 20, padding: "1.5rem", textAlign: "center" }}>
-            <p style={{ fontSize: 14, color: "#777", lineHeight: 1.6 }}>Your full report is being generated. Refresh this page in a few seconds.</p>
+          <div style={{ background: "#fff", border: "1px solid #efefed", borderRadius: 20, padding: "2rem 1.5rem", textAlign: "center" }}>
+            {generating ? (
+              <>
+                <div style={{ width: 36, height: 36, border: "3px solid #ece9fb", borderTopColor: "var(--violet-deep)", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 14px" }} />
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginBottom: 4 }}>Preparing your full report…</p>
+                <p style={{ fontSize: 13, color: "#888", lineHeight: 1.6 }}>Writing up your eight dimensions and next steps. This takes a few seconds — please don&apos;t close the page.</p>
+              </>
+            ) : (
+              <>
+                <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginBottom: 4 }}>Almost there</p>
+                <p style={{ fontSize: 13, color: "#888", lineHeight: 1.6, marginBottom: 14 }}>We couldn&apos;t finish generating your report just now. Refresh to try again — your payment is safe and your result is saved.</p>
+                <button onClick={() => location.reload()} style={{ background: "var(--violet-deep)", color: "#fff", border: "none", borderRadius: 999, padding: "11px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Refresh</button>
+              </>
+            )}
           </div>
         ) : (
           <PaywallGate onUnlock={onUnlock} color={color} riskLabel={result.risk.label} />

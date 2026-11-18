@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getResult, isPaid as isPaidKv, kvConfigured } from "@/lib/kv";
+import { getResult, isPaid as isPaidKv, getNarrative, kvConfigured } from "@/lib/kv";
 import { toFreeResult } from "@/lib/types";
 import type { StoredResult, FreeResult } from "@/lib/types";
-import { getOrCreateNarrative } from "@/lib/narrative";
 import ResultView from "@/components/analyzer/ResultView";
 import BrandMark from "@/components/layout/BrandMark";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
 
 // Result pages are private and must never be indexed (SEO rule 4).
 export const metadata: Metadata = {
@@ -64,8 +62,10 @@ export default async function ResultPage({ params }: { params: { id: string } })
   const paid = await isPaidKv(id);
   let result: StoredResult | FreeResult = paid ? full : toFreeResult(full);
   if (paid) {
-    // Generate the paid narrative once, then cache it (Phase 3.2).
-    const narrative = await getOrCreateNarrative(id, full);
+    // Only attach the narrative if it's ALREADY cached — don't block the page
+    // render on AI generation. If it's missing, ResultView generates it
+    // client-side with a visible "preparing your report" state.
+    const narrative = await getNarrative(id);
     if (narrative) result = { ...full, narrative };
   }
 
