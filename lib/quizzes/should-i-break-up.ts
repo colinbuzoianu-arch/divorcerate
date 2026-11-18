@@ -4,6 +4,7 @@ export const shouldIBreakUpQuiz: MiniQuiz = {
   slug: "should-i-break-up",
   title: "Should I break up? A quick gut-check",
   intro: "Eight honest questions. This is a reflection, not a verdict — there are no right answers.",
+  mode: "scale",
   questions: [
     {
       id: "future",

@@ -23,6 +23,10 @@ export default function SiteFooter() {
             <ul>
               <li><Link href="/relationship-test">Relationship test</Link></li>
               <li><Link href="/should-i-break-up-quiz">Should I break up?</Link></li>
+              <li><Link href="/four-horsemen-quiz">Four Horsemen quiz</Link></li>
+              <li><Link href="/attachment-style-quiz">Attachment style quiz</Link></li>
+              <li><Link href="/is-my-relationship-toxic-quiz">Is my relationship toxic?</Link></li>
+              <li><Link href="/relationship-compatibility-test">Compatibility test</Link></li>
             </ul>
           </div>
           <div>

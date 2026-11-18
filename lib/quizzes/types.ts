@@ -4,11 +4,17 @@
  * and NO server storage, and they always end with a CTA to the full
  * assessment. Add a new mini-quiz by dropping a config file here and a thin
  * page that renders <MiniQuiz config={...}/>.
+ *
+ * Two modes:
+ *  - "scale": each option carries points; the total maps to a band (0–100%).
+ *  - "category": each option belongs to a category; the most-picked category
+ *    is the result (e.g. attachment style, dominant "horseman").
  */
 
 export interface MiniOption {
   label: string;
-  points: number;
+  points?: number; // scale mode
+  category?: string; // category mode
 }
 
 export interface MiniQuestion {
@@ -24,32 +30,52 @@ export interface MiniBand {
   blurb: string;
 }
 
+export interface MiniCategory {
+  key: string;
+  title: string;
+  blurb: string;
+}
+
 export interface MiniQuiz {
   slug: string;
   title: string;
-  /** Short line under the title inside the quiz card. */
   intro: string;
   questions: MiniQuestion[];
-  /** Bands sorted ascending by `min`; the result uses the highest band whose min ≤ score%. */
-  bands: MiniBand[];
-  /** Shown above the "take the full test" CTA on the result. */
+  mode: "scale" | "category";
+  bands?: MiniBand[]; // scale mode
+  categories?: MiniCategory[]; // category mode
   ctaLede: string;
-  /** If true, the result shows a safety note (abuse/crisis topics). */
   safety?: boolean;
 }
 
-export interface MiniResult {
-  percent: number; // 0–100
-  band: MiniBand;
-}
+export type MiniResult =
+  | { mode: "scale"; percent: number; band: MiniBand }
+  | { mode: "category"; category: MiniCategory };
 
-/** Deterministic scoring: sum points, normalise to 0–100, pick the band. */
-export function scoreMiniQuiz(quiz: MiniQuiz, answers: Record<string, number>): MiniResult {
-  const max = quiz.questions.reduce((acc, q) => acc + Math.max(...q.options.map((o) => o.points)), 0);
-  const sum = quiz.questions.reduce((acc, q) => acc + (answers[q.id] ?? 0), 0);
+/** Deterministic scoring. Answers hold points (scale) or category keys (category). */
+export function scoreMiniQuiz(quiz: MiniQuiz, answers: Record<string, number | string>): MiniResult {
+  if (quiz.mode === "category") {
+    const tally: Record<string, number> = {};
+    for (const q of quiz.questions) {
+      const c = answers[q.id];
+      if (typeof c === "string") tally[c] = (tally[c] ?? 0) + 1;
+    }
+    const cats = quiz.categories ?? [];
+    // Highest tally; ties break by the category order in config (stable).
+    let best = cats[0];
+    let bestCount = -1;
+    for (const cat of cats) {
+      const count = tally[cat.key] ?? 0;
+      if (count > bestCount) { best = cat; bestCount = count; }
+    }
+    return { mode: "category", category: best };
+  }
+
+  const max = quiz.questions.reduce((acc, q) => acc + Math.max(...q.options.map((o) => o.points ?? 0)), 0);
+  const sum = quiz.questions.reduce((acc, q) => acc + (Number(answers[q.id]) || 0), 0);
   const percent = max > 0 ? Math.round((sum / max) * 100) : 0;
-  const sorted = [...quiz.bands].sort((a, b) => a.min - b.min);
+  const sorted = [...(quiz.bands ?? [])].sort((a, b) => a.min - b.min);
   let band = sorted[0];
   for (const b of sorted) if (percent >= b.min) band = b;
-  return { percent, band };
+  return { mode: "scale", percent, band };
 }

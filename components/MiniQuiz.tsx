@@ -11,16 +11,16 @@ import { track } from "@/lib/analytics";
  */
 export default function MiniQuiz({ config }: { config: MiniQuizConfig }) {
   const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [answers, setAnswers] = useState<Record<string, number | string>>({});
   const [done, setDone] = useState(false);
   const [started, setStarted] = useState(false);
 
   const q = config.questions[index];
   const total = config.questions.length;
 
-  function choose(points: number) {
+  function choose(value: number | string) {
     if (!started) { setStarted(true); track("quiz_start", { quiz: config.slug }); }
-    const next = { ...answers, [q.id]: points };
+    const next = { ...answers, [q.id]: value };
     setAnswers(next);
     track("quiz_step_complete", { step_index: index, quiz: config.slug });
     if (index < total - 1) {
@@ -37,11 +37,13 @@ export default function MiniQuiz({ config }: { config: MiniQuizConfig }) {
 
   if (done) {
     const result = scoreMiniQuiz(config, answers);
+    const title = result.mode === "scale" ? result.band.title : result.category.title;
+    const blurb = result.mode === "scale" ? result.band.blurb : result.category.blurb;
     return (
       <div style={card}>
         <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: 10 }}>Your reflection</p>
-        <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 32, color: "var(--text)", lineHeight: 1.1, marginBottom: 12 }}>{result.band.title}</p>
-        <p style={{ fontSize: 15, color: "var(--text-2)", lineHeight: 1.75, marginBottom: 16 }}>{result.band.blurb}</p>
+        <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 32, color: "var(--text)", lineHeight: 1.1, marginBottom: 12 }}>{title}</p>
+        <p style={{ fontSize: 15, color: "var(--text-2)", lineHeight: 1.75, marginBottom: 16 }}>{blurb}</p>
 
         {config.safety && (
           <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.6, background: "var(--paper-2)", borderRadius: 14, padding: "12px 14px", marginBottom: 16 }}>
@@ -75,7 +77,7 @@ export default function MiniQuiz({ config }: { config: MiniQuizConfig }) {
         {q.options.map((o) => (
           <button
             key={o.label}
-            onClick={() => choose(o.points)}
+            onClick={() => choose(config.mode === "category" ? (o.category ?? "") : (o.points ?? 0))}
             style={{ textAlign: "left", background: "#fff", border: "1px solid var(--line-light)", borderRadius: 14, padding: "13px 16px", fontSize: 14, color: "var(--text)", lineHeight: 1.45, cursor: "pointer", transition: "border-color 0.15s, background 0.15s" }}
           >
             {o.label}
