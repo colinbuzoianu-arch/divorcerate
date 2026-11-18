@@ -19,6 +19,7 @@ export interface SitePage {
 export const STATIC_PAGES: SitePage[] = [
   { path: "/", lastModified: "2026-11-18", changeFrequency: "monthly", priority: 1 },
   { path: "/relationship-test", lastModified: "2026-11-18", changeFrequency: "monthly", priority: 0.9 },
+  { path: "/should-i-break-up-quiz", lastModified: "2026-11-18", changeFrequency: "monthly", priority: 0.8 },
   { path: "/methodology", lastModified: "2026-11-18", changeFrequency: "monthly", priority: 0.7 },
   { path: "/blog", lastModified: "2026-11-18", changeFrequency: "weekly", priority: 0.8 },
   { path: "/support-resources", lastModified: "2026-11-18", changeFrequency: "yearly", priority: 0.5 },

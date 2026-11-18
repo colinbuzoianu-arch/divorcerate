@@ -19,9 +19,10 @@ export default function SiteFooter() {
             <p style={{ marginTop: 16, maxWidth: 300 }}>An honest, private look at your relationship, at splitornot.com.</p>
           </div>
           <div>
-            <h4>Test</h4>
+            <h4>Tests</h4>
             <ul>
               <li><Link href="/relationship-test">Relationship test</Link></li>
+              <li><Link href="/should-i-break-up-quiz">Should I break up?</Link></li>
             </ul>
           </div>
           <div>
