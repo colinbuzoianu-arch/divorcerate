@@ -6,6 +6,8 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import HeroThreads from "@/components/landing/HeroThreads";
 import NotifyForm from "@/components/landing/NotifyForm";
+import JsonLd from "@/components/JsonLd";
+import { faqPageLd } from "@/lib/seo";
 import { getAllPosts } from "@/lib/posts";
 
 /**
@@ -52,11 +54,20 @@ const dims = [
 
 const marqueeItems = ["Communication", "Conflict & repair", "Contempt", "Friendship", "Respect", "Trust", "Support", "Shared vision"];
 
+const faqs = [
+  { q: "Is this scientifically validated?", a: "No, and we won't pretend otherwise. The questions draw on well-established research themes, and it is a tool for reflection, not a validated clinical instrument." },
+  { q: "What happens to my answers?", a: "They're used only to create your result and are not stored. Your result is kept at a private link for 30 days, then deleted. You don't need an account. Our privacy policy lists exactly what is stored and which providers process it." },
+  { q: "Can we take it together?", a: "Yes. Take it separately and compare your results. Side-by-side couple comparison is coming soon, and the differences are often more revealing than the scores." },
+  { q: "Is it a replacement for couples therapy?", a: "No. Many people use their result to decide whether to seek a therapist, or to start that first session with something concrete." },
+  { q: "Why is the full report paid?", a: "The free result gives you the headline. The full report explains every dimension and gives you specific next steps. That's the part that costs us to produce, and the part that helps you act." },
+];
+
 export default function Home() {
   const posts = getAllPosts().slice(0, 3);
 
   return (
     <div className="cq">
+      <JsonLd data={faqPageLd(faqs)} />
       <svg className="grain" aria-hidden="true"><filter id="cqn"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={3} stitchTiles="stitch"></feTurbulence></filter><rect width="100%" height="100%" filter="url(#cqn)"></rect></svg>
 
       <SiteHeader />
@@ -326,11 +337,9 @@ export default function Home() {
         <div className="wrap faq">
           <div className="reveal"><h2 className="h2">Questions, <span className="it">answered.</span></h2></div>
           <div>
-            <details><summary>Is this scientifically validated?</summary><p>No, and we won&apos;t pretend otherwise. The questions draw on well-established research themes, and it is a tool for reflection, not a validated clinical instrument.</p></details>
-            <details><summary>What happens to my answers?</summary><p>They&apos;re used only to create your result and are not stored. Your result is kept at a private link for 30 days, then deleted. You don&apos;t need an account. Our privacy policy lists exactly what is stored and which providers process it.</p></details>
-            <details><summary>Can we take it together?</summary><p>Yes. Take it separately and compare your results. Side-by-side couple comparison is coming soon, and the differences are often more revealing than the scores.</p></details>
-            <details><summary>Is it a replacement for couples therapy?</summary><p>No. Many people use their result to decide whether to seek a therapist, or to start that first session with something concrete.</p></details>
-            <details><summary>Why is the full report paid?</summary><p>The free result gives you the headline. The full report explains every dimension and gives you specific next steps. That&apos;s the part that costs us to produce, and the part that helps you act.</p></details>
+            {faqs.map((f) => (
+              <details key={f.q}><summary>{f.q}</summary><p>{f.a}</p></details>
+            ))}
           </div>
         </div>
       </section>

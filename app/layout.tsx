@@ -5,6 +5,8 @@ import { GeistMono } from "geist/font/mono";
 import "./styles/tokens.css";
 import "./globals.css";
 import ConsentBanner from "@/components/ConsentBanner";
+import JsonLd from "@/components/JsonLd";
+import { organizationLd, websiteLd } from "@/lib/seo";
 
 // Geist + Geist Mono are self-hosted via Vercel's `geist` package (next/font/local
 // under the hood); Next 14's next/font/google doesn't know them. Instrument Serif
@@ -85,6 +87,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <JsonLd data={organizationLd()} />
+        <JsonLd data={websiteLd()} />
         {children}
         <ConsentBanner gaId={GA_MEASUREMENT_ID} />
       </body>

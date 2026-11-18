@@ -2,6 +2,8 @@ import { getPostBySlug, getAllPosts } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ArticleCtaLink from "@/components/ArticleCtaLink";
+import JsonLd from "@/components/JsonLd";
+import { blogPostingLd, breadcrumbLd } from "@/lib/seo";
 import type { Metadata } from "next";
 import { remark } from "remark";
 import html from "remark-html";
@@ -49,6 +51,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <main style={{ background: "#f0efed", minHeight: "100vh", padding: "2rem 1rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <JsonLd data={blogPostingLd({ title: post.title, description: post.description, slug: params.slug, date: post.date })} />
+      <JsonLd data={breadcrumbLd([{ name: "Home", path: "/" }, { name: "Journal", path: "/blog" }, { name: post.title, path: `/blog/${params.slug}` }])} />
       <div style={{ width: "100%", maxWidth: 680 }}>
 
         {/* Nav */}
