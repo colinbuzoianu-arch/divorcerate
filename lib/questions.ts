@@ -61,7 +61,7 @@ export const steps: Step[] = [
       {
         id: "contempt",
         label: "During arguments, do either of you use sarcasm, eye-rolling, or dismissive language?",
-        sub: "This is one of the most predictive questions in relationship research. Answer honestly — it only helps the accuracy.",
+        sub: "Contempt is one of the most-studied warning signs in relationship research. Answer honestly — the more candid you are, the more useful your result.",
         type: "options",
         options: ["Never", "Rarely", "Sometimes", "Often", "Almost always"],
       },
@@ -163,7 +163,7 @@ export const steps: Step[] = [
       {
         id: "extra",
         label: "Is there anything specific you want the analysis to consider?",
-        sub: "Optional — if something important is happening (infidelity, therapy, a big life change), mention it here. It improves the accuracy of your result.",
+        sub: "Optional — if something important is happening (infidelity, therapy, a big life change), mention it here so your result can take it into account.",
         type: "textarea",
       },
     ],

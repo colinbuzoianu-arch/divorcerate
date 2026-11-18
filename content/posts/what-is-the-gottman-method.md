@@ -5,7 +5,7 @@ date: "2025-04-08"
 slug: "what-is-the-gottman-method"
 ---
 
-When it comes to understanding why some relationships thrive and others fall apart, few researchers have contributed more than Dr. John Gottman. Over four decades of studying thousands of couples, Gottman and his colleagues identified specific, measurable patterns that predict — with remarkable accuracy — whether a relationship will survive.
+When it comes to understanding why some relationships thrive and others fall apart, few researchers have contributed more than Dr. John Gottman. Over four decades of studying thousands of couples, Gottman and his colleagues identified specific, measurable patterns that track closely with whether a relationship survives.
 
 His approach, known as the **Gottman Method**, has become one of the most evidence-based frameworks in couples therapy and relationship science. Here's what it is, what it found, and what it means for your relationship.
 
@@ -15,7 +15,7 @@ Gottman's work began in the 1970s at the University of Washington, where he and 
 
 Then they followed up with those same couples years later to see who had stayed together, who had separated, and who had stayed together but remained unhappy.
 
-The results were striking. Certain behavioural patterns predicted relationship outcomes with over 90% accuracy. Not the topic of fights. Not how often couples argued. But *how* couples engaged with each other during conflict and everyday interaction.
+The results were striking. In Gottman's own studies, certain behavioural patterns were reported to predict relationship outcomes with high accuracy — figures above 90% have been cited for some of his models, though these numbers come largely from fitting the data after the fact and have been questioned by other researchers. What matters for us is the robust, repeatedly observed finding underneath the headline: it is not the topic of fights, nor how often couples argue, but *how* couples engage with each other during conflict and everyday interaction that tracks most closely with where a relationship ends up.
 
 ## The Four Horsemen
 

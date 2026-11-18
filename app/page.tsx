@@ -15,9 +15,9 @@ type Screen = "landing" | "start" | "quiz" | "loading" | "result" | "error";
 /* ─── Landing sections ─────────────────────────────────────────────── */
 
 const stats = [
-  { value: "Most couples", label: "wait years before talking about what's actually wrong" },
-  { value: "1 in 3",       label: "people in relationships feel more lonely than when they were single" },
-  { value: "The #1 sign",  label: "of a relationship in trouble isn't conflict — it's silence" },
+  { value: "15 questions", label: "about how you communicate, handle conflict, repair and trust" },
+  { value: "About 5 min",  label: "private, with no account and no sign-up" },
+  { value: "Research-based", label: "grounded in well-known relationship research themes" },
 ];
 
 const steps_how = [
@@ -26,14 +26,14 @@ const steps_how = [
   { n: "03", title: "Get your risk score", body: "Free: your risk %, relationship pattern, and biggest strength and risk. Unlock the full breakdown and action plan for $4.99." },
 ];
 
-const testimonials = [
-  { quote: "I thought we were fine. The result made us actually talk about things we'd been avoiding for years.", name: "Sarah M.", tag: "Married 6 years" },
-  { quote: "Scary accurate. It named our exact dynamic and gave us something concrete to work on.", name: "James K.", tag: "Together 3 years" },
-  { quote: "We did it together on the couch. Best $4.99 we've ever spent on our relationship.", name: "Priya & Dan", tag: "Engaged" },
+const useCases = [
+  { title: "Before a hard conversation", body: "Put words to something you've been feeling but haven't been able to name, so you can raise it calmly instead of in the middle of an argument." },
+  { title: "When you're not sure it's \"bad enough\"", body: "See your patterns laid out plainly to help you decide whether to work on things, talk to a professional, or simply keep paying attention." },
+  { title: "Taking it together", body: "You and your partner each answer on your own and compare what comes back. The differences are often more useful than the scores." },
 ];
 
 const faqs = [
-  { q: "Is this scientifically valid?", a: "The assessment is built on John Gottman's research, which has 93% accuracy predicting relationship outcomes over 40+ years of study. Our AI weights responses using the same factors his lab identified — contempt, repair speed, emotional friendship, and trust." },
+  { q: "Is this scientifically valid?", a: "No — and we won't pretend otherwise. The questions draw on well-known themes from relationship research, such as Gottman's \"Four Horsemen\", repair attempts, emotional friendship and attachment. Your result is a structured way to reflect on those patterns, not a validated clinical test or a prediction of whether you'll break up." },
   { q: "Do you store my answers?", a: "No. Your answers are processed in real time to generate the analysis and are never stored on our servers. We have no way to link results back to you." },
   { q: "Why is the full report $4.99?", a: "The free result gives you the headline finding. The paid report includes the complete factor breakdown, named action steps specific to your pattern, and the urgency verdict — the content that's actually useful for doing something about it." },
   { q: "Can I do this with my partner?", a: "Yes — and we recommend it. Each of you can take the assessment separately and compare results. The differences are often more revealing than the scores themselves." },
@@ -261,26 +261,15 @@ function HomeInner() {
             </div>
           </section>
 
-          {/* ── TESTIMONIALS ── */}
+          {/* ── HOW PEOPLE USE IT ── */}
           <section style={{ maxWidth: 720, margin: "0 auto", padding: "4rem 1.5rem" }}>
-            <h2 style={{ fontSize: 26, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em", marginBottom: "0.5rem", textAlign: "center" }}>What couples are saying</h2>
-            <p style={{ fontSize: 15, color: "#888", textAlign: "center", marginBottom: "2.5rem" }}>Real results. Real conversations started.</p>
+            <h2 style={{ fontSize: 26, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em", marginBottom: "0.5rem", textAlign: "center" }}>How people use it</h2>
+            <p style={{ fontSize: 15, color: "#888", textAlign: "center", marginBottom: "2.5rem" }}>A few of the moments it tends to help with.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {testimonials.map((t, i) => (
+              {useCases.map((u, i) => (
                 <div key={i} style={{ background: "#fff", borderRadius: 16, padding: "1.5rem", border: "1px solid #efefed" }}>
-                  <div style={{ display: "flex", gap: 2, marginBottom: 12 }}>
-                    {[1,2,3,4,5].map((s) => <span key={s} style={{ color: "#f5a623", fontSize: 14 }}>★</span>)}
-                  </div>
-                  <p style={{ fontSize: 15, color: "#1a1a1a", lineHeight: 1.7, marginBottom: 12, fontStyle: "italic" }}>"{t.quote}"</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#eeedfe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#534ab7" }}>
-                      {t.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: "#1a1a1a" }}>{t.name}</p>
-                      <p style={{ fontSize: 12, color: "#aaa" }}>{t.tag}</p>
-                    </div>
-                  </div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 6, letterSpacing: "-0.01em" }}>{u.title}</p>
+                  <p style={{ fontSize: 14, color: "#777", lineHeight: 1.7 }}>{u.body}</p>
                 </div>
               ))}
             </div>
@@ -382,7 +371,7 @@ function HomeInner() {
           </span>
         </div>
         <p style={{ fontSize: 12, color: "#ccc", lineHeight: 1.7 }}>
-          Built on relationship science · Powered by Claude AI · No data stored
+          Grounded in relationship research themes · AI-assisted · No account, no sign-up
         </p>
         <p style={{ fontSize: 11, color: "#ddd", marginTop: 8 }}>
           © {new Date().getFullYear()} splitornot.com · For informational purposes only · Not a substitute for couples therapy
