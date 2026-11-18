@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnalysisResult } from "@/lib/types";
+import { AnalysisResult, FreeResult } from "@/lib/types";
 import { track } from "@/lib/analytics";
 
 const riskColors: Record<string, string> = {
@@ -37,13 +37,18 @@ const weightColor: Record<string, string> = {
 };
 
 interface Props {
-  result: AnalysisResult;
+  // Free results omit the paid-only fields (biggestRiskDetail, factors,
+  // recommendations, urgency); those are only present once isPaid is true.
+  result: AnalysisResult | FreeResult;
   isPaid: boolean;
   onUnlock: () => void;
   onRestart: () => void;
 }
 
 export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Props) {
+  // Paid-only fields live here; they are undefined for an unpaid/free result
+  // and are only read inside the isPaid branch.
+  const full = result as AnalysisResult;
   const markerRef    = useRef<HTMLDivElement>(null);
   const avgMarkerRef = useRef<HTMLDivElement>(null);
   const [animated, setAnimated] = useState(false);
@@ -52,7 +57,7 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
   const avg    = Math.min(100, Math.max(0, result.nationalAverage ?? 42));
   const color  = riskColors[result.riskLevel] ?? "#534ab7";
   const bg     = riskBg[result.riskLevel]     ?? "#eeedfe";
-  const urgency = urgencyConfig[result.urgency] ?? urgencyConfig["worth being aware of"];
+  const urgency = urgencyConfig[full.urgency] ?? urgencyConfig["worth being aware of"];
   const vsAvg  = pct - avg;
   const tier   = getTier(pct);
 
@@ -65,8 +70,8 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
     return () => clearTimeout(timer);
   }, [pct, avg]);
 
-  const positiveFactors = result.factors.filter((f) =>  f.positive);
-  const negativeFactors = result.factors.filter((f) => !f.positive);
+  const positiveFactors = (full.factors ?? []).filter((f) =>  f.positive);
+  const negativeFactors = (full.factors ?? []).filter((f) => !f.positive);
 
   /* Point 4 helper — each section gets a staggered reveal class */
   const r = (delay: string) => `reveal ${delay}`;
@@ -156,10 +161,13 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
         <div style={{ background: "#fcebeb", border: "1px solid #f0c0c0", borderRadius: 14, padding: "1rem" }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: "#a32d2d", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Biggest risk</p>
           <p style={{ fontSize: 14, fontWeight: 700, color: "#501313", marginBottom: 6, letterSpacing: "-0.01em" }}>{result.biggestRisk}</p>
-          {/* Detail blurred — unlocked with full report */}
+          {/* Detail is paid-only: never sent to the browser until unlocked.
+              When unpaid we blur a generic placeholder, not the real text. */}
           <div style={{ position: "relative" }}>
             <p style={{ fontSize: 12, color: "#a32d2d", lineHeight: 1.65, filter: "blur(4px)", userSelect: "none", pointerEvents: "none" }}>
-              {result.biggestRiskDetail}
+              {isPaid
+                ? full.biggestRiskDetail
+                : "The full report explains exactly why this is your biggest risk, what tends to drive it, and the specific steps that help."}
             </p>
             <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: "#a32d2d", background: "#fcebeb", padding: "3px 10px", borderRadius: 20, border: "1px solid #f0c0c0", whiteSpace: "nowrap" }}>
@@ -201,7 +209,7 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
             <div style={{ marginBottom: "1.25rem" }}>
               <p style={{ fontSize: 11, fontWeight: 600, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>What to do next</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {result.recommendations.map((rec, i) => (
+                {(full.recommendations ?? []).map((rec, i) => (
                   <div key={i} style={{ display: "flex", gap: 14, padding: "13px 16px", background: "#fafaf8", borderRadius: 14, border: "1px solid #efefed", alignItems: "flex-start" }}>
                     <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#534ab7", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
                       {i + 1}
@@ -221,13 +229,13 @@ export default function ResultScreen({ result, isPaid, onUnlock, onRestart }: Pr
                 {urgency.icon}
               </span>
               <div>
-                <p style={{ fontSize: 12, fontWeight: 700, color: urgency.color, textTransform: "capitalize", letterSpacing: "0.01em" }}>Overall: {result.urgency}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: urgency.color, textTransform: "capitalize", letterSpacing: "0.01em" }}>Overall: {full.urgency}</p>
                 <p style={{ fontSize: 12, color: "#666", marginTop: 3, lineHeight: 1.55 }}>
-                  {result.urgency === "keep doing what you are doing"
+                  {full.urgency === "keep doing what you are doing"
                     ? "Your relationship has strong protective factors. Keep investing in what's working."
-                    : result.urgency === "worth being aware of"
+                    : full.urgency === "worth being aware of"
                     ? "No immediate crisis, but a few patterns are worth watching. Small adjustments now prevent drift later."
-                    : result.urgency === "worth addressing soon"
+                    : full.urgency === "worth addressing soon"
                     ? "These patterns tend to compound over time. Addressing them proactively makes a real difference."
                     : "One or more serious risk factors are present. This is where professional support tends to help most."}
                 </p>
@@ -363,7 +371,7 @@ function FactorRow({ factor }: { factor: AnalysisResult["factors"][0] }) {
 
 /* ─── Share Button ──────────────────────────────────────────────────── */
 
-function ShareButton({ result, pct, color, bg, full }: { result: AnalysisResult; pct: number; color: string; bg: string; full: boolean }) {
+function ShareButton({ result, pct, color, bg, full }: { result: AnalysisResult | FreeResult; pct: number; color: string; bg: string; full: boolean }) {
   const [status, setStatus] = useState<"idle"|"generating"|"copied"|"shared">("idle");
 
   function drawCard(): HTMLCanvasElement {

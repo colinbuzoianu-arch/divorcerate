@@ -29,3 +29,38 @@ export interface AnalysisResult {
   urgency: "keep doing what you are doing" | "worth being aware of" | "worth addressing soon" | "worth addressing urgently";
   disclaimer: string;
 }
+
+/**
+ * The fields that are safe to expose before payment. Everything NOT listed here
+ * (biggestRiskDetail, factors, recommendations, urgency) is paid-only and must
+ * never leave the server for an unpaid result.
+ */
+export const FREE_FIELDS = [
+  "probability",
+  "nationalAverage",
+  "riskLevel",
+  "headline",
+  "summary",
+  "dynamicPattern",
+  "dynamicPatternDetail",
+  "biggestStrength",
+  "biggestStrengthDetail",
+  "biggestRisk",
+  "disclaimer",
+] as const;
+
+export type FreeResult = Pick<AnalysisResult, (typeof FREE_FIELDS)[number]>;
+
+/** Strip a full result down to only the free fields. */
+export function toFreeResult(full: AnalysisResult): FreeResult {
+  const free = {} as Record<string, unknown>;
+  for (const key of FREE_FIELDS) free[key] = full[key];
+  return free as FreeResult;
+}
+
+/** Response shape returned by /api/analyze and GET /api/result/[id]. */
+export interface ResultResponse {
+  resultId: string;
+  paid: boolean;
+  result: FreeResult | AnalysisResult;
+}

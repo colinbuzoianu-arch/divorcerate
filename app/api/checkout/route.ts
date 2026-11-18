@@ -18,9 +18,13 @@ export async function POST(req: NextRequest) {
 
     const stripe = new Stripe(stripeSecretKey, { apiVersion: "2023-10-16" });
 
-    // Store the result token in metadata so we can retrieve it after payment
+    // Store the result id in metadata so the webhook can mark it paid, and in
+    // the success URL so /success can poll for it.
     const body = await req.json();
-    const resultToken = body.resultToken ?? "";
+    const resultId = typeof body.resultId === "string" ? body.resultId : "";
+    if (!resultId) {
+      return NextResponse.json({ error: "Missing result id." }, { status: 400 });
+    }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -31,9 +35,9 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: "payment",
-      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&token=${resultToken}`,
+      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&result=${resultId}`,
       cancel_url: `${appUrl}?cancelled=true`,
-      metadata: { resultToken },
+      metadata: { resultId },
     });
 
     return NextResponse.json({ url: session.url });

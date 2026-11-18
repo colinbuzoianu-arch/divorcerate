@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { steps } from "@/lib/questions";
-import { Answers, AnalysisResult } from "@/lib/types";
+import { Answers, AnalysisResult, FreeResult } from "@/lib/types";
 import StartScreen from "@/components/StartScreen";
 import QuizStep from "@/components/QuizStep";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -47,30 +47,35 @@ function HomeInner() {
   const [screen, setScreen]           = useState<Screen>("landing");
   const [stepIndex, setStepIndex]     = useState(0);
   const [answers, setAnswers]         = useState<Answers>({});
-  const [result, setResult]           = useState<AnalysisResult | null>(null);
-  const [resultToken, setResultToken] = useState("");
+  const [result, setResult]           = useState<AnalysisResult | FreeResult | null>(null);
+  const [resultId, setResultId]       = useState("");
   const [isPaid, setIsPaid]           = useState(false);
   const [errorMsg, setErrorMsg]       = useState("");
   const [openFaq, setOpenFaq]         = useState<number | null>(null);
+  const [hp, setHp]                   = useState(""); // honeypot
   const appRef = useRef<HTMLDivElement>(null);
+  const quizStartedRef = useRef<number | null>(null);
 
+  // Open a stored result by id (e.g. returning from checkout at /?result=<id>).
+  // The server decides whether the full report is unlocked — no localStorage trust.
   useEffect(() => {
-    const unlockedToken = searchParams.get("unlocked");
-    if (unlockedToken) {
-      const paid = localStorage.getItem(`paid_${unlockedToken}`) === "true";
-      if (paid) {
-        setIsPaid(true);
-        const saved = localStorage.getItem(`result_${unlockedToken}`);
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved) as AnalysisResult;
-            setResult(parsed);
-            setScreen("result");
-            track("result_view", { band: parsed.riskLevel, paid: true });
-          } catch {}
-        }
-      }
-    }
+    const id = searchParams.get("result");
+    if (!id) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/result/${id}`, { cache: "no-store" });
+        const data = await res.json();
+        if (cancelled || !res.ok) return;
+        setResultId(id);
+        setResult(data.result);
+        setIsPaid(Boolean(data.paid));
+        setScreen("result");
+        track("result_view", { band: data.result?.riskLevel, paid: Boolean(data.paid) });
+        if (!data.paid) track("paywall_view", { band: data.result?.riskLevel });
+      } catch {}
+    })();
+    return () => { cancelled = true; };
   }, [searchParams]);
 
   const scrollToApp = () => {
@@ -101,17 +106,21 @@ function HomeInner() {
   const runAnalysis = async () => {
     setScreen("loading");
     try {
-      const res  = await fetch("/api/analyze", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ answers }) });
+      const elapsedMs = quizStartedRef.current ? Date.now() - quizStartedRef.current : undefined;
+      const res  = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers, hp, elapsedMs }),
+      });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || "Unknown error");
-      const token = Math.random().toString(36).slice(2) + Date.now().toString(36);
-      setResultToken(token);
-      localStorage.setItem(`result_${token}`, JSON.stringify(data));
-      setIsPaid(false);
-      setResult(data as AnalysisResult);
+      // Response is { resultId, paid, result } — result holds free fields only.
+      setResultId(data.resultId);
+      setIsPaid(Boolean(data.paid));
+      setResult(data.result as FreeResult);
       setScreen("result");
-      track("result_view", { band: (data as AnalysisResult).riskLevel, paid: false });
-      track("paywall_view", { band: (data as AnalysisResult).riskLevel });
+      track("result_view", { band: data.result?.riskLevel, paid: false });
+      track("paywall_view", { band: data.result?.riskLevel });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Analysis failed. Please try again.");
@@ -122,7 +131,7 @@ function HomeInner() {
   const handleUnlock = async () => {
     track("checkout_start", { value: 4.99, currency: "USD" });
     try {
-      const res  = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ resultToken }) });
+      const res  = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ resultId }) });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
     } catch { alert("Could not start checkout. Please try again."); }
@@ -131,7 +140,8 @@ function HomeInner() {
   const restart = () => {
     setScreen("landing");
     setStepIndex(0); setAnswers({}); setResult(null);
-    setResultToken(""); setIsPaid(false); setErrorMsg("");
+    setResultId(""); setIsPaid(false); setErrorMsg("");
+    quizStartedRef.current = null;
     setTimeout(() => appRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   };
 
@@ -327,6 +337,18 @@ function HomeInner() {
         {showApp && (
           <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #efefed", padding: "1.75rem", width: "100%", maxWidth: 620, boxShadow: "0 2px 24px rgba(0,0,0,0.05)" }}>
 
+            {/* Honeypot — hidden from humans; bots that autofill it are rejected server-side */}
+            <input
+              type="text"
+              name="company_website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={hp}
+              onChange={(e) => setHp(e.target.value)}
+              style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+            />
+
             {/* Header — only show when in quiz/loading */}
             {(screen === "quiz" || screen === "loading") && (
               <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
@@ -340,7 +362,7 @@ function HomeInner() {
               </div>
             )}
 
-            {screen === "start" && <StartScreen onStart={() => { track("quiz_start", { quiz: MAIN_QUIZ }); setScreen("quiz"); }} />}
+            {screen === "start" && <StartScreen onStart={() => { quizStartedRef.current = Date.now(); track("quiz_start", { quiz: MAIN_QUIZ }); setScreen("quiz"); }} />}
             {screen === "quiz" && (
               <QuizStep step={steps[stepIndex]} stepIndex={stepIndex} totalSteps={steps.length} answers={answers} onChange={handleChange} onNext={handleNext} onBack={handleBack} onNavigate={handleNavigate} />
             )}
