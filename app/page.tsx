@@ -21,7 +21,14 @@ export const metadata: Metadata = {
   title: "Relationship Test: Free, Private Relationship Health Check | CoupleIQ",
   description:
     "A free, private 5-minute relationship test. See where your relationship stands across eight dimensions, discover your relationship pattern, and get clear next steps.",
-  alternates: { canonical: "https://splitornot.com" },
+  alternates: {
+    canonical: "https://splitornot.com",
+    languages: {
+      en: "https://splitornot.com",
+      de: "https://splitornot.com/de",
+      "x-default": "https://splitornot.com",
+    },
+  },
 };
 
 const ARROW = (
