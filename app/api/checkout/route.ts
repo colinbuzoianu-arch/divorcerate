@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
       line_items: [{ price: priceId, quantity: 1 }],
       mode: "payment",
       success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&result=${resultId}`,
-      cancel_url: `${appUrl}?cancelled=true`,
+      // Back/cancel from Stripe returns to the user's result, not the homepage.
+      cancel_url: `${appUrl}/r/${resultId}`,
       metadata: { resultId },
     });
 

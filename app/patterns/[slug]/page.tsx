@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PATTERNS, getPattern } from "@/lib/patterns";
 import BrandMark from "@/components/layout/BrandMark";
+import BackToResult from "@/components/BackToResult";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/seo";
 import { SITE_URL } from "@/lib/pages";
@@ -40,10 +41,12 @@ export default function PatternPage({ params }: Props) {
       <JsonLd data={breadcrumbLd([{ name: "Home", path: "/" }, { name: "Patterns", path: `/patterns/${p.slug}` }, { name: p.name, path: `/patterns/${p.slug}` }])} />
 
       <div style={{ width: "100%", maxWidth: 720 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2.5rem" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
           <Link href="/" style={{ textDecoration: "none" }}><BrandMark /></Link>
           <Link href="/relationship-test" style={{ fontSize: 13, color: "var(--text-2)", textDecoration: "none" }}>Take the test →</Link>
         </div>
+
+        <BackToResult />
 
         <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: 12 }}>Relationship pattern</p>
         <h1 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 48, color: "var(--text)", letterSpacing: "-0.02em", lineHeight: 1, marginBottom: "1rem" }}>{p.name}</h1>
