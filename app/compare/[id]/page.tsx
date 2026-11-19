@@ -4,7 +4,8 @@ import { kvConfigured } from "@/lib/kv";
 import { getComparison, loadComparisonResults, computeComparison } from "@/lib/comparison";
 import BrandMark from "@/components/layout/BrandMark";
 import RadarChart from "@/components/RadarChart";
-import { CompareInvite, CompareUnlock } from "@/components/compare/CompareActions";
+import { CompareUnlock } from "@/components/compare/CompareActions";
+import CompareWaiting from "@/components/compare/CompareWaiting";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -41,16 +42,12 @@ export default async function ComparePage({ params }: { params: { id: string } }
     return <Shell><div style={{ ...card, textAlign: "center" }}><p style={{ ...h1, fontSize: 28 }}>This comparison has expired</p><p style={{ color: "var(--text-2)", marginBottom: 16 }}>Comparisons are kept for 30 days, then deleted. You can start a fresh one from your result.</p><Link href="/relationship-test" style={{ color: "var(--violet-deep)", fontWeight: 600 }}>Take the test →</Link></div></Shell>;
   }
 
-  // Waiting for the partner to take the test.
+  // Waiting for the partner to take the test. The creator and the invitee see
+  // different copy here (resolved client-side) — see CompareWaiting.
   if (!comp.bResultId) {
     return (
       <Shell>
-        <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: 12 }}>Couple comparison</p>
-        <h1 style={h1}>Waiting for your partner</h1>
-        <p style={{ fontSize: 16, color: "var(--text-2)", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-          You and your partner take the test on your own. Once you both have, we&apos;ll show you where you see things the same way and where you differ — using only your eight dimension scores, never your answers. Nothing is shared unless you both take part.
-        </p>
-        <div style={card}><CompareInvite id={id} /></div>
+        <CompareWaiting id={id} />
       </Shell>
     );
   }

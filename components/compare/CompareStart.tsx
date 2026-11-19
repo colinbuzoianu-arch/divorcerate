@@ -23,7 +23,13 @@ export default function CompareStart({ resultId }: { resultId?: string }) {
         body: JSON.stringify({ resultId }),
       });
       const data = await res.json();
-      if (res.ok && data.id) { window.location.href = `/compare/${data.id}`; return; }
+      if (res.ok && data.id) {
+        // Remember, in this browser, that WE started this comparison — so the
+        // waiting screen shows us "share the link", not "you were invited".
+        try { localStorage.setItem(`cq_compare_creator_${data.id}`, "1"); } catch { /* no-op */ }
+        window.location.href = `/compare/${data.id}`;
+        return;
+      }
       setMsg(data.error || "Could not start a comparison. Please try again.");
     } catch {
       setMsg("Could not start a comparison. Please try again.");
