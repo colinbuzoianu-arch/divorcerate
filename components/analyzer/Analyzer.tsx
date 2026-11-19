@@ -100,6 +100,22 @@ export default function Analyzer() {
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || "Unknown error");
       clearProgress();
+
+      // Couple comparison (Phase 6.2): if we arrived from an invite, link this
+      // result to the comparison (that's this partner's consent) and go there.
+      const compareId = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("compare") : null;
+      if (compareId && /^[0-9a-fA-F-]{10,64}$/.test(compareId)) {
+        try {
+          await fetch(`/api/compare/${compareId}/join`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ resultId: data.resultId }),
+          });
+        } catch { /* fall through to the normal result page */ }
+        router.push(`/compare/${compareId}`);
+        return;
+      }
+
       router.push(`/r/${data.resultId}`);
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Analysis failed. Please try again.");

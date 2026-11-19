@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { markPaid } from "@/lib/kv";
+import { setComparisonPaid } from "@/lib/comparison";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,17 +39,20 @@ export async function POST(req: NextRequest) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const resultId = session.metadata?.resultId;
-    if (session.payment_status === "paid" && resultId) {
+    if (session.payment_status === "paid") {
       try {
-        await markPaid(resultId);
+        if (session.metadata?.kind === "comparison" && session.metadata?.compId) {
+          await setComparisonPaid(session.metadata.compId);
+        } else if (session.metadata?.resultId) {
+          await markPaid(session.metadata.resultId);
+        } else {
+          console.warn("checkout.session.completed without a known target.");
+        }
       } catch (err) {
-        console.error("Failed to mark result paid:", err);
+        console.error("Failed to record payment:", err);
         // Return 500 so Stripe retries.
         return NextResponse.json({ error: "Could not record payment." }, { status: 500 });
       }
-    } else {
-      console.warn("checkout.session.completed without paid status or resultId.");
     }
   }
 

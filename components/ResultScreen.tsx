@@ -7,6 +7,7 @@ import SafetyBlock from "@/components/SafetyBlock";
 import RadarChart from "@/components/RadarChart";
 import EmailCapture from "@/components/EmailCapture";
 import FeedbackPrompt from "@/components/FeedbackPrompt";
+import CompareStart from "@/components/compare/CompareStart";
 
 const BAND_COLORS: Record<string, string> = {
   "Critical Point": "#C23A54",
@@ -197,7 +198,7 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
         <EmailCapture result={result} />
       </div>
       <div className="reveal reveal-d7">
-        <PartnerInvite />
+        <CompareStart resultId={resultId} />
       </div>
 
       <div className="reveal reveal-d7">
@@ -259,35 +260,6 @@ function PaywallGate({ onUnlock, color, riskLabel }: { onUnlock: () => void; col
           {loading ? "Opening checkout…" : "Unlock the full report — $4.99"}
         </button>
       </div>
-    </div>
-  );
-}
-
-/* ─── Partner invite (Phase 5.2) ──────────────────────────────────────── */
-
-function PartnerInvite() {
-  const [status, setStatus] = useState<"idle" | "copied" | "shared">("idle");
-
-  async function invite() {
-    const origin = typeof window !== "undefined" ? window.location.origin : "https://splitornot.com";
-    const url = `${origin}/relationship-test?ref=partner&utm_source=partner_invite&utm_medium=result`;
-    const text = "I took this relationship test — take it separately and let's compare. It's free and private.";
-    track("share_click", { surface: "partner_invite" });
-    if (navigator.share) {
-      try { await navigator.share({ title: "Take the CoupleIQ relationship test", text, url }); setStatus("shared"); setTimeout(() => setStatus("idle"), 2500); return; } catch { /* fall through */ }
-    }
-    try { await navigator.clipboard.writeText(url); setStatus("copied"); setTimeout(() => setStatus("idle"), 2500); } catch { /* no-op */ }
-  }
-
-  return (
-    <div style={{ border: "1px solid #efefed", borderRadius: 16, padding: "1.25rem 1.5rem", background: "#fff", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-      <div>
-        <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginBottom: 2 }}>Invite your partner to take it</p>
-        <p style={{ fontSize: 13, color: "#777", lineHeight: 1.5, margin: 0 }}>Take it separately, then compare. (Private — they get their own result.)</p>
-      </div>
-      <button onClick={invite} style={{ background: "var(--violet-deep)", color: "#fff", border: "none", borderRadius: 999, padding: "11px 20px", fontSize: 14, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
-        {status === "copied" ? "Link copied!" : status === "shared" ? "Shared!" : "Invite partner"}
-      </button>
     </div>
   );
 }

@@ -9,10 +9,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://splitornot.com/relationship-test" },
 };
 
-export default function RelationshipTestPage() {
+export default function RelationshipTestPage({ searchParams }: { searchParams: { compare?: string } }) {
+  const comparing = Boolean(searchParams?.compare);
   return (
     <main style={{ background: "var(--ink)", minHeight: "100vh", padding: "1.5rem 1rem 3rem", fontFamily: "var(--sans)", color: "var(--on-dark)" }}>
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
+        {comparing && (
+          <div style={{ maxWidth: 620, margin: "0 auto 1.25rem", background: "rgba(139,124,255,0.12)", border: "1px solid var(--line-dark)", borderRadius: 16, padding: "12px 16px", fontSize: 13, color: "var(--on-dark-2)", lineHeight: 1.6 }}>
+            Your partner invited you to compare. Taking this shares only your eight dimension <strong style={{ color: "var(--on-dark)" }}>scores</strong> with them — never your answers or anything you type.
+          </div>
+        )}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.75rem" }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
             <span aria-hidden="true" style={{ position: "relative", width: 30, height: 22, flex: "none" }}>
