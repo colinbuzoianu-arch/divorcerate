@@ -182,6 +182,17 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
         )}
       </div>
 
+      {/* DOWNLOAD PDF (paid) — Phase 6.3 */}
+      {isPaid && resultId && (
+        <a
+          href={`/api/result/${resultId}/pdf`}
+          className="reveal reveal-d6"
+          style={{ display: "block", textAlign: "center", background: "#fff", border: "1px solid #e5e5e5", borderRadius: 999, padding: "13px 20px", fontSize: 14, fontWeight: 600, color: "#1a1a1a", textDecoration: "none" }}
+        >
+          Download your report (PDF)
+        </a>
+      )}
+
       {/* BOOKMARK NOTICE */}
       <div className="reveal reveal-d6" style={{ display: "flex", alignItems: "flex-start", gap: 10, background: "#fafaf8", border: "1px solid #efefed", borderRadius: 12, padding: "12px 14px" }}>
         <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>🔖</span>
