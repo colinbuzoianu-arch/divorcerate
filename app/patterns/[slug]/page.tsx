@@ -20,7 +20,14 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title: `${p.name}: what it is, why it happens, what helps | CoupleIQ`,
     description: p.lede,
-    alternates: { canonical: `${SITE_URL}/patterns/${p.slug}` },
+    alternates: {
+      canonical: `${SITE_URL}/patterns/${p.slug}`,
+      languages: {
+        en: `${SITE_URL}/patterns/${p.slug}`,
+        de: `${SITE_URL}/de/patterns/${p.slug}`,
+        "x-default": `${SITE_URL}/patterns/${p.slug}`,
+      },
+    },
     openGraph: { title: `${p.name} | CoupleIQ`, description: p.lede, type: "article", url: `${SITE_URL}/patterns/${p.slug}` },
   };
 }

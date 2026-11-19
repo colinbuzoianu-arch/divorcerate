@@ -206,3 +206,16 @@ export const PATTERNS: PatternContent[] = [
 export function getPattern(slug: string): PatternContent | undefined {
   return PATTERNS.find((p) => p.slug === slug);
 }
+
+// Locale-aware access (Phase 7). English stays the canonical source for the
+// homepage and sitemap; German content lives in patterns.de.ts.
+import { PATTERNS_DE } from "@/lib/patterns.de";
+import type { Locale } from "@/lib/i18n/config";
+
+export function getPatterns(locale: Locale): PatternContent[] {
+  return locale === "de" ? PATTERNS_DE : PATTERNS;
+}
+
+export function getPatternLocalized(slug: string, locale: Locale): PatternContent | undefined {
+  return getPatterns(locale).find((p) => p.slug === slug);
+}

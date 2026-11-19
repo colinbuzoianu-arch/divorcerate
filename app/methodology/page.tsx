@@ -7,7 +7,14 @@ export const metadata: Metadata = {
   title: "Methodology: how the relationship health score works | CoupleIQ",
   description:
     "Exactly how CoupleIQ scores your relationship: the eight dimensions we measure, how they're weighted, the research themes we draw on, and what the score can and can't tell you.",
-  alternates: { canonical: "https://splitornot.com/methodology" },
+  alternates: {
+    canonical: "https://splitornot.com/methodology",
+    languages: {
+      en: "https://splitornot.com/methodology",
+      de: "https://splitornot.com/de/methodology",
+      "x-default": "https://splitornot.com/methodology",
+    },
+  },
 };
 
 const DIMENSIONS: { key: keyof typeof WEIGHTS; label: string; blurb: string }[] = [

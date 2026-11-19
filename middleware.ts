@@ -18,6 +18,8 @@ import { LOCALE_COOKIE } from "@/lib/i18n/config";
 // German edition is built out — see docs/GERMAN_EDITION_PLAN.md.)
 const TRANSLATED_PREFIXES = [
   "/relationship-test",
+  "/patterns",
+  "/methodology",
 ];
 
 function hasGermanVersion(pathname: string): boolean {
