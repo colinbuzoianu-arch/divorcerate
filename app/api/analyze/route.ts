@@ -8,6 +8,8 @@ import { validateAnalyzeRequest } from "@/lib/validation";
 import { checkAnalyzeRateLimit } from "@/lib/ratelimit";
 import { saveResult, kvConfigured } from "@/lib/kv";
 import { detectSafetyFlag } from "@/lib/safety";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { localizeScoreView, bandLabel, dimensionLabel } from "@/lib/i18n/scoring";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -40,6 +42,8 @@ export async function POST(req: NextRequest) {
     const validation = validateAnalyzeRequest(body);
     if (!validation.ok) return NextResponse.json({ error: validation.error }, { status: validation.status });
     const answers = validation.answers;
+    const rawLocale = (body as { locale?: unknown })?.locale;
+    const locale: Locale = isLocale(typeof rawLocale === "string" ? rawLocale : undefined) ? (rawLocale as Locale) : "en";
 
     // 3.1 — deterministic scoring (no AI). 1.4 — safety flag.
     const safetyFlag = detectSafetyFlag(answers);
@@ -52,16 +56,25 @@ export async function POST(req: NextRequest) {
     const strength = dimByKey(score.biggestStrength);
     const risk = dimByKey(score.biggestRisk);
 
-    const view = { band: score.band, pattern: score.pattern, strength, risk, dimensions: score.dimensions };
+    const baseView = { band: score.band, pattern: score.pattern, strength, risk, dimensions: score.dimensions };
+    // The AI writes in the user's language and uses localized labels.
+    const view = locale === "en" ? baseView : localizeScoreView(baseView, locale);
 
     // 3.2 — exactly one short AI call for the free headline; fall back if it fails.
     let headline: string;
     try {
-      headline = (await callAnthropic(buildHeadlinePrompt(view, safetyFlag), 120)).trim().replace(/^["']|["']$/g, "");
+      headline = (await callAnthropic(buildHeadlinePrompt(view, safetyFlag, locale), 120)).trim().replace(/^["']|["']$/g, "");
       if (!headline) throw new Error("empty headline");
     } catch (err) {
       console.warn("Headline generation failed, using fallback:", err instanceof Error ? err.message : err);
-      headline = `Your relationship lands in the ${score.band}, with ${strength.label.toLowerCase()} as your strongest area and ${risk.label.toLowerCase()} the one to focus on.`;
+      if (locale === "de") {
+        const b = bandLabel.de[score.band];
+        const sLab = dimensionLabel.de[strength.key];
+        const rLab = dimensionLabel.de[risk.key];
+        headline = `Eure Beziehung liegt im Bereich „${b}“ – ${sLab} ist euer stärkster Bereich, ${rLab} der, auf den ihr achten solltet.`;
+      } else {
+        headline = `Your relationship lands in the ${score.band}, with ${strength.label.toLowerCase()} as your strongest area and ${risk.label.toLowerCase()} the one to focus on.`;
+      }
     }
 
     const result: StoredResult = {
@@ -75,6 +88,7 @@ export async function POST(req: NextRequest) {
       headline,
       safetyFlag,
       createdAt: Date.now(),
+      locale,
     };
 
     // 1.2 — store the full result; return only free fields + resultId.

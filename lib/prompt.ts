@@ -29,10 +29,17 @@ function safetyBlock(safetyFlag: boolean): string {
     : "";
 }
 
+/** Language directive. German output uses the informal "du". */
+function languageBlock(locale: string): string {
+  return locale === "de"
+    ? `\nWrite all human-readable text in natural, warm German, addressing the reader informally as "du" (never "Sie"). Use German relationship vocabulary and no English prose. If a JSON shape is specified below, keep its keys exactly as written (in English) and put only the German text in the values.\n`
+    : "";
+}
+
 /** One short, specific headline for the free result. No numbers. */
-export function buildHeadlinePrompt(score: ScoreView, safetyFlag = false): string {
+export function buildHeadlinePrompt(score: ScoreView, safetyFlag = false, locale = "en"): string {
   return `${PERSONA}
-${safetyBlock(safetyFlag)}
+${safetyBlock(safetyFlag)}${languageBlock(locale)}
 A person completed a relationship self-reflection. Computed results:
 - Overall band: ${score.band}
 - Relationship pattern: ${score.pattern}
@@ -45,10 +52,10 @@ Write ONE short, honest sentence (max ~20 words) that captures the core finding 
 }
 
 /** The paid long-form narrative, as strict JSON. */
-export function buildNarrativePrompt(score: ScoreView, safetyFlag = false): string {
+export function buildNarrativePrompt(score: ScoreView, safetyFlag = false, locale = "en"): string {
   const keys = score.dimensions.map((d) => `"${d.key}"`).join(", ");
   return `${PERSONA}
-${safetyBlock(safetyFlag)}
+${safetyBlock(safetyFlag)}${languageBlock(locale)}
 A person completed a relationship self-reflection. Computed results:
 - Overall band: ${score.band}
 - Relationship pattern: ${score.pattern}

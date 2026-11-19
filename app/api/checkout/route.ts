@@ -13,6 +13,8 @@ export async function POST(req: NextRequest) {
 
     const stripe = new Stripe(stripeSecretKey, { apiVersion: "2023-10-16" });
     const body = await req.json();
+    // Locale prefix for return URLs: "" for English (default), "/de" for German.
+    const localePrefix = body.locale === "de" ? "/de" : "";
 
     // Couple comparison (Phase 6.2) uses its own Stripe price.
     if (body.kind === "comparison") {
@@ -27,8 +29,8 @@ export async function POST(req: NextRequest) {
         payment_method_types: ["card"],
         line_items: [{ price: comparisonPriceId, quantity: 1 }],
         mode: "payment",
-        success_url: `${appUrl}/compare/${compId}?paid=1`,
-        cancel_url: `${appUrl}/compare/${compId}`,
+        success_url: `${appUrl}${localePrefix}/compare/${compId}?paid=1`,
+        cancel_url: `${appUrl}${localePrefix}/compare/${compId}`,
         metadata: { kind: "comparison", compId },
       });
       return NextResponse.json({ url: session.url });
@@ -47,9 +49,9 @@ export async function POST(req: NextRequest) {
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
       mode: "payment",
-      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&result=${resultId}`,
+      success_url: `${appUrl}${localePrefix}/success?session_id={CHECKOUT_SESSION_ID}&result=${resultId}`,
       // Back/cancel from Stripe returns to the user's result, not the homepage.
-      cancel_url: `${appUrl}/r/${resultId}`,
+      cancel_url: `${appUrl}${localePrefix}/r/${resultId}`,
       metadata: { resultId },
     });
 

@@ -1,4 +1,5 @@
 import type { Band, DimensionKey, Pattern } from "@/lib/scoring";
+import type { Locale } from "@/lib/i18n/config";
 
 export type Answers = Record<string, string | number>;
 
@@ -41,6 +42,7 @@ export interface StoredResult {
   headline: string; // short AI line (free)
   safetyFlag: boolean;
   createdAt: number;
+  locale?: Locale; // language the result was produced in (default "en")
   narrative?: Narrative; // paid-only
 }
 

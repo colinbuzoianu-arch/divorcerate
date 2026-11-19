@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ResultScreen from "@/components/ResultScreen";
 import type { StoredResult, FreeResult, Narrative } from "@/lib/types";
 import { track } from "@/lib/analytics";
+import { localizeHref } from "@/lib/i18n/config";
 
 /**
  * Client wrapper for a stored result (Phase 2.1 / 3.2). Provides the Stripe
@@ -22,6 +23,7 @@ export default function ResultView({
   resultId: string;
 }) {
   const router = useRouter();
+  const locale = result.locale ?? "en";
   const [narrative, setNarrative] = useState<Narrative | undefined>((result as StoredResult).narrative);
   const [generating, setGenerating] = useState(false);
   const started = useRef(false);
@@ -49,7 +51,7 @@ export default function ResultView({
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resultId }),
+        body: JSON.stringify({ resultId, locale }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
@@ -59,13 +61,13 @@ export default function ResultView({
     }
   };
 
-  const handleRestart = () => router.push("/relationship-test");
+  const handleRestart = () => router.push(localizeHref("/relationship-test", locale));
 
   const merged: StoredResult | FreeResult = narrative ? { ...(result as StoredResult), narrative } : result;
 
   return (
     <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #efefed", padding: "1.75rem", width: "100%", maxWidth: 620, margin: "0 auto", boxShadow: "0 2px 24px rgba(0,0,0,0.05)" }}>
-      <ResultScreen result={merged} isPaid={isPaid} generating={generating} resultId={resultId} onUnlock={handleUnlock} onRestart={handleRestart} />
+      <ResultScreen result={merged} isPaid={isPaid} generating={generating} resultId={resultId} locale={locale} onUnlock={handleUnlock} onRestart={handleRestart} />
     </div>
   );
 }

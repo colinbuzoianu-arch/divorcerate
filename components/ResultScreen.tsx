@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { StoredResult, FreeResult } from "@/lib/types";
 import { track } from "@/lib/analytics";
+import { localizeHref, type Locale } from "@/lib/i18n/config";
+import { getApp, type AppDict } from "@/lib/i18n/app";
+import { bandLabel, bandBlurb, patternLabel, dimensionLabel } from "@/lib/i18n/scoring";
+import type { Band, Pattern, DimensionKey } from "@/lib/scoring";
 import SafetyBlock from "@/components/SafetyBlock";
 import RadarChart from "@/components/RadarChart";
 import EmailCapture from "@/components/EmailCapture";
@@ -17,27 +21,27 @@ const BAND_COLORS: Record<string, string> = {
   "Solid Ground": "#1E7A58",
 };
 
-const BAND_BLURB: Record<string, string> = {
-  "Critical Point": "Serious strain across several areas. This is where support tends to help most.",
-  "Fault Line": "A few significant patterns worth addressing soon, before they compound.",
-  "Amber Zone": "Real strengths and real risks. Small, deliberate changes matter most here.",
-  "Stable Foundation": "Fundamentally sound, with a few things worth keeping an eye on.",
-  "Solid Ground": "Strong protective factors. Keep investing in what's working.",
-};
-
 interface Props {
   result: StoredResult | FreeResult;
   isPaid: boolean;
   generating?: boolean;
   resultId?: string;
+  locale?: Locale;
   onUnlock: () => void;
   onRestart: () => void;
 }
 
-export default function ResultScreen({ result, isPaid, generating = false, resultId, onUnlock, onRestart }: Props) {
+export default function ResultScreen({ result, isPaid, generating = false, resultId, locale = "en", onUnlock, onRestart }: Props) {
   const full = result as StoredResult;
   const color = BAND_COLORS[result.band] ?? "#4B3FB0";
   const narrative = isPaid ? full.narrative : undefined;
+  const t = getApp(locale).result;
+  const dl = dimensionLabel[locale];
+  const bandText = bandLabel[locale][result.band as Band] ?? result.band;
+  const patternText = patternLabel[locale][result.pattern as Pattern] ?? result.pattern;
+  const riskText = dl[result.risk.key as DimensionKey] ?? result.risk.label;
+  const strengthText = dl[result.strength.key as DimensionKey] ?? result.strength.label;
+  const dimLabel = (key: string, fallback: string) => dl[key as DimensionKey] ?? fallback;
   const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
@@ -51,23 +55,23 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
     <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
 
       {/* SAFETY — free, never blurred, always first */}
-      {result.safetyFlag && <SafetyBlock />}
+      {result.safetyFlag && <SafetyBlock locale={locale} />}
 
       {/* HEADLINE CARD — band leads, score supports */}
       <div className="reveal reveal-d1" style={{ background: "#fafaf8", border: `1px solid ${color}33`, borderRadius: 20, padding: "1.75rem 1.5rem", textAlign: "center" }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: color + "18", border: `1px solid ${color}33`, borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: color }} />
-          <span style={{ fontFamily: "var(--mono)", fontSize: 11, color, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.1em" }}>Relationship health</span>
+          <span style={{ fontFamily: "var(--mono)", fontSize: 11, color, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.1em" }}>{t.healthEyebrow}</span>
         </div>
         <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 44, color, lineHeight: 1, letterSpacing: "-0.02em", marginBottom: 6 }}>
-          {result.band}
+          {bandText}
         </p>
         <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6, maxWidth: 420, margin: "0 auto 16px" }}>
-          {BAND_BLURB[result.band]}
+          {bandBlurb[locale][result.band as Band]}
         </p>
         <div style={{ display: "inline-flex", alignItems: "baseline", gap: 8 }}>
           <span style={{ fontFamily: "var(--serif)", fontSize: 64, lineHeight: 0.9, color: "#1a1a1a", letterSpacing: "-0.03em" }}>{result.healthScore}</span>
-          <span style={{ fontSize: 13, color: "#999" }}>/ 100 health score</span>
+          <span style={{ fontSize: 13, color: "#999" }}>{t.outOf}</span>
         </div>
         <div style={{ height: 1, background: color + "20", margin: "16px 0" }} />
         <p style={{ fontSize: 15, fontWeight: 500, color: "#1a1a1a", lineHeight: 1.55 }}>{result.headline}</p>
@@ -75,16 +79,16 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
 
       {/* DIMENSION RADAR + BARS */}
       <div className="reveal reveal-d2" style={{ background: "#fff", border: "1px solid #efefed", borderRadius: 20, padding: "1.5rem" }}>
-        <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Eight dimensions</p>
+        <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{t.eightDimensions}</p>
         {isPaid && (
           <div style={{ margin: "0 0 20px" }}>
-            <RadarChart dimensions={result.dimensions} />
+            <RadarChart dimensions={result.dimensions.map((d) => ({ ...d, label: dimLabel(d.key, d.label) }))} />
           </div>
         )}
         <div style={{ display: "grid", gap: 12 }}>
           {result.dimensions.map((d) => (
             <div key={d.key} style={{ display: "grid", gridTemplateColumns: "130px 1fr 32px", gap: 12, alignItems: "center" }}>
-              <span style={{ fontSize: 13, color: "#555" }}>{d.label}</span>
+              <span style={{ fontSize: 13, color: "#555" }}>{dimLabel(d.key, d.label)}</span>
               <span style={{ height: 6, borderRadius: 6, background: "#f0eff3", overflow: "hidden" }}>
                 <span style={{ display: "block", height: "100%", borderRadius: 6, width: animated ? `${d.score}%` : "0%", background: "linear-gradient(90deg, var(--violet), var(--ember))", transition: "width 1s ease" }} />
               </span>
@@ -96,20 +100,20 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
 
       {/* PATTERN */}
       <div className="reveal reveal-d3" style={{ border: "1px solid #efefed", borderRadius: 20, padding: "1.5rem", background: "#fff" }}>
-        <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Your relationship pattern</p>
-        <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 30, color: "var(--violet-deep)", lineHeight: 1.05, marginBottom: 10 }}>{result.pattern}</p>
-        <a href={`/patterns/${result.patternSlug}${resultId ? `?from=${resultId}` : ""}`} style={{ fontSize: 14, fontWeight: 600, color: "var(--violet-deep)", textDecoration: "none" }}>Read more about your pattern →</a>
+        <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>{t.yourPattern}</p>
+        <p style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 30, color: "var(--violet-deep)", lineHeight: 1.05, marginBottom: 10 }}>{patternText}</p>
+        <a href={`${localizeHref(`/patterns/${result.patternSlug}`, locale)}${resultId ? `?from=${resultId}` : ""}`} style={{ fontSize: 14, fontWeight: 600, color: "var(--violet-deep)", textDecoration: "none" }}>{t.readMore}</a>
       </div>
 
       {/* STRENGTH + RISK */}
       <div className="reveal reveal-d4" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
         <div style={{ background: "#e8f3ee", border: "1px solid #c3e0d3", borderRadius: 16, padding: "1rem" }}>
-          <p style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 500, color: "#0f6e56", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Biggest strength</p>
-          <p style={{ fontSize: 14, fontWeight: 600, color: "#085041" }}>{result.strength.label}</p>
+          <p style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 500, color: "#0f6e56", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{t.biggestStrength}</p>
+          <p style={{ fontSize: 14, fontWeight: 600, color: "#085041" }}>{strengthText}</p>
         </div>
         <div style={{ background: "#fcecec", border: "1px solid #f0c9c9", borderRadius: 16, padding: "1rem" }}>
-          <p style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 500, color: "#a32d2d", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Focus area</p>
-          <p style={{ fontSize: 14, fontWeight: 600, color: "#501313" }}>{result.risk.label}</p>
+          <p style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 500, color: "#a32d2d", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{t.focusArea}</p>
+          <p style={{ fontSize: 14, fontWeight: 600, color: "#501313" }}>{riskText}</p>
         </div>
       </div>
 
@@ -123,14 +127,14 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
               </div>
             )}
             <div style={{ background: "#fff", border: "1px solid #efefed", borderRadius: 20, padding: "1.5rem" }}>
-              <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>Your dimensions, explained</p>
+              <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>{t.dimensionsExplained}</p>
               <div style={{ display: "grid", gap: 14 }}>
                 {result.dimensions.map((d) => {
                   const note = noteFor(d.key);
                   if (!note) return null;
                   return (
                     <div key={d.key}>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", marginBottom: 3 }}>{d.label} · {d.score}</p>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", marginBottom: 3 }}>{dimLabel(d.key, d.label)} · {d.score}</p>
                       <p style={{ fontSize: 13, color: "#666", lineHeight: 1.65 }}>{note}</p>
                     </div>
                   );
@@ -139,13 +143,13 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
             </div>
             {narrative.riskDetail && (
               <div style={{ background: "#fcecec", border: "1px solid #f0c9c9", borderRadius: 20, padding: "1.5rem" }}>
-                <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#a32d2d", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Why {result.risk.label} is your focus area</p>
+                <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#a32d2d", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>{t.whyFocus.replace("{risk}", riskText)}</p>
                 <p style={{ fontSize: 14, color: "#501313", lineHeight: 1.7 }}>{narrative.riskDetail}</p>
               </div>
             )}
             {narrative.recommendations.length > 0 && (
               <div style={{ background: "#fff", border: "1px solid #efefed", borderRadius: 20, padding: "1.5rem" }}>
-                <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>What to do next</p>
+                <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "#bbb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>{t.whatToDoNext}</p>
                 <div style={{ display: "grid", gap: 12 }}>
                   {narrative.recommendations.map((rec, i) => (
                     <div key={i} style={{ display: "flex", gap: 14, padding: "13px 16px", background: "#fafaf8", borderRadius: 14, border: "1px solid #efefed", alignItems: "flex-start" }}>
@@ -166,19 +170,19 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
               <>
                 <div style={{ width: 36, height: 36, border: "3px solid #ece9fb", borderTopColor: "var(--violet-deep)", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 14px" }} />
                 <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-                <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginBottom: 4 }}>Preparing your full report…</p>
-                <p style={{ fontSize: 13, color: "#888", lineHeight: 1.6 }}>Writing up your eight dimensions and next steps. This takes a few seconds — please don&apos;t close the page.</p>
+                <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginBottom: 4 }}>{t.preparingTitle}</p>
+                <p style={{ fontSize: 13, color: "#888", lineHeight: 1.6 }}>{t.preparingBody}</p>
               </>
             ) : (
               <>
-                <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginBottom: 4 }}>Almost there</p>
-                <p style={{ fontSize: 13, color: "#888", lineHeight: 1.6, marginBottom: 14 }}>We couldn&apos;t finish generating your report just now. Refresh to try again — your payment is safe and your result is saved.</p>
-                <button onClick={() => location.reload()} style={{ background: "var(--violet-deep)", color: "#fff", border: "none", borderRadius: 999, padding: "11px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Refresh</button>
+                <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", marginBottom: 4 }}>{t.almostTitle}</p>
+                <p style={{ fontSize: 13, color: "#888", lineHeight: 1.6, marginBottom: 14 }}>{t.almostBody}</p>
+                <button onClick={() => location.reload()} style={{ background: "var(--violet-deep)", color: "#fff", border: "none", borderRadius: 999, padding: "11px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>{t.refresh}</button>
               </>
             )}
           </div>
         ) : (
-          <PaywallGate onUnlock={onUnlock} color={color} riskLabel={result.risk.label} />
+          <PaywallGate onUnlock={onUnlock} color={color} riskLabel={riskText} t={t} />
         )}
       </div>
 
@@ -189,7 +193,7 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
           className="reveal reveal-d6"
           style={{ display: "block", textAlign: "center", background: "#fff", border: "1px solid #e5e5e5", borderRadius: 999, padding: "13px 20px", fontSize: 14, fontWeight: 600, color: "#1a1a1a", textDecoration: "none" }}
         >
-          Download your report (PDF)
+          {t.pdf}
         </a>
       )}
 
@@ -197,28 +201,28 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
       <div className="reveal reveal-d6" style={{ display: "flex", alignItems: "flex-start", gap: 10, background: "#fafaf8", border: "1px solid #efefed", borderRadius: 12, padding: "12px 14px" }}>
         <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>🔖</span>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#444", marginBottom: 3 }}>Save your result</p>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#444", marginBottom: 3 }}>{t.bookmarkTitle}</p>
           <p style={{ fontSize: 12, color: "#888", lineHeight: 1.6, margin: 0 }}>
-            Bookmark this page to return to your result. It stays at this private link for 30 days, then is automatically deleted.
+            {t.bookmarkBody}
           </p>
         </div>
       </div>
 
       {/* RETENTION — email the result + invite your partner (Phase 5.1, 5.2) */}
       <div className="reveal reveal-d6">
-        <EmailCapture result={result} />
+        <EmailCapture result={result} locale={locale} />
       </div>
       <div className="reveal reveal-d7">
-        <CompareStart resultId={resultId} />
+        <CompareStart resultId={resultId} locale={locale} />
       </div>
 
       <div className="reveal reveal-d7">
-        <ShareButton band={result.band} score={result.healthScore} pattern={result.pattern} color={color} full={isPaid} />
+        <ShareButton band={bandText} score={result.healthScore} pattern={patternText} color={color} full={isPaid} t={t} locale={locale} />
       </div>
 
       {/* FEEDBACK (Phase 5.4) */}
       <div className="reveal reveal-d8">
-        <FeedbackPrompt resultId={resultId} />
+        <FeedbackPrompt resultId={resultId} locale={locale} />
       </div>
 
       <button
@@ -226,7 +230,7 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
         onClick={onRestart}
         style={{ background: "transparent", border: "1px solid #eee", borderRadius: 999, padding: "12px 20px", fontSize: 14, color: "#bbb", width: "100%", cursor: "pointer", fontWeight: 500 }}
       >
-        Take the test again
+        {t.takeAgain}
       </button>
     </div>
   );
@@ -234,25 +238,19 @@ export default function ResultScreen({ result, isPaid, generating = false, resul
 
 /* ─── Paywall ─────────────────────────────────────────────────────────── */
 
-function PaywallGate({ onUnlock, color, riskLabel }: { onUnlock: () => void; color: string; riskLabel: string }) {
+function PaywallGate({ onUnlock, color, riskLabel, t }: { onUnlock: () => void; color: string; riskLabel: string; t: AppDict["result"] }) {
   const [loading, setLoading] = useState(false);
-  const locked = [
-    "All eight dimensions, explained for you",
-    `Why ${riskLabel} is your focus area`,
-    "Three specific next steps for your pattern",
-    "A private link to your full report",
-  ];
+  const locked = t.paywallItems.map((item) => item.replace("{risk}", riskLabel));
   return (
     <div style={{ border: `1px solid ${color}33`, borderRadius: 20, overflow: "hidden" }}>
       <div style={{ position: "relative", padding: "1.5rem", background: "#fafaf8" }}>
         <div style={{ filter: "blur(5px)", userSelect: "none", pointerEvents: "none" }}>
           <p style={{ fontSize: 13, color: "#777", lineHeight: 1.7 }}>
-            Your {riskLabel.toLowerCase()} score points to a pattern that tends to compound quietly over time.
-            The full report explains exactly what is driving it and the specific steps that help most for your pattern…
+            {t.paywallBlurb.replace("{risk}", riskLabel)}
           </p>
         </div>
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontFamily: "var(--mono)", fontSize: 11, fontWeight: 500, color, background: "#fff", padding: "5px 14px", borderRadius: 999, border: `1px solid ${color}33`, textTransform: "uppercase", letterSpacing: "0.08em" }}>🔒 Full report</span>
+          <span style={{ fontFamily: "var(--mono)", fontSize: 11, fontWeight: 500, color, background: "#fff", padding: "5px 14px", borderRadius: 999, border: `1px solid ${color}33`, textTransform: "uppercase", letterSpacing: "0.08em" }}>{t.paywallBadge}</span>
         </div>
       </div>
       <div style={{ padding: "1.5rem", borderTop: "1px solid #efefed" }}>
@@ -268,7 +266,7 @@ function PaywallGate({ onUnlock, color, riskLabel }: { onUnlock: () => void; col
           disabled={loading}
           style={{ width: "100%", background: "var(--violet-deep)", color: "#fff", border: "none", borderRadius: 999, padding: "15px 20px", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
         >
-          {loading ? "Opening checkout…" : "Unlock the full report — $4.99"}
+          {loading ? t.checkoutOpening : t.paywallButton}
         </button>
       </div>
     </div>
@@ -277,7 +275,7 @@ function PaywallGate({ onUnlock, color, riskLabel }: { onUnlock: () => void; col
 
 /* ─── Share ───────────────────────────────────────────────────────────── */
 
-function ShareButton({ band, score, pattern, color, full }: { band: string; score: number; pattern: string; color: string; full: boolean }) {
+function ShareButton({ band, score, pattern, color, full, t, locale }: { band: string; score: number; pattern: string; color: string; full: boolean; t: AppDict["result"]; locale: Locale }) {
   const [status, setStatus] = useState<"idle" | "generating" | "copied" | "shared">("idle");
 
   function drawCard(): HTMLCanvasElement {
@@ -289,10 +287,10 @@ function ShareButton({ band, score, pattern, color, full }: { band: string; scor
     ctx.fillStyle = color;
     ctx.beginPath(); ctx.arc(W - 220, 200, 240, 0, Math.PI * 2); ctx.globalAlpha = 0.25; ctx.fill(); ctx.globalAlpha = 1;
     ctx.textAlign = "center";
-    ctx.fillStyle = "#A8A2B3"; ctx.font = "500 30px sans-serif"; ctx.fillText("MY RELATIONSHIP HEALTH", W / 2, 300);
+    ctx.fillStyle = "#A8A2B3"; ctx.font = "500 30px sans-serif"; ctx.fillText(t.shareCardLabel, W / 2, 300);
     ctx.fillStyle = "#F3EEE6"; ctx.font = "400 120px Georgia, serif"; ctx.fillText(band, W / 2, 440);
     ctx.fillStyle = color; ctx.font = "700 180px Georgia, serif"; ctx.fillText(String(score), W / 2, 640);
-    ctx.fillStyle = "#A8A2B3"; ctx.font = "400 34px sans-serif"; ctx.fillText("/ 100 health score", W / 2, 700);
+    ctx.fillStyle = "#A8A2B3"; ctx.font = "400 34px sans-serif"; ctx.fillText(t.shareCardScore, W / 2, 700);
     ctx.fillStyle = "#F3EEE6"; ctx.font = "italic 400 44px Georgia, serif"; ctx.fillText(pattern, W / 2, 800);
     ctx.fillStyle = "#8B7CFF"; ctx.font = "500 32px sans-serif"; ctx.fillText("CoupleIQ · splitornot.com", W / 2, H - 80);
     return canvas;
@@ -308,17 +306,17 @@ function ShareButton({ band, score, pattern, color, full }: { band: string; scor
     // Share a link to the quiz (with UTM), not the private result page — the
     // point is to get other people to take it (Phase 5.3).
     const origin = typeof window !== "undefined" ? window.location.origin : "https://splitornot.com";
-    const shareUrl = `${origin}/relationship-test?utm_source=share&utm_medium=result_card&utm_campaign=coupleiq`;
-    const text = `I got '${band}' on CoupleIQ — a free, private relationship test.`;
+    const shareUrl = `${origin}${localizeHref("/relationship-test", locale)}?utm_source=share&utm_medium=result_card&utm_campaign=coupleiq`;
+    const text = t.shareText.replace("{band}", band);
     if (navigator.canShare?.({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: "My CoupleIQ result", text, url: shareUrl }); setStatus("shared"); setTimeout(() => setStatus("idle"), 2500); return; } catch { /* fall through */ }
+      try { await navigator.share({ files: [file], title: "CoupleIQ", text, url: shareUrl }); setStatus("shared"); setTimeout(() => setStatus("idle"), 2500); return; } catch { /* fall through */ }
     }
     const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "my-coupleiq-result.png"; a.click(); URL.revokeObjectURL(url);
     try { await navigator.clipboard.writeText(shareUrl); setStatus("copied"); } catch { setStatus("idle"); }
     setTimeout(() => setStatus("idle"), 2500);
   }
 
-  const label = status === "generating" ? "Generating card…" : status === "copied" ? "Image saved · Link copied!" : status === "shared" ? "Shared!" : "Share my result";
+  const label = status === "generating" ? t.shareGenerating : status === "copied" ? t.shareCopied : status === "shared" ? t.shareShared : t.shareIdle;
   return (
     <button onClick={handleShare} disabled={status === "generating"} style={{ width: "100%", background: "#fff", border: "1px solid #e5e5e5", borderRadius: 999, padding: "14px 20px", fontSize: 14, fontWeight: 600, color: "#1a1a1a", cursor: "pointer" }}>
       {label}

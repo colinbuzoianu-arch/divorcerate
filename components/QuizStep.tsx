@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { Step, Question } from "@/lib/questions";
 import { Answers } from "@/lib/types";
+import type { Locale } from "@/lib/i18n/config";
+import { getApp, type AppDict } from "@/lib/i18n/app";
 
 interface Props {
   step: Step;
@@ -13,6 +15,7 @@ interface Props {
   onNext: () => void;
   onBack: () => void;
   onNavigate: (index: number) => void;
+  locale?: Locale;
 }
 
 export default function QuizStep({
@@ -24,7 +27,9 @@ export default function QuizStep({
   onNext,
   onBack,
   onNavigate,
+  locale = "en",
 }: Props) {
+  const t = getApp(locale).step;
   const isLast = stepIndex === totalSteps - 1;
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -43,7 +48,7 @@ export default function QuizStep({
       {/* Step label */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
         <span style={{ fontSize: 13, color: "#999", letterSpacing: "0.02em" }}>
-          Step {stepIndex + 1} of {totalSteps}
+          {t.stepOf.replace("{i}", String(stepIndex + 1)).replace("{n}", String(totalSteps))}
         </span>
         <span style={{ fontSize: 13, color: "#4B3FB0", fontWeight: 600 }}>{step.title}</span>
       </div>
@@ -58,7 +63,7 @@ export default function QuizStep({
             <div
               key={i}
               onClick={() => { if (clickable) onNavigate(i); }}
-              title={clickable ? `Go back to step ${i + 1}` : undefined}
+              title={clickable ? t.goBackTo.replace("{i}", String(i + 1)) : undefined}
               style={{
                 flex: active ? "0 0 28px" : "0 0 8px",
                 height: 8,
@@ -75,7 +80,7 @@ export default function QuizStep({
 
       {/* Questions */}
       {step.questions.map((q) => (
-        <QuestionBlock key={q.id} question={q} value={answers[q.id]} onChange={onChange} />
+        <QuestionBlock key={q.id} question={q} value={answers[q.id]} onChange={onChange} t={t} />
       ))}
 
       {/* Nav buttons */}
@@ -95,7 +100,7 @@ export default function QuizStep({
               transition: "border-color 0.15s, color 0.15s",
             }}
           >
-            Back
+            {t.back}
           </button>
         )}
         <button
@@ -118,7 +123,7 @@ export default function QuizStep({
           onMouseDown={(e) => { if (allAnswered) (e.currentTarget.style.transform = "scale(0.98)"); }}
           onMouseUp={(e) => { (e.currentTarget.style.transform = "scale(1)"); }}
         >
-          {isLast ? "Get my results" : "Continue"}
+          {isLast ? t.getResults : t.continue}
         </button>
       </div>
     </div>
@@ -129,10 +134,12 @@ function QuestionBlock({
   question: q,
   value,
   onChange,
+  t,
 }: {
   question: Question;
   value: string | number | undefined;
   onChange: (id: string, val: string | number) => void;
+  t: AppDict["step"];
 }) {
   return (
     <div style={{ marginBottom: "1.75rem" }}>
@@ -159,12 +166,12 @@ function QuestionBlock({
       {q.type === "options" && (
         <div className="option-btn-wrap" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {q.options!.map((opt) => {
-            const selected = value === opt;
+            const selected = value === opt.value;
             return (
               <button
-                key={opt}
+                key={opt.value}
                 className={`option-btn${selected ? " selected" : ""}`}
-                onClick={() => onChange(q.id, opt)}
+                onClick={() => onChange(q.id, opt.value)}
                 style={{
                   background: selected ? "#ece9fb" : "#fafaf8",
                   border: selected ? "1.5px solid #4B3FB0" : "1px solid #e8e8e5",
@@ -178,7 +185,7 @@ function QuestionBlock({
                   cursor: "pointer",
                 }}
               >
-                {opt}
+                {opt.label}
               </button>
             );
           })}
@@ -196,7 +203,7 @@ function QuestionBlock({
             lineHeight: 1,
           }}>
             {(value as number) ?? q.default}
-            <span style={{ fontSize: 16, fontWeight: 400, color: "#aaa", marginLeft: 4 }}>/ 10</span>
+            <span style={{ fontSize: 16, fontWeight: 400, color: "#aaa", marginLeft: 4 }}>{t.of10}</span>
           </div>
           <input
             type="range"
@@ -216,7 +223,7 @@ function QuestionBlock({
 
       {q.type === "textarea" && (
         <textarea
-          placeholder="Optional — leave blank if nothing specific"
+          placeholder={t.textareaPlaceholder}
           value={(value as string) || ""}
           onChange={(e) => onChange(q.id, e.target.value)}
           style={{

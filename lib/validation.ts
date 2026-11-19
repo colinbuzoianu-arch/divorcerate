@@ -27,7 +27,9 @@ function buildAnswersSchema() {
   for (const step of steps) {
     for (const q of step.questions) {
       if (q.type === "options") {
-        const opts = (q.options ?? []) as [string, ...string[]];
+        // Validate against canonical option VALUES (English tokens), which the
+        // client submits regardless of display language.
+        const opts = (q.options ?? []).map((o) => o.value) as [string, ...string[]];
         shape[q.id] = z.enum(opts);
       } else if (q.type === "range") {
         const min = q.min ?? 1;

@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Locale } from "@/lib/i18n/config";
+import { getApp } from "@/lib/i18n/app";
 
-const messages = [
-  "Analyzing your communication patterns…",
-  "Weighing risk and protective factors…",
-  "Applying relationship science models…",
-  "Generating your personalized insights…",
-];
-
-export default function LoadingScreen() {
+export default function LoadingScreen({ locale = "en" }: { locale?: Locale }) {
+  const t = getApp(locale).loading;
+  const messages = t.messages;
   const [msgIndex, setMsgIndex]   = useState(0);
   const [seconds, setSeconds]     = useState(0);
 
@@ -45,17 +42,13 @@ export default function LoadingScreen() {
         <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4B3FB0", animation: "pulse 1.5s ease-in-out infinite" }} />
         <style>{`@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }`}</style>
         <p style={{ fontSize: 13, color: "#888", margin: 0 }}>
-          {seconds < 10
-            ? "Usually takes 15–20 seconds…"
-            : seconds < 20
-            ? "Almost there…"
-            : "Taking a little longer than usual, hang tight…"}
+          {seconds < 10 ? t.est1 : seconds < 20 ? t.est2 : t.est3}
         </p>
       </div>
 
       {/* Reassurance */}
       <p style={{ fontSize: 12, color: "#bbb", margin: 0, maxWidth: 260, lineHeight: 1.6 }}>
-        We're applying 40 years of relationship research to your specific answers.
+        {t.reassurance}
       </p>
     </div>
   );

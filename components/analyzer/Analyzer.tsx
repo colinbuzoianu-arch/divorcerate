@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { steps } from "@/lib/questions";
+import { getSteps } from "@/lib/questions";
 import { Answers } from "@/lib/types";
+import { localizeHref, type Locale } from "@/lib/i18n/config";
+import { getApp } from "@/lib/i18n/app";
 import StartScreen from "@/components/StartScreen";
 import QuizStep from "@/components/QuizStep";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -18,8 +20,9 @@ const PROGRESS_KEY = "cq_quiz_progress";
  * off to the server-rendered result at /r/[id]. Progress is saved in
  * sessionStorage so a mid-quiz refresh doesn't lose answers.
  */
-export default function Analyzer() {
+export default function Analyzer({ locale = "en" }: { locale?: Locale }) {
   const router = useRouter();
+  const steps = getSteps(locale);
   const [screen, setScreen] = useState<Screen>("start");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
@@ -95,7 +98,7 @@ export default function Analyzer() {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers, hp, elapsedMs }),
+        body: JSON.stringify({ answers, hp, elapsedMs, locale }),
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || "Unknown error");
@@ -112,11 +115,11 @@ export default function Analyzer() {
             body: JSON.stringify({ resultId: data.resultId }),
           });
         } catch { /* fall through to the normal result page */ }
-        router.push(`/compare/${compareId}`);
+        router.push(localizeHref(`/compare/${compareId}`, locale));
         return;
       }
 
-      router.push(`/r/${data.resultId}`);
+      router.push(localizeHref(`/r/${data.resultId}`, locale));
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Analysis failed. Please try again.");
       setScreen("error");
@@ -139,15 +142,15 @@ export default function Analyzer() {
         style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
       />
 
-      {screen === "start" && <StartScreen onStart={beginQuiz} />}
+      {screen === "start" && <StartScreen onStart={beginQuiz} locale={locale} />}
       {screen === "quiz" && (
-        <QuizStep step={steps[stepIndex]} stepIndex={stepIndex} totalSteps={steps.length} answers={answers} onChange={handleChange} onNext={handleNext} onBack={handleBack} onNavigate={handleNavigate} />
+        <QuizStep step={steps[stepIndex]} stepIndex={stepIndex} totalSteps={steps.length} answers={answers} onChange={handleChange} onNext={handleNext} onBack={handleBack} onNavigate={handleNavigate} locale={locale} />
       )}
-      {screen === "loading" && <LoadingScreen />}
+      {screen === "loading" && <LoadingScreen locale={locale} />}
       {screen === "error" && (
         <div style={{ textAlign: "center" }}>
           <div style={{ background: "#fcebeb", border: "1px solid #f7c1c1", borderRadius: 12, padding: "1rem", fontSize: 14, color: "#a32d2d", marginBottom: "1rem" }}>{errorMsg}</div>
-          <button onClick={retry} style={{ background: "transparent", border: "1px solid #eee", borderRadius: 12, padding: "12px 20px", fontSize: 14, color: "#aaa", width: "100%", cursor: "pointer" }}>Try again</button>
+          <button onClick={retry} style={{ background: "transparent", border: "1px solid #eee", borderRadius: 12, padding: "12px 20px", fontSize: 14, color: "#aaa", width: "100%", cursor: "pointer" }}>{getApp(locale).errorRetry}</button>
         </div>
       )}
     </div>

@@ -2,6 +2,7 @@ import { callAnthropic, parseJsonLoose } from "@/lib/anthropic";
 import { buildNarrativePrompt } from "@/lib/prompt";
 import { getNarrative, saveNarrative } from "@/lib/kv";
 import type { Narrative, StoredResult } from "@/lib/types";
+import { localizeScoreView } from "@/lib/i18n/scoring";
 
 /**
  * Returns the paid narrative for a result, generating it once (lazily, after
@@ -14,7 +15,9 @@ export async function getOrCreateNarrative(id: string, result: StoredResult): Pr
   if (cached) return cached;
 
   try {
-    const raw = await callAnthropic(buildNarrativePrompt(result, result.safetyFlag), 1600);
+    const locale = result.locale ?? "en";
+    const view = locale === "en" ? result : localizeScoreView(result, locale);
+    const raw = await callAnthropic(buildNarrativePrompt(view, result.safetyFlag, locale), 1600);
     const parsed = parseJsonLoose<Partial<Narrative>>(raw);
     if (!parsed || typeof parsed.summary !== "string" || !Array.isArray(parsed.recommendations)) {
       return null;

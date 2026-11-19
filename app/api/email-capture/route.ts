@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import type { StoredResult } from "@/lib/types";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { bandLabel, patternLabel, dimensionLabel } from "@/lib/i18n/scoring";
+import type { Band, Pattern, DimensionKey } from "@/lib/scoring";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,12 +16,21 @@ const BAND_COLOR: Record<string, string> = {
   "Solid Ground": "#1E7A58",
 };
 
-function buildEmailHtml(result: StoredResult): string {
+const EMAIL_STRINGS = {
+  en: { report: "Your relationship health report", pattern: "Your relationship pattern", dimensions: "Eight dimensions", next: "What to do next", retake: "Take the test again", disclaimer: "For self-reflection only — not a substitute for professional help.", subject: (band: string) => `Your relationship health report — ${band} · CoupleIQ` },
+  de: { report: "Dein Beziehungs-Gesundheitsbericht", pattern: "Dein Beziehungsmuster", dimensions: "Acht Dimensionen", next: "Was als Nächstes zu tun ist", retake: "Test erneut machen", disclaimer: "Nur zur Selbstreflexion – kein Ersatz für professionelle Hilfe.", subject: (band: string) => `Dein Beziehungs-Gesundheitsbericht — ${band} · CoupleIQ` },
+};
+
+function buildEmailHtml(result: StoredResult, locale: Locale): string {
   const color = BAND_COLOR[result.band] ?? "#4B3FB0";
+  const s = EMAIL_STRINGS[locale];
+  const testPath = locale === "de" ? "/de/relationship-test" : "/relationship-test";
+  const bandText = bandLabel[locale][result.band as Band] ?? result.band;
+  const patternText = patternLabel[locale][result.pattern as Pattern] ?? result.pattern;
 
   const dimRows = result.dimensions.map((d) => `
     <tr>
-      <td style="padding:6px 0;font-size:13px;color:#555;">${d.label}</td>
+      <td style="padding:6px 0;font-size:13px;color:#555;">${dimensionLabel[locale][d.key as DimensionKey] ?? d.label}</td>
       <td style="padding:6px 0;font-size:13px;color:#1a1a1a;font-weight:600;text-align:right;">${d.score}</td>
     </tr>`).join("");
 
@@ -42,11 +54,11 @@ function buildEmailHtml(result: StoredResult): string {
 
         <tr><td style="padding-bottom:24px;text-align:center;">
           <span style="font-size:22px;color:#1a1a1a;">CoupleIQ</span>
-          <p style="font-size:12px;color:#aaa;margin:4px 0 0;">Your relationship health report</p>
+          <p style="font-size:12px;color:#aaa;margin:4px 0 0;">${s.report}</p>
         </td></tr>
 
         <tr><td style="background:#fff;border:1px solid ${color}33;border-radius:16px;padding:24px;text-align:center;">
-          <p style="font-size:11px;color:${color};font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">${result.band}</p>
+          <p style="font-size:11px;color:${color};font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">${bandText}</p>
           <p style="font-size:56px;font-weight:800;color:#1a1a1a;line-height:1;margin:0;letter-spacing:-0.03em;">${result.healthScore}<span style="font-size:16px;color:#999;font-weight:400;"> / 100</span></p>
           <p style="font-size:15px;font-weight:500;color:#1a1a1a;line-height:1.5;margin:14px 0 0;">${result.headline}</p>
         </td></tr>
@@ -54,14 +66,14 @@ function buildEmailHtml(result: StoredResult): string {
         <tr><td height="16"></td></tr>
 
         <tr><td style="background:#fff;border:1px solid #efefed;border-radius:16px;padding:24px;">
-          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">Your relationship pattern</p>
-          <p style="font-size:18px;font-weight:700;color:#4B3FB0;margin:0;">${result.pattern}</p>
+          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">${s.pattern}</p>
+          <p style="font-size:18px;font-weight:700;color:#4B3FB0;margin:0;">${patternText}</p>
         </td></tr>
 
         <tr><td height="16"></td></tr>
 
         <tr><td style="background:#fff;border:1px solid #efefed;border-radius:16px;padding:24px;">
-          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">Eight dimensions</p>
+          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 10px;">${s.dimensions}</p>
           <table width="100%" cellpadding="0" cellspacing="0">${dimRows}</table>
         </td></tr>
 
@@ -69,21 +81,21 @@ function buildEmailHtml(result: StoredResult): string {
         <tr><td height="16"></td></tr>
         <tr><td style="background:#fff;border:1px solid #efefed;border-radius:16px;padding:24px;">
           <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 16px;">${result.narrative.summary}</p>
-          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px;">What to do next</p>
+          <p style="font-size:11px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 8px;">${s.next}</p>
           <table width="100%" cellpadding="0" cellspacing="0">${recRows}</table>
         </td></tr>` : ""}
 
         <tr><td height="28"></td></tr>
 
         <tr><td style="text-align:center;">
-          <a href="https://splitornot.com/relationship-test" style="display:inline-block;background:#4B3FB0;color:#fff;text-decoration:none;border-radius:999px;padding:14px 32px;font-size:15px;font-weight:600;">Take the test again</a>
+          <a href="https://splitornot.com${testPath}" style="display:inline-block;background:#4B3FB0;color:#fff;text-decoration:none;border-radius:999px;padding:14px 32px;font-size:15px;font-weight:600;">${s.retake}</a>
         </td></tr>
 
         <tr><td height="28"></td></tr>
 
         <tr><td style="text-align:center;border-top:1px solid #e8e8e5;padding-top:24px;">
           <p style="font-size:12px;color:#ccc;margin:0 0 4px;">CoupleIQ · splitornot.com</p>
-          <p style="font-size:11px;color:#ddd;margin:0;">For self-reflection only — not a substitute for professional help.</p>
+          <p style="font-size:11px;color:#ddd;margin:0;">${s.disclaimer}</p>
         </td></tr>
 
       </table>
@@ -104,7 +116,8 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { email, result, mode, consent, reminderConsent }: { email: string; result?: StoredResult; mode?: string; consent?: boolean; reminderConsent?: boolean } = body;
+    const { email, result, mode, consent, reminderConsent, locale: rawLocale }: { email: string; result?: StoredResult; mode?: string; consent?: boolean; reminderConsent?: boolean; locale?: string } = body;
+    const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
@@ -135,13 +148,14 @@ export async function POST(req: NextRequest) {
     }
 
     const resend = new Resend(resendKey);
-    const html   = buildEmailHtml(result);
+    const html   = buildEmailHtml(result, locale);
+    const bandForSubject = bandLabel[locale][result.band as Band] ?? result.band;
 
     // Send the report email
     const { error: sendError } = await resend.emails.send({
       from:    fromEmail,
       to:      email,
-      subject: `Your relationship health report — ${result.band} · CoupleIQ`,
+      subject: EMAIL_STRINGS[locale].subject(bandForSubject),
       html,
     });
 

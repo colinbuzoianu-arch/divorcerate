@@ -12,19 +12,12 @@ import { LOCALE_COOKIE } from "@/lib/i18n/config";
  * are translated, their prefixes are added here.
  */
 
-// English paths (prefixes) that have a /de equivalent. "/" is handled exactly.
+// English paths (prefixes) that ALREADY have a /de equivalent. "/" is handled
+// exactly. Add a prefix here only once its German page exists, so an
+// auto-redirect never lands on a 404. (Remaining sections are added as the
+// German edition is built out — see docs/GERMAN_EDITION_PLAN.md.)
 const TRANSLATED_PREFIXES = [
   "/relationship-test",
-  "/should-i-break-up-quiz",
-  "/four-horsemen-quiz",
-  "/attachment-style-quiz",
-  "/is-my-relationship-toxic-quiz",
-  "/relationship-compatibility-test",
-  "/patterns",
-  "/methodology",
-  "/blog",
-  "/support-resources",
-  "/legal",
 ];
 
 function hasGermanVersion(pathname: string): boolean {

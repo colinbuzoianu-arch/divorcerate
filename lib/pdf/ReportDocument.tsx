@@ -1,5 +1,13 @@
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import type { StoredResult } from "@/lib/types";
+import type { Locale } from "@/lib/i18n/config";
+import { bandLabel, patternLabel, dimensionLabel } from "@/lib/i18n/scoring";
+import type { Band, Pattern, DimensionKey } from "@/lib/scoring";
+
+const PDF_STRINGS = {
+  en: { subtitle: "Your relationship report · splitornot.com", health: "Relationship health", outOf: "/ 100 health score", pattern: "Your relationship pattern", strength: "Biggest strength", focus: "Focus area", dimensions: "Eight dimensions", yourResult: "Your result", dimsExplained: "Your dimensions, explained", whyFocus: (r: string) => `Why ${r} is your focus area`, next: "What to do next", footer: "CoupleIQ · splitornot.com — For self-reflection only. Not a diagnosis or a substitute for professional help." },
+  de: { subtitle: "Dein Beziehungsbericht · splitornot.com", health: "Beziehungsgesundheit", outOf: "/ 100 Beziehungs-Score", pattern: "Dein Beziehungsmuster", strength: "Größte Stärke", focus: "Fokusbereich", dimensions: "Acht Dimensionen", yourResult: "Dein Ergebnis", dimsExplained: "Deine Dimensionen, erklärt", whyFocus: (r: string) => `Warum ${r} dein Fokusbereich ist`, next: "Was als Nächstes zu tun ist", footer: "CoupleIQ · splitornot.com — Nur zur Selbstreflexion. Keine Diagnose und kein Ersatz für professionelle Hilfe." },
+};
 
 /**
  * Server-rendered PDF of the paid full report (Phase 6.3). Built with
@@ -34,61 +42,68 @@ const s = StyleSheet.create({
   footer: { position: "absolute", bottom: 28, left: 48, right: 48, fontSize: 8, color: MUTED, borderTopWidth: 1, borderTopColor: LINE, paddingTop: 8 },
 });
 
-export function ReportDocument({ result }: { result: StoredResult }) {
+export function ReportDocument({ result, locale = "en" }: { result: StoredResult; locale?: Locale }) {
   const n = result.narrative;
   const noteFor = (key: string) => n?.dimensionNotes?.find((d) => d.key === key)?.note;
+  const str = PDF_STRINGS[locale];
+  const dl = dimensionLabel[locale];
+  const dimLabel = (key: string, fallback: string) => dl[key as DimensionKey] ?? fallback;
+  const bandText = bandLabel[locale][result.band as Band] ?? result.band;
+  const patternText = patternLabel[locale][result.pattern as Pattern] ?? result.pattern;
+  const strengthText = dimLabel(result.strength.key, result.strength.label);
+  const riskText = dimLabel(result.risk.key, result.risk.label);
 
   return (
-    <Document title="Your CoupleIQ relationship report" author="CoupleIQ">
+    <Document title="CoupleIQ" author="CoupleIQ">
       <Page size="A4" style={s.page}>
         <Text style={s.brand}>CoupleIQ</Text>
-        <Text style={s.brandSub}>Your relationship report · splitornot.com</Text>
+        <Text style={s.brandSub}>{str.subtitle}</Text>
 
         <View style={s.bandRow}>
-          <Text style={s.eyebrow}>Relationship health</Text>
-          <Text style={s.band}>{result.band}</Text>
-          <Text style={s.score}>{result.healthScore} / 100 health score</Text>
+          <Text style={s.eyebrow}>{str.health}</Text>
+          <Text style={s.band}>{bandText}</Text>
+          <Text style={s.score}>{result.healthScore} {str.outOf}</Text>
           <Text style={s.headline}>{result.headline}</Text>
         </View>
 
-        <Text style={s.h2}>Your relationship pattern</Text>
-        <Text style={s.body}>{result.pattern}</Text>
+        <Text style={s.h2}>{str.pattern}</Text>
+        <Text style={s.body}>{patternText}</Text>
 
         <View style={s.twoCol}>
           <View style={s.colBox}>
-            <Text style={{ ...s.colLabel, color: "#0F6E56" }}>Biggest strength</Text>
-            <Text style={{ fontFamily: "Helvetica-Bold" }}>{result.strength.label}</Text>
+            <Text style={{ ...s.colLabel, color: "#0F6E56" }}>{str.strength}</Text>
+            <Text style={{ fontFamily: "Helvetica-Bold" }}>{strengthText}</Text>
           </View>
           <View style={s.colBox}>
-            <Text style={{ ...s.colLabel, color: EMBER }}>Focus area</Text>
-            <Text style={{ fontFamily: "Helvetica-Bold" }}>{result.risk.label}</Text>
+            <Text style={{ ...s.colLabel, color: EMBER }}>{str.focus}</Text>
+            <Text style={{ fontFamily: "Helvetica-Bold" }}>{riskText}</Text>
           </View>
         </View>
 
-        <Text style={s.h2}>Eight dimensions</Text>
+        <Text style={s.h2}>{str.dimensions}</Text>
         {result.dimensions.map((d) => (
           <View key={d.key} style={s.dimRow}>
-            <Text style={s.dimLabel}>{d.label}</Text>
+            <Text style={s.dimLabel}>{dimLabel(d.key, d.label)}</Text>
             <Text style={s.dimScore}>{d.score}</Text>
           </View>
         ))}
 
         {n?.summary ? (
           <>
-            <Text style={s.h2}>Your result</Text>
+            <Text style={s.h2}>{str.yourResult}</Text>
             <Text style={s.body}>{n.summary}</Text>
           </>
         ) : null}
 
         {n?.dimensionNotes?.length ? (
           <>
-            <Text style={s.h2}>Your dimensions, explained</Text>
+            <Text style={s.h2}>{str.dimsExplained}</Text>
             {result.dimensions.map((d) => {
               const note = noteFor(d.key);
               if (!note) return null;
               return (
                 <View key={d.key} style={{ marginBottom: 6 }}>
-                  <Text style={{ fontFamily: "Helvetica-Bold" }}>{d.label} · {d.score}</Text>
+                  <Text style={{ fontFamily: "Helvetica-Bold" }}>{dimLabel(d.key, d.label)} · {d.score}</Text>
                   <Text style={s.body}>{note}</Text>
                 </View>
               );
@@ -98,14 +113,14 @@ export function ReportDocument({ result }: { result: StoredResult }) {
 
         {n?.riskDetail ? (
           <>
-            <Text style={s.h2}>Why {result.risk.label} is your focus area</Text>
+            <Text style={s.h2}>{str.whyFocus(riskText)}</Text>
             <Text style={s.body}>{n.riskDetail}</Text>
           </>
         ) : null}
 
         {n?.recommendations?.length ? (
           <>
-            <Text style={s.h2}>What to do next</Text>
+            <Text style={s.h2}>{str.next}</Text>
             {n.recommendations.map((r, i) => (
               <View key={i} style={s.rec}>
                 <Text style={s.recTitle}>{i + 1}. {r.title}</Text>
@@ -116,7 +131,7 @@ export function ReportDocument({ result }: { result: StoredResult }) {
         ) : null}
 
         <Text style={s.footer} fixed>
-          CoupleIQ · splitornot.com — For self-reflection only. Not a diagnosis or a substitute for professional help.
+          {str.footer}
         </Text>
       </Page>
     </Document>

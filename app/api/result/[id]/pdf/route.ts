@@ -29,7 +29,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   const narrative = await getOrCreateNarrative(id, full);
   const result = narrative ? { ...full, narrative } : full;
 
-  const element = React.createElement(ReportDocument, { result }) as unknown as Parameters<typeof renderToBuffer>[0];
+  const element = React.createElement(ReportDocument, { result, locale: result.locale ?? "en" }) as unknown as Parameters<typeof renderToBuffer>[0];
   const buffer = await renderToBuffer(element);
 
   return new NextResponse(new Uint8Array(buffer), {

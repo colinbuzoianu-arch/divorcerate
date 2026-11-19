@@ -1,9 +1,14 @@
+import { localizeHref, type Locale } from "@/lib/i18n/config";
+import { getApp } from "@/lib/i18n/app";
+
 /**
  * Safety block (Phase 1.4). Rendered for free, never blurred, above the rest of
  * the result whenever the safety layer triggers. It must never be paywalled and
- * must never be contradicted by "keep working on it" messaging.
+ * must never be contradicted by "keep working on it" messaging. German uses
+ * German/EU helplines.
  */
-export default function SafetyBlock() {
+export default function SafetyBlock({ locale = "en" }: { locale?: Locale }) {
+  const t = getApp(locale).safety;
   return (
     <div
       role="note"
@@ -16,36 +21,29 @@ export default function SafetyBlock() {
       }}
     >
       <p style={{ fontSize: 15, fontWeight: 800, color: "#8a2b12", letterSpacing: "-0.01em", marginBottom: 8 }}>
-        Your safety comes first
+        {t.title}
       </p>
       <p style={{ fontSize: 13, color: "#6b4433", lineHeight: 1.7, marginBottom: 12 }}>
-        Some of your answers suggest you may not feel safe or respected right now. If you ever feel
-        afraid of your partner, controlled, or unsafe at home, a quiz is not what you need — talking
-        to someone trained to help is. Support is free and confidential.
+        {t.body}
       </p>
       <ul style={{ listStyle: "none", padding: 0, margin: "0 0 12px", display: "grid", gap: 8 }}>
         <li style={{ fontSize: 13, color: "#6b4433", lineHeight: 1.6 }}>
-          <strong style={{ color: "#8a2b12" }}>Find a helpline in your country:</strong>{" "}
+          <strong style={{ color: "#8a2b12" }}>{t.findHelpline}</strong>{" "}
           <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer" style={{ color: "#B4461C", fontWeight: 600, textUnderlineOffset: 3 }}>
-            findahelpline.com
+            {t.findHelplineLink}
           </a>
         </li>
         <li style={{ fontSize: 13, color: "#6b4433", lineHeight: 1.6 }}>
-          <strong style={{ color: "#8a2b12" }}>US:</strong> Domestic Violence Hotline 1-800-799-7233
-          (or text START to 88788) · Call or text <strong>988</strong> for crisis support.
-        </li>
-        <li style={{ fontSize: 13, color: "#6b4433", lineHeight: 1.6 }}>
-          <strong style={{ color: "#8a2b12" }}>UK:</strong> Refuge 0808 2000 247 ·{" "}
-          <strong style={{ color: "#8a2b12" }}>EU:</strong> call 112 in an emergency.
+          {t.region}
         </li>
       </ul>
       <p style={{ fontSize: 13, margin: 0 }}>
-        <a href="/support-resources" style={{ color: "#B4461C", fontWeight: 700, textUnderlineOffset: 3 }}>
-          See more support resources →
+        <a href={localizeHref("/support-resources", locale)} style={{ color: "#B4461C", fontWeight: 700, textUnderlineOffset: 3 }}>
+          {t.more}
         </a>
       </p>
       <p style={{ fontSize: 12, color: "#9a7a6b", lineHeight: 1.6, marginTop: 10 }}>
-        If you are in immediate danger, contact your local emergency number now.
+        {t.immediate}
       </p>
     </div>
   );
