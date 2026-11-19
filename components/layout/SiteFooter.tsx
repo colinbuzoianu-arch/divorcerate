@@ -1,55 +1,60 @@
 import Link from "next/link";
+import { localizeHref, type Locale } from "@/lib/i18n/config";
+import { getUI } from "@/lib/i18n/ui";
+import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 
 /**
- * Shared site footer in the CoupleIQ style (Phase 2). Only live routes are
- * linked — pattern pages, methodology, about and the mini-quizzes are omitted
- * until they exist (no dead links, SEO rule 4 / plan 2.2).
+ * Shared site footer in the CoupleIQ style (Phase 2, localized in Phase 7).
+ * Links are locale-aware; the default locale (en) is unprefixed.
  */
-export default function SiteFooter() {
+export default function SiteFooter({ locale = "en" }: { locale?: Locale }) {
+  const t = getUI(locale).footer;
+  const href = (p: string) => localizeHref(p, locale);
   const year = new Date().getFullYear();
   return (
     <footer className="foot">
       <div className="wrap">
         <div className="foot-grid">
           <div>
-            <Link className="brand" href="/">
+            <Link className="brand" href={href("/")}>
               <span className="mark" aria-hidden="true"><span></span><span></span></span>
               <span className="word">Couple<b>IQ</b></span>
             </Link>
-            <p style={{ marginTop: 16, maxWidth: 300 }}>An honest, private look at your relationship, at splitornot.com.</p>
+            <p style={{ marginTop: 16, maxWidth: 300 }}>{t.tagline}</p>
+            <div style={{ marginTop: 20 }}><LanguageSwitcher locale={locale} tone="dark" /></div>
           </div>
           <div>
-            <h4>Tests</h4>
+            <h4>{t.testsHeading}</h4>
             <ul>
-              <li><Link href="/relationship-test">Relationship test</Link></li>
-              <li><Link href="/should-i-break-up-quiz">Should I break up?</Link></li>
-              <li><Link href="/four-horsemen-quiz">Four Horsemen quiz</Link></li>
-              <li><Link href="/attachment-style-quiz">Attachment style quiz</Link></li>
-              <li><Link href="/is-my-relationship-toxic-quiz">Is my relationship toxic?</Link></li>
-              <li><Link href="/relationship-compatibility-test">Compatibility test</Link></li>
+              <li><Link href={href("/relationship-test")}>{t.links.relationshipTest}</Link></li>
+              <li><Link href={href("/should-i-break-up-quiz")}>{t.links.shouldIBreakUp}</Link></li>
+              <li><Link href={href("/four-horsemen-quiz")}>{t.links.fourHorsemen}</Link></li>
+              <li><Link href={href("/attachment-style-quiz")}>{t.links.attachmentStyle}</Link></li>
+              <li><Link href={href("/is-my-relationship-toxic-quiz")}>{t.links.toxic}</Link></li>
+              <li><Link href={href("/relationship-compatibility-test")}>{t.links.compatibility}</Link></li>
             </ul>
           </div>
           <div>
-            <h4>Learn</h4>
+            <h4>{t.learnHeading}</h4>
             <ul>
-              <li><Link href="/patterns/pursuer-withdrawer">Relationship patterns</Link></li>
-              <li><Link href="/methodology">Methodology</Link></li>
-              <li><Link href="/blog">Journal</Link></li>
-              <li><Link href="/support-resources">Support resources</Link></li>
+              <li><Link href={href("/patterns/pursuer-withdrawer")}>{t.links.patterns}</Link></li>
+              <li><Link href={href("/methodology")}>{t.links.methodology}</Link></li>
+              <li><Link href={href("/blog")}>{t.links.journal}</Link></li>
+              <li><Link href={href("/support-resources")}>{t.links.support}</Link></li>
             </ul>
           </div>
           <div>
-            <h4>Company</h4>
+            <h4>{t.companyHeading}</h4>
             <ul>
-              <li><Link href="/legal">Privacy &amp; terms</Link></li>
-              <li><a href="mailto:support.coupleiq@gmail.com">Contact</a></li>
+              <li><Link href={href("/legal")}>{t.links.privacy}</Link></li>
+              <li><a href="mailto:support.coupleiq@gmail.com">{t.links.contact}</a></li>
             </ul>
           </div>
         </div>
         <div className="big" aria-hidden="true">Couple<span className="it">IQ</span></div>
         <div className="foot-base">
-          <span>© {year} CoupleIQ · splitornot.com · Operated by Verumsell SRL</span>
-          <span>For self-reflection only. Not a substitute for professional help.</span>
+          <span>{t.rights.replace("{year}", String(year))}</span>
+          <span>{t.disclaimer}</span>
         </div>
       </div>
     </footer>

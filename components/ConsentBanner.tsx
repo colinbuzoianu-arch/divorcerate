@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { localizeHref, type Locale } from "@/lib/i18n/config";
+import { getUI } from "@/lib/i18n/ui";
 
 /**
  * Cookie consent banner with Google Consent Mode v2 (Phase 1.5, GDPR).
@@ -16,8 +18,10 @@ const STORAGE_KEY = "cq_consent";
 
 type Choice = "granted" | "denied";
 
-export default function ConsentBanner({ gaId }: { gaId: string }) {
+export default function ConsentBanner({ gaId, locale = "en" }: { gaId: string; locale?: Locale }) {
   const [visible, setVisible] = useState(false);
+  const t = getUI(locale).consent;
+  const [before, after] = t.message.split("{privacy}");
 
   useEffect(() => {
     let choice: string | null = null;
@@ -93,25 +97,24 @@ export default function ConsentBanner({ gaId }: { gaId: string }) {
       }}
     >
       <p style={{ fontSize: 13.5, color: "#444", lineHeight: 1.6, margin: "0 0 12px" }}>
-        We use analytics and advertising cookies to understand how the site is used. They stay off
-        until you accept. See our{" "}
-        <a href="/legal" style={{ color: "#4B3FB0", textDecoration: "underline", textUnderlineOffset: 2 }}>
-          privacy policy
+        {before}
+        <a href={localizeHref("/legal", locale)} style={{ color: "#4B3FB0", textDecoration: "underline", textUnderlineOffset: 2 }}>
+          {t.privacyPolicy}
         </a>
-        .
+        {after}
       </p>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <button
           onClick={() => choose("granted")}
           style={{ background: "#4B3FB0", color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 14, fontWeight: 700, cursor: "pointer", minHeight: 44 }}
         >
-          Accept
+          {t.accept}
         </button>
         <button
           onClick={() => choose("denied")}
           style={{ background: "transparent", color: "#555", border: "1px solid #ddd", borderRadius: 10, padding: "10px 18px", fontSize: 14, fontWeight: 600, cursor: "pointer", minHeight: 44 }}
         >
-          Decline
+          {t.decline}
         </button>
       </div>
     </div>
