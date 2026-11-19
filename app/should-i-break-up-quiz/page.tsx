@@ -10,7 +10,10 @@ export const metadata: Metadata = {
   title: "Should I Break Up? A Free Quiz to Help You Decide | CoupleIQ",
   description:
     "A free, private 'should I break up?' quiz. Eight honest questions to help you tell a rough patch from the end of the road — plus what the signs really mean.",
-  alternates: { canonical: "https://splitornot.com/should-i-break-up-quiz" },
+  alternates: {
+    canonical: "https://splitornot.com/should-i-break-up-quiz",
+    languages: { en: "https://splitornot.com/should-i-break-up-quiz", de: "https://splitornot.com/de/should-i-break-up-quiz", "x-default": "https://splitornot.com/should-i-break-up-quiz" },
+  },
 };
 
 const faqs = [

@@ -20,6 +20,11 @@ const TRANSLATED_PREFIXES = [
   "/relationship-test",
   "/patterns",
   "/methodology",
+  "/should-i-break-up-quiz",
+  "/four-horsemen-quiz",
+  "/attachment-style-quiz",
+  "/is-my-relationship-toxic-quiz",
+  "/relationship-compatibility-test",
 ];
 
 function hasGermanVersion(pathname: string): boolean {

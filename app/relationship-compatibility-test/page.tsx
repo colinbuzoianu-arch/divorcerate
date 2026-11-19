@@ -6,7 +6,10 @@ export const metadata: Metadata = {
   title: "Relationship Compatibility Test (Free) | CoupleIQ",
   description:
     "A free relationship compatibility test for newer couples. Eight questions on values, lifestyle, conflict and the future — see where you align and where to talk.",
-  alternates: { canonical: "https://splitornot.com/relationship-compatibility-test" },
+  alternates: {
+    canonical: "https://splitornot.com/relationship-compatibility-test",
+    languages: { en: "https://splitornot.com/relationship-compatibility-test", de: "https://splitornot.com/de/relationship-compatibility-test", "x-default": "https://splitornot.com/relationship-compatibility-test" },
+  },
 };
 
 export default function RelationshipCompatibilityTestPage() {

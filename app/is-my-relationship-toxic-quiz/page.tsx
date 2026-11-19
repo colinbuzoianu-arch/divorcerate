@@ -6,7 +6,10 @@ export const metadata: Metadata = {
   title: "Is My Relationship Toxic? A Free Quiz | CoupleIQ",
   description:
     "A free, private 'is my relationship toxic?' quiz. Eight honest questions on the real warning signs — contempt, control, blame, feeling drained — plus where to get help.",
-  alternates: { canonical: "https://splitornot.com/is-my-relationship-toxic-quiz" },
+  alternates: {
+    canonical: "https://splitornot.com/is-my-relationship-toxic-quiz",
+    languages: { en: "https://splitornot.com/is-my-relationship-toxic-quiz", de: "https://splitornot.com/de/is-my-relationship-toxic-quiz", "x-default": "https://splitornot.com/is-my-relationship-toxic-quiz" },
+  },
 };
 
 export default function IsMyRelationshipToxicQuizPage() {

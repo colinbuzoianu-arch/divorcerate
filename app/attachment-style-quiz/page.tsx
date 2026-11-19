@@ -6,7 +6,10 @@ export const metadata: Metadata = {
   title: "Attachment Style Quiz: Secure, Anxious, Avoidant or Fearful | CoupleIQ",
   description:
     "A free attachment style quiz. Seven questions to find out whether you lean secure, anxious, avoidant or fearful-avoidant in relationships — and what it means.",
-  alternates: { canonical: "https://splitornot.com/attachment-style-quiz" },
+  alternates: {
+    canonical: "https://splitornot.com/attachment-style-quiz",
+    languages: { en: "https://splitornot.com/attachment-style-quiz", de: "https://splitornot.com/de/attachment-style-quiz", "x-default": "https://splitornot.com/attachment-style-quiz" },
+  },
 };
 
 export default function AttachmentStyleQuizPage() {

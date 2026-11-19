@@ -2,12 +2,19 @@ import Link from "next/link";
 import type { MiniQuiz as MiniQuizConfig } from "@/lib/quizzes/types";
 import MiniQuiz from "@/components/MiniQuiz";
 import BrandMark from "@/components/layout/BrandMark";
+import SetHtmlLang from "@/components/SetHtmlLang";
 import JsonLd from "@/components/JsonLd";
 import { faqPageLd } from "@/lib/seo";
-import { MINI_QUIZZES } from "@/lib/quizzes/registry";
+import { getMiniQuizLinks } from "@/lib/quizzes/registry";
+import { localizeHref, type Locale } from "@/lib/i18n/config";
 
 export interface LandingSection { heading: string; body: string[]; }
 export interface LandingFaq { q: string; a: string; }
+
+const CHROME = {
+  en: { fullTest: "Full test →", safetyHeading: "If you don't feel safe", safetyBody: "If you feel afraid of your partner, controlled, or unsafe at home, this is not a question for a quiz — those are reasons to reach out for confidential help, not things to “work on.” Please see our ", supportLink: "support resources", safetyTail: ". Your safety comes first.", faqHeading: "Questions, answered", cta: "Take the full relationship test →", more: "More free quizzes" },
+  de: { fullTest: "Zum Test →", safetyHeading: "Wenn du dich nicht sicher fühlst", safetyBody: "Wenn du Angst vor deinem:r Partner:in hast, dich kontrolliert oder zu Hause nicht sicher fühlst, ist das keine Frage für ein Quiz – das sind Gründe, vertrauliche Hilfe zu suchen, keine Dinge zum „Daran-Arbeiten\". Bitte sieh unsere ", supportLink: "Hilfsangebote", safetyTail: ". Deine Sicherheit geht vor.", faqHeading: "Fragen, beantwortet", cta: "Zum vollständigen Beziehungstest →", more: "Mehr kostenlose Quizze" },
+};
 
 /**
  * Shared layout for mini-quiz landing pages (Phase 4.2): header, hero, the quiz
@@ -22,6 +29,7 @@ export default function MiniQuizLanding({
   sections,
   faqs,
   safetyNote = false,
+  locale = "en",
 }: {
   config: MiniQuizConfig;
   eyebrow: string;
@@ -30,17 +38,21 @@ export default function MiniQuizLanding({
   sections: LandingSection[];
   faqs: LandingFaq[];
   safetyNote?: boolean;
+  locale?: Locale;
 }) {
   const h2 = { fontFamily: "var(--serif)", fontWeight: 400, fontSize: 30, color: "var(--text)", letterSpacing: "-0.02em", lineHeight: 1.1, margin: "0 0 0.9rem" } as const;
   const para = { fontSize: 15.5, color: "var(--text-2)", lineHeight: 1.8, margin: "0 0 1rem" } as const;
+  const c = CHROME[locale];
+  const crossLinks = getMiniQuizLinks(locale);
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", padding: "2rem 1rem 4rem", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "var(--sans)", color: "var(--text)" }}>
+      {locale === "de" && <SetHtmlLang lang="de" />}
       <JsonLd data={faqPageLd(faqs)} />
       <div style={{ width: "100%", maxWidth: 720 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2.5rem" }}>
-          <Link href="/" style={{ textDecoration: "none" }}><BrandMark /></Link>
-          <Link href="/relationship-test" style={{ fontSize: 13, color: "var(--text-2)", textDecoration: "none" }}>Full test →</Link>
+          <Link href={localizeHref("/", locale)} style={{ textDecoration: "none" }}><BrandMark /></Link>
+          <Link href={localizeHref("/relationship-test", locale)} style={{ fontSize: 13, color: "var(--text-2)", textDecoration: "none" }}>{c.fullTest}</Link>
         </div>
 
         <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: 12 }}>{eyebrow}</p>
@@ -48,7 +60,7 @@ export default function MiniQuizLanding({
         <p style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.7, marginBottom: "2rem" }}>{lede}</p>
 
         <div style={{ marginBottom: "2.5rem" }}>
-          <MiniQuiz config={config} />
+          <MiniQuiz config={config} locale={locale} />
         </div>
 
         <article style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
@@ -61,18 +73,16 @@ export default function MiniQuizLanding({
 
           {safetyNote && (
             <section style={{ background: "var(--paper-2)", borderRadius: 24, padding: "1.75rem" }}>
-              <h2 style={{ ...h2, fontSize: 24 }}>If you don&apos;t feel safe</h2>
+              <h2 style={{ ...h2, fontSize: 24 }}>{c.safetyHeading}</h2>
               <p style={{ ...para, margin: 0 }}>
-                If you feel afraid of your partner, controlled, or unsafe at home, this is not a question for a
-                quiz — those are reasons to reach out for confidential help, not things to &quot;work on.&quot;
-                Please see our{" "}
-                <Link href="/support-resources" style={{ color: "var(--violet-deep)", fontWeight: 600 }}>support resources</Link>. Your safety comes first.
+                {c.safetyBody}
+                <Link href={localizeHref("/support-resources", locale)} style={{ color: "var(--violet-deep)", fontWeight: 600 }}>{c.supportLink}</Link>{c.safetyTail}
               </p>
             </section>
           )}
 
           <section>
-            <h2 style={h2}>Questions, answered</h2>
+            <h2 style={h2}>{c.faqHeading}</h2>
             <div>
               {faqs.map((f) => (
                 <details key={f.q} style={{ borderBottom: "1px solid var(--line-light)", padding: "14px 0" }}>
@@ -85,16 +95,16 @@ export default function MiniQuizLanding({
         </article>
 
         <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
-          <Link href="/relationship-test" style={{ background: "var(--violet-deep)", color: "#fff", borderRadius: 999, padding: "14px 30px", fontSize: 15, fontWeight: 600, textDecoration: "none", display: "inline-block" }}>
-            Take the full relationship test →
+          <Link href={localizeHref("/relationship-test", locale)} style={{ background: "var(--violet-deep)", color: "#fff", borderRadius: 999, padding: "14px 30px", fontSize: 15, fontWeight: 600, textDecoration: "none", display: "inline-block" }}>
+            {c.cta}
           </Link>
         </div>
 
         {/* More free quizzes */}
         <div style={{ marginTop: "2.5rem" }}>
-          <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: 16 }}>More free quizzes</p>
+          <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-2)", marginBottom: 16 }}>{c.more}</p>
           <div style={{ display: "grid", gap: 10 }}>
-            {MINI_QUIZZES.filter((qz) => !qz.href.includes(config.slug)).map((qz) => (
+            {crossLinks.filter((qz) => !qz.href.includes(config.slug)).map((qz) => (
               <Link key={qz.href} href={qz.href} style={{ textDecoration: "none", background: "#fff", border: "1px solid var(--line-light)", borderRadius: 16, padding: "1rem 1.25rem", display: "block" }}>
                 <p style={{ fontFamily: "var(--serif)", fontSize: 20, color: "var(--text)", marginBottom: 2 }}>{qz.title}</p>
                 <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.5 }}>{qz.blurb}</p>

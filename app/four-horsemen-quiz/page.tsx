@@ -6,7 +6,10 @@ export const metadata: Metadata = {
   title: "Four Horsemen Quiz: Find Your Gottman Conflict Pattern | CoupleIQ",
   description:
     "A free quiz based on Gottman's Four Horsemen — criticism, contempt, defensiveness and stonewalling. Find out which shows up most in your conflicts, and the antidote.",
-  alternates: { canonical: "https://splitornot.com/four-horsemen-quiz" },
+  alternates: {
+    canonical: "https://splitornot.com/four-horsemen-quiz",
+    languages: { en: "https://splitornot.com/four-horsemen-quiz", de: "https://splitornot.com/de/four-horsemen-quiz", "x-default": "https://splitornot.com/four-horsemen-quiz" },
+  },
 };
 
 export default function FourHorsemenQuizPage() {
