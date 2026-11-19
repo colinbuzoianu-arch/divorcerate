@@ -4,7 +4,10 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Privacy Policy & Terms | CoupleIQ",
   description: "Privacy policy and terms of service for CoupleIQ — the relationship health analyzer at splitornot.com.",
-  alternates: { canonical: "https://splitornot.com/legal" },
+  alternates: {
+    canonical: "https://splitornot.com/legal",
+    languages: { en: "https://splitornot.com/legal", de: "https://splitornot.com/de/legal", "x-default": "https://splitornot.com/legal" },
+  },
 };
 
 const LAST_UPDATED   = "18 November 2026";

@@ -25,6 +25,8 @@ const TRANSLATED_PREFIXES = [
   "/attachment-style-quiz",
   "/is-my-relationship-toxic-quiz",
   "/relationship-compatibility-test",
+  "/support-resources",
+  "/legal",
 ];
 
 function hasGermanVersion(pathname: string): boolean {

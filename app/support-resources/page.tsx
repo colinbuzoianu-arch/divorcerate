@@ -5,7 +5,10 @@ export const metadata: Metadata = {
   title: "Support resources: abuse, crisis and domestic violence help | CoupleIQ",
   description:
     "Free, confidential helplines and crisis resources for anyone who feels unsafe, afraid or in crisis in their relationship. International directory plus examples by country.",
-  alternates: { canonical: "https://splitornot.com/support-resources" },
+  alternates: {
+    canonical: "https://splitornot.com/support-resources",
+    languages: { en: "https://splitornot.com/support-resources", de: "https://splitornot.com/de/support-resources", "x-default": "https://splitornot.com/support-resources" },
+  },
 };
 
 const sectionStyle = { background: "#fff", borderRadius: 16, border: "1px solid #efefed", padding: "1.5rem" } as const;
