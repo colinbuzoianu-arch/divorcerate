@@ -19,7 +19,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: `${post.title} | CoupleIQ`,
       description: post.description,
-      alternates: { canonical: `https://splitornot.com/blog/${params.slug}` },
+      alternates: {
+        canonical: `https://splitornot.com/blog/${params.slug}`,
+        languages: {
+          en: `https://splitornot.com/blog/${params.slug}`,
+          de: `https://splitornot.com/de/blog/${params.slug}`,
+          "x-default": `https://splitornot.com/blog/${params.slug}`,
+        },
+      },
       openGraph: {
         title: post.title,
         description: post.description,

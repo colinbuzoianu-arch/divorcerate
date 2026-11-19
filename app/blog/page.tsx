@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     "Evidence-based articles on relationships, the Gottman Method, attachment theory, conflict patterns, and more.",
   alternates: {
     canonical: "https://splitornot.com/blog",
+    languages: { en: "https://splitornot.com/blog", de: "https://splitornot.com/de/blog", "x-default": "https://splitornot.com/blog" },
   },
   openGraph: {
     title: "Relationship Insights | CoupleIQ Blog",

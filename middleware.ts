@@ -27,6 +27,7 @@ const TRANSLATED_PREFIXES = [
   "/relationship-compatibility-test",
   "/support-resources",
   "/legal",
+  "/blog",
 ];
 
 function hasGermanVersion(pathname: string): boolean {

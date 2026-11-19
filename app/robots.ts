@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
       // Private / non-indexable areas (SEO rule 4).
-      disallow: ["/r/", "/success", "/api/"],
+      disallow: ["/r/", "/success", "/api/", "/de/r/", "/de/success", "/compare/", "/de/compare/"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

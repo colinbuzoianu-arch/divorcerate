@@ -8,6 +8,7 @@ import HeroThreads from "@/components/landing/HeroThreads";
 import JsonLd from "@/components/JsonLd";
 import SetHtmlLang from "@/components/SetHtmlLang";
 import { faqPageLd } from "@/lib/seo";
+import { getAllPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "Beziehungstest: Kostenloser, privater Beziehungs-Check | CoupleIQ",
@@ -77,6 +78,7 @@ const faqs = [
 ];
 
 export default function HomeDe() {
+  const posts = getAllPosts("de").slice(0, 3);
   return (
     <div className="cq">
       <SetHtmlLang lang="de" />
@@ -363,6 +365,27 @@ export default function HomeDe() {
           </div>
         </div>
       </section>
+
+      {/* JOURNAL */}
+      {posts.length > 0 && (
+        <section className="paper sec" style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-head reveal">
+              <h2 className="h2">Aus dem <span className="it">Journal.</span></h2>
+              <Link className="btn btn-dark btn-sm" href="/de/blog">Alle Artikel</Link>
+            </div>
+            <div className="posts">
+              {posts.map((post, i) => (
+                <Link className="post reveal" href={`/de/blog/${post.slug}`} key={post.slug}>
+                  <div className={`cover c${i + 1}`} aria-hidden="true"><i></i><i></i></div>
+                  <h3>{post.title}</h3>
+                  <p>{post.description}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* FINALER CTA */}
       <section className="final">

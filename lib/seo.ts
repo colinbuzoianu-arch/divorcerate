@@ -37,8 +37,9 @@ export function blogPostingLd(opts: {
   slug: string;
   date: string;
   image?: string;
+  basePath?: string; // "/blog" (default) or "/de/blog"
 }) {
-  const url = `${SITE_URL}/blog/${opts.slug}`;
+  const url = `${SITE_URL}${opts.basePath ?? "/blog"}/${opts.slug}`;
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
