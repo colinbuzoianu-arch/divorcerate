@@ -5,7 +5,6 @@ import "./styles/landing.css";
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import HeroThreads from "@/components/landing/HeroThreads";
-import NotifyForm from "@/components/landing/NotifyForm";
 import JsonLd from "@/components/JsonLd";
 import { faqPageLd } from "@/lib/seo";
 import { getAllPosts } from "@/lib/posts";
@@ -58,7 +57,7 @@ const marqueeItems = ["Communication", "Conflict & repair", "Contempt", "Friends
 const faqs = [
   { q: "Is this scientifically validated?", a: "No, and we won't pretend otherwise. The questions draw on well-established research themes, and it is a tool for reflection, not a validated clinical instrument." },
   { q: "What happens to my answers?", a: "They're used only to create your result and are not stored. Your result is kept at a private link for 30 days, then deleted. You don't need an account. Our privacy policy lists exactly what is stored and which providers process it." },
-  { q: "Can we take it together?", a: "Yes. Take it separately and compare your results. Side-by-side couple comparison is coming soon, and the differences are often more revealing than the scores." },
+  { q: "Can we take it together?", a: "Yes. You each take the test on your own, then compare privately side by side — only your scores are shared, never your answers, and only if both of you agree. The differences are often more revealing than the scores." },
   { q: "Is it a replacement for couples therapy?", a: "No. Many people use their result to decide whether to seek a therapist, or to start that first session with something concrete." },
   { q: "Why is the full report paid?", a: "The free result gives you the headline. The full report explains every dimension and gives you specific next steps. That's the part that costs us to produce, and the part that helps you act." },
 ];
@@ -196,7 +195,7 @@ export default function Home() {
                 <text className="lbl end" x="40" y="224">SUPPORT</text>
                 <text className="lbl end" x="90" y="86">VISION</text>
               </svg>
-              <div className="legend"><span>You</span><span>Your partner (coming soon)</span></div>
+              <div className="legend"><span>You</span><span>Your partner</span></div>
             </div>
             <ol className="dims">
               {dims.map(([k, h, p]) => (
@@ -314,10 +313,10 @@ export default function Home() {
             <span className="tag t1">You</span><span className="tag t2">Them</span><span className="tag t3">us</span>
           </div>
           <div className="reveal">
-            <span className="soon mono">Coming soon</span>
+            <span className="soon mono">Now live</span>
             <h2 className="h2" style={{ marginTop: 24 }}>Take it separately. <span className="it grad">Compare</span> privately.</h2>
-            <p className="lede" style={{ marginTop: 24, maxWidth: 460 }}>You and your partner answer on your own. CoupleIQ shows where you see things the same way and where you don&apos;t. Nothing is shared unless both of you say yes.</p>
-            <NotifyForm />
+            <p className="lede" style={{ marginTop: 24, maxWidth: 460 }}>You and your partner answer on your own. CoupleIQ shows where you see things the same way and where you don&apos;t. Only your scores are shared, never your answers — and only if both of you say yes.</p>
+            <Link href="/relationship-test" className="btn btn-light" style={{ marginTop: 32 }}>Take the test, then invite your partner</Link>
           </div>
         </div>
       </section>
