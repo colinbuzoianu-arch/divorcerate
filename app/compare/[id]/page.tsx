@@ -3,6 +3,7 @@ import Link from "next/link";
 import { kvConfigured } from "@/lib/kv";
 import { getComparison, loadComparisonResults, computeComparison } from "@/lib/comparison";
 import BrandMark from "@/components/layout/BrandMark";
+import RadarChart from "@/components/RadarChart";
 import { CompareInvite, CompareUnlock } from "@/components/compare/CompareActions";
 
 export const dynamic = "force-dynamic";
@@ -101,6 +102,15 @@ export default async function ComparePage({ params }: { params: { id: string } }
           <p style={{ fontFamily: "var(--serif)", fontSize: 44, color: "var(--ember-deep)", lineHeight: 1 }}>{view.overall.b}</p>
           <p style={{ fontSize: 12, color: "var(--text-2)" }}>Partner 2 health score</p>
         </div>
+      </div>
+
+      {/* Overlaid radar */}
+      <div style={{ marginBottom: "1.25rem" }}>
+        <RadarChart
+          dimensions={view.dimensions.map((d) => ({ key: d.key, label: d.label, score: d.a }))}
+          compare={view.dimensions.map((d) => d.b)}
+          legend={{ a: "Partner 1", b: "Partner 2" }}
+        />
       </div>
 
       {/* Dimensions */}
